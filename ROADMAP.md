@@ -34,7 +34,7 @@ This roadmap tracks the development progress of the "Rune of the Day" app, detai
 
 ## Debugging
 
-- [ ] Fix navigation container nesting issue causing render errors.
+- [x] Fix navigation container nesting issue causing render errors.
 - [ ] Troubleshoot font loading/rendering glitches on some devices.
 - [ ] Confirm `AsyncStorage` reliability across platforms.
 - [ ] Optimize performance for faster navigation and animations.

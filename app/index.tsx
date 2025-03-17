@@ -34,8 +34,7 @@ const App = () => {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-
+    <>
       <StatusBar style={theme === 'dark' ? 'light' : 'dark'} />
       <Tab.Navigator
         screenOptions={{
@@ -69,7 +68,7 @@ const App = () => {
           }}
         />
       </Tab.Navigator>
-    </SafeAreaView>
+      </>
   );
 };
 
