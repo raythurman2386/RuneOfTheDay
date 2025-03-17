@@ -9,6 +9,19 @@ A React Native app built with Expo that delivers a daily rune from the Elder Fut
 - **Flashcards**: Interactive flashcards with flip animations for learning rune meanings.
 - **Theming**: Light and dark mode support based on the user’s system preferences.
 - **Navigation**: Bottom tab navigation for seamless access to app sections.
+- **Privacy-Focused**: Completely offline app with no data collection.
+
+## Privacy Policy
+
+Our privacy policy is hosted on GitHub Pages and can be accessed at:
+- Development: `https://raythurman2386.github.io/RuneOfTheDay/privacy.html`
+- Production: Replace with your custom domain if applicable
+
+The policy explains our commitment to user privacy, detailing:
+- No data collection
+- Local storage usage
+- Device-only storage
+- No third-party services
 
 ## Getting Started
 

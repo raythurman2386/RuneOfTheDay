@@ -14,6 +14,22 @@ This roadmap tracks the development progress of the "Rune of the Day" app, detai
 - [x] Develop a flashcard screen with flip functionality.
 - [x] Enable light/dark mode theming with a custom hook.
 
+## App Store Preparation
+
+- [x] Set up GitHub Pages for privacy policy and app landing page
+- [x] Create comprehensive privacy policy
+- [ ] Generate app store screenshots for all required sizes
+- [ ] Create compelling app store descriptions
+- [ ] Complete app store listing assets:
+  - [ ] Feature graphic
+  - [ ] Promo video (optional)
+  - [ ] App icon in required sizes
+- [ ] Configure build process:
+  - [x] Set up EAS build configuration
+  - [x] Configure environment variables
+  - [ ] Generate and secure Android keystore
+  - [ ] Set up iOS certificates and provisioning profiles
+
 ## Styling
 
 - [ ] Polish the UI for a cohesive design:
@@ -49,6 +65,7 @@ This roadmap tracks the development progress of the "Rune of the Day" app, detai
 ## Documentation
 
 - [x] Write `README.md` with setup and contribution guidelines.
+- [x] Create privacy policy and hosting setup
 - [ ] Add inline comments to complex code sections.
 - [ ] Document custom hooks and components.
 - [ ] Create a user guide for app features.
