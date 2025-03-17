@@ -7,7 +7,6 @@ node_modules/
 .expo/
 dist/
 web-build/
-expo-env.d.ts
 
 # Native
 *.orig.*
@@ -17,7 +16,7 @@ expo-env.d.ts
 *.key
 *.mobileprovision
 eas.json
-
+expo-env.d.ts
 # Metro
 .metro-health-check*
 
@@ -31,9 +30,24 @@ yarn-error.*
 *.pem
 
 # local env files
+.env
 .env*.local
+.env.development
+.env.production
 
 # typescript
 *.tsbuildinfo
 
-app-example
+# Android/iOS build files
+android/
+ios/
+*.keystore
+google-services.json
+GoogleService-Info.plist
+upload-keystore.jks
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
