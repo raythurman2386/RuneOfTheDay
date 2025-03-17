@@ -7,6 +7,7 @@ import MainScreen from "./screens/MainScreen";
 import RuneListScreen from "./screens/RuneListScreen";
 import FlashcardScreen from "./screens/FlashcardScreen";
 import RuneIcon from "./components/RuneIcon";
+import CustomTabBar from "./components/CustomTabBar";
 import { useColorTheme } from "./hooks/useColorTheme";
 
 const Tab = createBottomTabNavigator();
@@ -41,11 +42,10 @@ const App = () => {
   }
 
   return (
-    <SafeAreaView
-      style={{ flex: 1, backgroundColor: colors.background }}
-    >
-      <StatusBar style={theme === 'dark' ? "light" : "dark"}/>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+      <StatusBar style={theme === "dark" ? "light" : "dark"} />
       <Tab.Navigator
+        tabBar={(props) => <CustomTabBar {...props} />}
         screenOptions={{
           headerStyle: {
             backgroundColor: colors.background,
@@ -61,9 +61,6 @@ const App = () => {
             backgroundColor: colors.surface,
             borderTopWidth: 0,
             elevation: 0,
-            height: 60,
-            paddingBottom: 8,
-            paddingTop: 8,
           },
           tabBarActiveTintColor: colors.text,
           tabBarInactiveTintColor: colors.icon,
@@ -94,8 +91,8 @@ const App = () => {
           component={FlashcardScreen}
           options={{
             tabBarIcon: ({ color, size }) => (
-              <RuneIcon symbol="ᚴ" color={color} size={size} />
-            ), // Hló
+              <RuneIcon symbol="ᚨ" color={color} size={size} />
+            ), // Ansuz
             tabBarLabel: "Learn",
           }}
         />

@@ -1,23 +1,30 @@
 # Rune of the Day
 
-A React Native app built with Expo that delivers a daily rune from the Elder Futhark set, complete with its symbol, name, and meaning. The app also includes features like a rune list and interactive flashcards to help users learn about runes.
+A React Native app built with Expo that delivers a daily rune from the Elder Futhark set, complete with its symbol, name, meaning, and associated Norse deity. The app also includes features like a rune list and interactive flashcards to help users learn about runes.
 
 ## Features
 
-- **Daily Rune**: A randomly selected rune displayed each day with its symbol, name, and meaning.
-- **Rune List**: A comprehensive view of all 24 Elder Futhark runes.
-- **Flashcards**: Interactive flashcards with flip animations for learning rune meanings.
+- **Daily Rune**: A randomly selected rune displayed each day with its symbol, name, meaning, and associated deity.
+- **Rune List**: A comprehensive view of all 24 Elder Futhark runes with their meanings and divine associations.
+- **Flashcards**: Interactive flashcards with flip animations for learning rune meanings and deity connections.
 - **Theming**: Light and dark mode support based on the user’s system preferences.
 - **Navigation**: Bottom tab navigation for seamless access to app sections.
+- **Haptic Feedback**: Platform-safe tactile responses for enhanced user interaction:
+  - Success feedback when daily rune loads
+  - Medium feedback for card flips
+  - Light feedback for navigation and list interactions
+  - Graceful fallback on web and unsupported devices
 - **Privacy-Focused**: Completely offline app with no data collection.
 
 ## Privacy Policy
 
 Our privacy policy is hosted on GitHub Pages and can be accessed at:
+
 - Development: `https://raythurman2386.github.io/RuneOfTheDay/privacy.html`
 - Production: Replace with your custom domain if applicable
 
 The policy explains our commitment to user privacy, detailing:
+
 - No data collection
 - Local storage usage
 - Device-only storage

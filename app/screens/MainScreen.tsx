@@ -1,25 +1,34 @@
-import React from "react";
-import { View, Text, StyleSheet, useWindowDimensions } from "react-native";
+import React, { useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  useWindowDimensions,
+  Pressable,
+} from "react-native";
 import { useRuneOfTheDay } from "../hooks/useRuneOfTheDay";
 import { useColorTheme } from "../hooks/useColorTheme";
+import useHaptics from "../hooks/useHaptics";
 
 const MainScreen = () => {
   const rune = useRuneOfTheDay();
   const { colors } = useColorTheme();
   const { height } = useWindowDimensions();
+  const { successFeedback, mediumFeedback } = useHaptics();
+
+  useEffect(() => {
+    if (rune) {
+      successFeedback();
+    }
+  }, [rune]);
 
   if (!rune) {
     return (
       <View
         testID="main-container"
-        style={[
-          styles.container,
-          { backgroundColor: colors.background },
-        ]}
+        style={[styles.container, { backgroundColor: colors.background }]}
       >
-        <Text style={[styles.loading, { color: colors.text }]}>
-          Loading...
-        </Text>
+        <Text style={[styles.loading, { color: colors.text }]}>Loading...</Text>
       </View>
     );
   }
@@ -27,10 +36,7 @@ const MainScreen = () => {
   return (
     <View
       testID="main-container"
-      style={[
-        styles.container,
-        { backgroundColor: colors.background },
-      ]}
+      style={[styles.container, { backgroundColor: colors.background }]}
     >
       <View style={styles.header}>
         <Text style={[styles.title, { color: colors.text }]}>
@@ -38,19 +44,25 @@ const MainScreen = () => {
         </Text>
       </View>
 
-      <View style={[styles.runeContainer, { height: height * 0.5 }]}>
+      <Pressable
+        style={[styles.runeContainer, { height: height * 0.5 }]}
+        onPress={() => mediumFeedback()}
+      >
         <Text style={[styles.symbol, { color: colors.text }]}>
           {rune.symbol}
         </Text>
-        <Text style={[styles.name, { color: colors.text }]}>
-          {rune.name}
-        </Text>
-      </View>
+        <Text style={[styles.name, { color: colors.text }]}>{rune.name}</Text>
+      </Pressable>
 
       <View style={styles.meaningContainer}>
         <Text style={[styles.meaning, { color: colors.icon }]}>
           {rune.meaning}
         </Text>
+        {rune.deity !== "None specified" && (
+          <Text style={[styles.deity, { color: colors.icon }]}>
+            Associated Deity: {rune.deity}
+          </Text>
+        )}
       </View>
     </View>
   );
@@ -79,8 +91,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   title: {
-    fontSize: 28,
     fontWeight: "bold",
+    fontSize: 28,
+    textTransform: "uppercase",
+    letterSpacing: 2,
   },
   symbol: {
     fontFamily: "ElderFuthark",
@@ -96,6 +110,12 @@ const styles = StyleSheet.create({
   meaning: {
     fontSize: 18,
     lineHeight: 28,
+    textAlign: "center",
+  },
+  deity: {
+    fontSize: 16,
+    fontStyle: "italic",
+    marginTop: 15,
     textAlign: "center",
   },
 });

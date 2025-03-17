@@ -5,7 +5,7 @@ This roadmap tracks the development progress of the "Rune of the Day" app, detai
 ## Core Features
 
 - [x] Initialize Expo project with TypeScript.
-- [x] Define rune data (symbols, names, meanings) in `src/data/`.
+- [x] Define rune data (symbols, names, meanings, deities) in `src/data/`.
 - [x] Implement daily rune selection with `AsyncStorage` to persist the daily choice.
 - [x] Add custom font support for rune symbols.
 - [x] Build the main screen to show the daily rune.
@@ -13,17 +13,26 @@ This roadmap tracks the development progress of the "Rune of the Day" app, detai
 - [x] Create a rune list screen with all 24 Elder Futhark runes.
 - [x] Develop a flashcard screen with flip functionality.
 - [x] Enable light/dark mode theming with a custom hook.
+- [x] Add haptic feedback for enhanced user interaction:
+  - [x] Success feedback when daily rune loads
+  - [x] Medium feedback for card flips
+  - [x] Light feedback for navigation and list interactions
+  - [x] Platform-safe implementation with web support
+- [x] Display associated deities for each rune across all screens:
+  - [x] Main screen: Below rune meaning
+  - [x] Rune list: As subtitle
+  - [x] Flashcards: On back of card
 
 ## App Store Preparation
 
 - [x] Set up GitHub Pages for privacy policy and app landing page
 - [x] Create comprehensive privacy policy
-- [ ] Generate app store screenshots for all required sizes
-- [ ] Create compelling app store descriptions
-- [ ] Complete app store listing assets:
-  - [ ] Feature graphic
-  - [ ] Promo video (optional)
-  - [ ] App icon in required sizes
+- [x] Generate app store screenshots for all required sizes
+- [x] Create compelling app store descriptions
+- [x] Complete app store listing assets:
+  - [x] Feature graphic
+  - [x] Promo video (optional)
+  - [x] App icon in required sizes
 - [ ] Configure build process:
   - [x] Set up EAS build configuration
   - [x] Configure environment variables

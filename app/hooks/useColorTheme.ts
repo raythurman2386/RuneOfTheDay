@@ -6,7 +6,7 @@ export type ColorTheme = typeof Colors.light | typeof Colors.dark;
 
 const useColorTheme = () => {
   const [theme, setTheme] = useState<ColorSchemeName>(
-    Appearance.getColorScheme()
+    Appearance.getColorScheme(),
   );
 
   useEffect(() => {
@@ -16,7 +16,7 @@ const useColorTheme = () => {
     return () => listener.remove();
   }, []);
 
-  const colors = theme === 'dark' ? Colors.dark : Colors.light;
+  const colors = theme === "dark" ? Colors.dark : Colors.light;
   return { theme, colors };
 };
 
