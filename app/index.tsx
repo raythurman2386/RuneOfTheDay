@@ -44,7 +44,7 @@ const App = () => {
     <SafeAreaView
       style={{ flex: 1, backgroundColor: colors.background }}
     >
-      <StatusBar style={theme === 'dark' ? "dark" : "light"}/>
+      <StatusBar style={theme === 'dark' ? "light" : "dark"}/>
       <Tab.Navigator
         screenOptions={{
           headerStyle: {
