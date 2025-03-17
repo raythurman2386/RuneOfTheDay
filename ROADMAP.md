@@ -1,4 +1,3 @@
-
 # Roadmap for Rune of the Day
 
 This roadmap tracks the development progress of the "Rune of the Day" app, detailing completed tasks and future plans across core features, styling, testing, debugging, and enhancements.

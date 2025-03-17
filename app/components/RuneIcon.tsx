@@ -1,5 +1,5 @@
-import React from 'react';
-import { Text } from 'react-native';
+import React from "react";
+import { Text } from "react-native";
 
 interface RuneIconProps {
   symbol: string;
@@ -8,7 +8,11 @@ interface RuneIconProps {
 }
 
 const RuneIcon = ({ symbol, color, size }: RuneIconProps) => {
-  return <Text style={{ fontFamily: 'ElderFuthark', color, fontSize: size }}>{symbol}</Text>;
+  return (
+    <Text style={{ fontFamily: "ElderFuthark", color, fontSize: size }}>
+      {symbol}
+    </Text>
+  );
 };
 
 export default RuneIcon;

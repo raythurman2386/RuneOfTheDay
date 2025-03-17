@@ -1,6 +1,6 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { useRuneOfTheDay } from '../hooks/useRuneOfTheDay';
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
+import { useRuneOfTheDay } from "../hooks/useRuneOfTheDay";
 
 const MainScreen = () => {
   const rune = useRuneOfTheDay();
@@ -26,34 +26,34 @@ const MainScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#000',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#000",
   },
   loading: {
     fontSize: 18,
-    color: '#fff',
+    color: "#fff",
   },
   title: {
     fontSize: 24,
-    color: '#fff',
+    color: "#fff",
     marginBottom: 20,
   },
   symbol: {
-    fontFamily: 'ElderFuthark',
+    fontFamily: "ElderFuthark",
     fontSize: 100,
-    color: '#fff',
+    color: "#fff",
     marginBottom: 20,
   },
   name: {
     fontSize: 32,
-    color: '#fff',
+    color: "#fff",
     marginBottom: 10,
   },
   meaning: {
     fontSize: 18,
-    color: '#fff',
-    textAlign: 'center',
+    color: "#fff",
+    textAlign: "center",
     paddingHorizontal: 20,
   },
 });

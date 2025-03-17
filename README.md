@@ -21,17 +21,20 @@ A React Native app built with Expo that delivers a daily rune from the Elder Fut
 ### Installation
 
 1. **Clone the repository**:
+
    ```bash
    git clone https://github.com/yourusername/rune-of-the-day.git
    cd rune-of-the-day
    ```
 
 2. **Install dependencies**:
+
    ```bash
    yarn install
    ```
 
 3. **Start the development server**:
+
    ```bash
    expo start
    ```
