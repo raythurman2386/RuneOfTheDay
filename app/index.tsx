@@ -14,6 +14,7 @@ const Tab = createBottomTabNavigator();
 const App = () => {
   const [fontLoaded, setFontLoaded] = useState(false);
   const theme = useColorTheme();
+  const isDark = theme === "dark";
 
   useEffect(() => {
     const loadFont = async () => {
@@ -27,20 +28,46 @@ const App = () => {
 
   if (!fontLoaded) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color="#0000ff" />
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: isDark ? "#000" : "#fff",
+        }}
+      >
+        <ActivityIndicator size="large" color={isDark ? "#fff" : "#000"} />
       </View>
     );
   }
 
   return (
-    <>
-      <StatusBar style={theme === "dark" ? "light" : "dark"} />
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: isDark ? "#000" : "#fff" }}
+    >
+      <StatusBar style={isDark ? "light" : "dark"} />
       <Tab.Navigator
         screenOptions={{
-          tabBarStyle: { backgroundColor: "#000" },
-          tabBarActiveTintColor: "#fff",
-          tabBarInactiveTintColor: "#888",
+          headerStyle: {
+            backgroundColor: isDark ? "#000" : "#fff",
+            elevation: 0,
+            shadowOpacity: 0,
+            borderBottomWidth: 0,
+          },
+          headerTintColor: isDark ? "#fff" : "#000",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+          tabBarStyle: {
+            backgroundColor: isDark ? "#111" : "#f5f5f5",
+            borderTopWidth: 0,
+            elevation: 0,
+            height: 60,
+            paddingBottom: 8,
+            paddingTop: 8,
+          },
+          tabBarActiveTintColor: isDark ? "#fff" : "#000",
+          tabBarInactiveTintColor: isDark ? "#666" : "#999",
         }}
       >
         <Tab.Screen
@@ -74,7 +101,7 @@ const App = () => {
           }}
         />
       </Tab.Navigator>
-    </>
+    </SafeAreaView>
   );
 };
 

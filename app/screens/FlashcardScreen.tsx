@@ -5,9 +5,13 @@ import {
   StyleSheet,
   TouchableOpacity,
   Platform,
+  Animated,
+  Dimensions,
 } from "react-native";
 import FlipCard from "react-native-flip-card";
 import { runes } from "../data/runes";
+import { useColorTheme } from "../hooks/useColorTheme";
+import { MaterialIcons } from "@expo/vector-icons";
 
 interface Rune {
   symbol: string;
@@ -15,49 +19,133 @@ interface Rune {
   meaning: string;
 }
 
+const { width } = Dimensions.get("window");
+const CARD_WIDTH = Math.min(width - 48, 320);
+const CARD_HEIGHT = CARD_WIDTH * 1.5;
+
 const FlashcardScreen = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [fadeAnim] = useState(new Animated.Value(1));
+  const theme = useColorTheme();
+  const isDark = theme === "dark";
+
+  const animateTransition = (callback: () => void) => {
+    Animated.sequence([
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    setTimeout(callback, 200);
+  };
 
   const nextRune = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % runes.length);
+    animateTransition(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % runes.length);
+    });
   };
 
   const previousRune = () => {
-    setCurrentIndex(
-      (prevIndex) => (prevIndex - 1 + runes.length) % runes.length,
-    );
+    animateTransition(() => {
+      setCurrentIndex(
+        (prevIndex) => (prevIndex - 1 + runes.length) % runes.length,
+      );
+    });
   };
 
   const currentRune: Rune = runes[currentIndex];
   const progress = `${currentIndex + 1} / ${runes.length}`;
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.progress}>{progress}</Text>
-      <FlipCard
-        key={currentIndex}
-        friction={6}
-        perspective={1000}
-        flipHorizontal={true}
-        flipVertical={false}
-        clickable={true}
-      >
-        {/* Front: Rune Symbol */}
-        <View style={styles.card}>
-          <Text style={styles.symbol}>{currentRune.symbol}</Text>
-        </View>
-        {/* Back: Rune Name and Meaning */}
-        <View style={styles.card}>
-          <Text style={styles.name}>{currentRune.name}</Text>
-          <Text style={styles.meaning}>{currentRune.meaning}</Text>
-        </View>
-      </FlipCard>
+    <View
+      style={[styles.container, { backgroundColor: isDark ? "#000" : "#fff" }]}
+    >
+      <View style={styles.header}>
+        <Text style={[styles.progress, { color: isDark ? "#fff" : "#000" }]}>
+          {progress}
+        </Text>
+        <Text style={[styles.hint, { color: isDark ? "#666" : "#999" }]}>
+          Tap card to flip
+        </Text>
+      </View>
+
+      <Animated.View style={{ opacity: fadeAnim, flex: 1 }}>
+        <FlipCard
+          key={currentIndex}
+          friction={8}
+          perspective={2000}
+          flipHorizontal={true}
+          flipVertical={false}
+          clickable={true}
+          style={styles.flipCard}
+        >
+          {/* Front: Rune Symbol */}
+          <View
+            style={[
+              styles.card,
+              { backgroundColor: isDark ? "#111" : "#f5f5f5" },
+            ]}
+          >
+            <Text style={[styles.symbol, { color: isDark ? "#fff" : "#000" }]}>
+              {currentRune.symbol}
+            </Text>
+          </View>
+
+          {/* Back: Rune Name and Meaning */}
+          <View
+            style={[
+              styles.card,
+              { backgroundColor: isDark ? "#111" : "#f5f5f5" },
+            ]}
+          >
+            <Text style={[styles.name, { color: isDark ? "#fff" : "#000" }]}>
+              {currentRune.name}
+            </Text>
+            <Text style={[styles.meaning, { color: isDark ? "#999" : "#666" }]}>
+              {currentRune.meaning}
+            </Text>
+          </View>
+        </FlipCard>
+      </Animated.View>
+
       <View style={styles.controls}>
-        <TouchableOpacity style={styles.button} onPress={previousRune}>
-          <Text style={styles.buttonText}>Previous</Text>
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor: isDark ? "#222" : "#eee" }]}
+          onPress={previousRune}
+        >
+          <MaterialIcons
+            name="chevron-left"
+            size={24}
+            color={isDark ? "#fff" : "#000"}
+          />
+          <Text
+            style={[styles.buttonText, { color: isDark ? "#fff" : "#000" }]}
+          >
+            Previous
+          </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={nextRune}>
-          <Text style={styles.buttonText}>Next</Text>
+
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor: isDark ? "#222" : "#eee" }]}
+          onPress={nextRune}
+        >
+          <Text
+            style={[styles.buttonText, { color: isDark ? "#fff" : "#000" }]}
+          >
+            Next
+          </Text>
+          <MaterialIcons
+            name="chevron-right"
+            size={24}
+            color={isDark ? "#fff" : "#000"}
+          />
         </TouchableOpacity>
       </View>
     </View>
@@ -67,31 +155,41 @@ const FlashcardScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "space-between",
+    paddingVertical: 24,
+  },
+  header: {
     alignItems: "center",
-    backgroundColor: "#1a1a1a",
-    paddingVertical: 20,
+    paddingHorizontal: 24,
+    marginBottom: 20,
   },
   progress: {
-    color: "#fff",
-    fontSize: 16,
-    marginBottom: 20,
+    fontSize: 18,
+    fontWeight: "600",
+    marginBottom: 8,
+  },
+  hint: {
+    fontSize: 14,
     fontWeight: "500",
   },
+  flipCard: {
+    width: CARD_WIDTH,
+    height: CARD_HEIGHT,
+    alignSelf: "center",
+  },
   card: {
-    width: 320,
-    height: 480,
+    width: "100%",
+    height: "100%",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#2d2d2d",
-    borderRadius: 16,
+    borderRadius: 20,
     padding: 24,
     ...Platform.select({
       ios: {
-        boxShadowColor: "#000",
-        boxShadowOffset: { width: 0, height: 4 },
-        boxShadowOpacity: 0.3,
-        boxShadowRadius: 6,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 8,
       },
       android: {
         elevation: 8,
@@ -100,43 +198,43 @@ const styles = StyleSheet.create({
   },
   symbol: {
     fontFamily: "ElderFuthark",
-    fontSize: 120,
-    color: "#fff",
-    textShadowColor: "rgba(255,255,255,0.3)",
+    fontSize: CARD_WIDTH * 0.4,
+    textShadowColor: "rgba(128,128,128,0.2)",
     textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 10,
+    textShadowRadius: 8,
   },
   name: {
     fontSize: 32,
-    fontWeight: "600",
-    color: "#fff",
-    marginBottom: 12,
+    fontWeight: "700",
+    textTransform: "uppercase",
+    letterSpacing: 2,
+    marginBottom: 24,
     textAlign: "center",
   },
   meaning: {
     fontSize: 18,
-    color: "#e0e0e0",
     textAlign: "center",
-    lineHeight: 24,
+    lineHeight: 28,
   },
   controls: {
     flexDirection: "row",
     justifyContent: "space-between",
-    width: 280,
-    marginTop: 32,
+    paddingHorizontal: 24,
+    marginTop: 24,
   },
   button: {
-    backgroundColor: "#3d3d3d",
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 8,
-    minWidth: 120,
+    flexDirection: "row",
     alignItems: "center",
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 12,
+    minWidth: 120,
+    justifyContent: "center",
   },
   buttonText: {
-    color: "#fff",
     fontSize: 16,
-    fontWeight: "500",
+    fontWeight: "600",
+    marginHorizontal: 4,
   },
 });
 
