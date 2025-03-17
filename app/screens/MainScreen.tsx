@@ -5,8 +5,7 @@ import { useColorTheme } from "../hooks/useColorTheme";
 
 const MainScreen = () => {
   const rune = useRuneOfTheDay();
-  const theme = useColorTheme();
-  const isDark = theme === "dark";
+  const { colors } = useColorTheme();
   const { height } = useWindowDimensions();
 
   if (!rune) {
@@ -15,10 +14,10 @@ const MainScreen = () => {
         testID="main-container"
         style={[
           styles.container,
-          { backgroundColor: isDark ? "#000" : "#fff" },
+          { backgroundColor: colors.background },
         ]}
       >
-        <Text style={[styles.loading, { color: isDark ? "#fff" : "#000" }]}>
+        <Text style={[styles.loading, { color: colors.text }]}>
           Loading...
         </Text>
       </View>
@@ -28,25 +27,28 @@ const MainScreen = () => {
   return (
     <View
       testID="main-container"
-      style={[styles.container, { backgroundColor: isDark ? "#000" : "#fff" }]}
+      style={[
+        styles.container,
+        { backgroundColor: colors.background },
+      ]}
     >
       <View style={styles.header}>
-        <Text style={[styles.title, { color: isDark ? "#fff" : "#000" }]}>
+        <Text style={[styles.title, { color: colors.text }]}>
           Rune of the Day
         </Text>
       </View>
 
       <View style={[styles.runeContainer, { height: height * 0.5 }]}>
-        <Text style={[styles.symbol, { color: isDark ? "#fff" : "#000" }]}>
+        <Text style={[styles.symbol, { color: colors.text }]}>
           {rune.symbol}
         </Text>
-        <Text style={[styles.name, { color: isDark ? "#fff" : "#000" }]}>
+        <Text style={[styles.name, { color: colors.text }]}>
           {rune.name}
         </Text>
       </View>
 
       <View style={styles.meaningContainer}>
-        <Text style={[styles.meaning, { color: isDark ? "#999" : "#666" }]}>
+        <Text style={[styles.meaning, { color: colors.icon }]}>
           {rune.meaning}
         </Text>
       </View>
@@ -59,9 +61,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    paddingTop: 20,
-    paddingBottom: 10,
     alignItems: "center",
+    paddingHorizontal: 24,
+    marginBottom: 20,
+    paddingTop: 20,
   },
   runeContainer: {
     justifyContent: "center",
@@ -70,7 +73,7 @@ const styles = StyleSheet.create({
   meaningContainer: {
     flex: 1,
     paddingHorizontal: 30,
-    paddingTop: 20,
+    paddingBottom: 40,
   },
   loading: {
     fontSize: 18,

@@ -10,15 +10,14 @@ interface Rune {
 }
 
 const RuneListScreen = () => {
-  const theme = useColorTheme();
-  const isDark = theme === "dark";
+  const { colors } = useColorTheme();
 
   const renderItem = ({ item }: { item: Rune }) => (
     <Pressable
       style={({ pressed }) => [
         styles.item,
         {
-          backgroundColor: isDark ? "#111" : "#f5f5f5",
+          backgroundColor: colors.background,
           marginHorizontal: pressed ? 12 : 16,
           transform: [{ scale: pressed ? 0.98 : 1 }],
         },
@@ -26,16 +25,16 @@ const RuneListScreen = () => {
     >
       <View style={styles.content}>
         <View style={styles.symbolContainer}>
-          <Text style={[styles.symbol, { color: isDark ? "#fff" : "#000" }]}>
+          <Text style={[styles.symbol, { color: colors.text }]}>
             {item.symbol}
           </Text>
         </View>
         <View style={styles.textContainer}>
-          <Text style={[styles.name, { color: isDark ? "#fff" : "#000" }]}>
+          <Text style={[styles.name, { color: colors.text }]}>
             {item.name}
           </Text>
           <Text
-            style={[styles.meaning, { color: isDark ? "#999" : "#666" }]}
+            style={[styles.meaning, { color: colors.icon }]}
             numberOfLines={2}
           >
             {item.meaning}
@@ -50,7 +49,7 @@ const RuneListScreen = () => {
       data={runes}
       keyExtractor={(item) => item.name}
       renderItem={renderItem}
-      style={[styles.list, { backgroundColor: isDark ? "#000" : "#fff" }]}
+      style={[styles.list, { backgroundColor: colors.background }]}
       contentContainerStyle={styles.listContent}
       showsVerticalScrollIndicator={false}
     />

@@ -10,6 +10,7 @@ export const Colors = {
   light: {
     text: "#11181C",
     background: "#fff",
+    surface: "#f5f5f5",
     tint: tintColorLight,
     icon: "#687076",
     tabIconDefault: "#687076",
@@ -18,9 +19,15 @@ export const Colors = {
   dark: {
     text: "#ECEDEE",
     background: "#151718",
+    surface: "#222222",
     tint: tintColorDark,
     icon: "#9BA1A6",
     tabIconDefault: "#9BA1A6",
     tabIconSelected: tintColorDark,
   },
 };
+
+export type ColorTheme = typeof Colors.light | typeof Colors.dark;
+export type ThemeMode = keyof typeof Colors;
+
+export default Colors;

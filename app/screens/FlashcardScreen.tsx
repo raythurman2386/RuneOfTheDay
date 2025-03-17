@@ -3,10 +3,10 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
-  Platform,
+  Pressable,
   Animated,
   Dimensions,
+  Platform,
 } from "react-native";
 import FlipCard from "react-native-flip-card";
 import { runes } from "../data/runes";
@@ -26,8 +26,7 @@ const CARD_HEIGHT = CARD_WIDTH * 1.5;
 const FlashcardScreen = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fadeAnim] = useState(new Animated.Value(1));
-  const theme = useColorTheme();
-  const isDark = theme === "dark";
+  const { colors } = useColorTheme();
 
   const animateTransition = (callback: () => void) => {
     Animated.sequence([
@@ -65,13 +64,13 @@ const FlashcardScreen = () => {
 
   return (
     <View
-      style={[styles.container, { backgroundColor: isDark ? "#000" : "#fff" }]}
+      style={[styles.container, { backgroundColor: colors.background }]}
     >
       <View style={styles.header}>
-        <Text style={[styles.progress, { color: isDark ? "#fff" : "#000" }]}>
+        <Text style={[styles.progress, { color: colors.text }]}>
           {progress}
         </Text>
-        <Text style={[styles.hint, { color: isDark ? "#666" : "#999" }]}>
+        <Text style={[styles.hint, { color: colors.icon }]}>
           Tap card to flip
         </Text>
       </View>
@@ -90,10 +89,10 @@ const FlashcardScreen = () => {
           <View
             style={[
               styles.card,
-              { backgroundColor: isDark ? "#111" : "#f5f5f5" },
+              { backgroundColor: colors.surface, borderColor: colors.icon },
             ]}
           >
-            <Text style={[styles.symbol, { color: isDark ? "#fff" : "#000" }]}>
+            <Text style={[styles.symbol, { color: colors.text }]}>
               {currentRune.symbol}
             </Text>
           </View>
@@ -102,13 +101,13 @@ const FlashcardScreen = () => {
           <View
             style={[
               styles.card,
-              { backgroundColor: isDark ? "#111" : "#f5f5f5" },
+              { backgroundColor: colors.surface, borderColor: colors.icon },
             ]}
           >
-            <Text style={[styles.name, { color: isDark ? "#fff" : "#000" }]}>
+            <Text style={[styles.name, { color: colors.text }]}>
               {currentRune.name}
             </Text>
-            <Text style={[styles.meaning, { color: isDark ? "#999" : "#666" }]}>
+            <Text style={[styles.meaning, { color: colors.icon }]}>
               {currentRune.meaning}
             </Text>
           </View>
@@ -116,37 +115,39 @@ const FlashcardScreen = () => {
       </Animated.View>
 
       <View style={styles.controls}>
-        <TouchableOpacity
-          style={[styles.button, { backgroundColor: isDark ? "#222" : "#eee" }]}
+        <Pressable
+          style={[
+            styles.button,
+            { backgroundColor: colors.surface, borderColor: colors.icon },
+          ]}
           onPress={previousRune}
         >
           <MaterialIcons
             name="chevron-left"
             size={24}
-            color={isDark ? "#fff" : "#000"}
+            color={colors.text}
           />
-          <Text
-            style={[styles.buttonText, { color: isDark ? "#fff" : "#000" }]}
-          >
+          <Text style={[styles.buttonText, { color: colors.text }]}>
             Previous
           </Text>
-        </TouchableOpacity>
+        </Pressable>
 
-        <TouchableOpacity
-          style={[styles.button, { backgroundColor: isDark ? "#222" : "#eee" }]}
+        <Pressable
+          style={[
+            styles.button,
+            { backgroundColor: colors.surface, borderColor: colors.icon },
+          ]}
           onPress={nextRune}
         >
-          <Text
-            style={[styles.buttonText, { color: isDark ? "#fff" : "#000" }]}
-          >
+          <Text style={[styles.buttonText, { color: colors.text }]}>
             Next
           </Text>
           <MaterialIcons
             name="chevron-right"
             size={24}
-            color={isDark ? "#fff" : "#000"}
+            color={colors.text}
           />
-        </TouchableOpacity>
+        </Pressable>
       </View>
     </View>
   );
@@ -184,6 +185,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 20,
     padding: 24,
+    borderWidth: 1,
     ...Platform.select({
       ios: {
         shadowColor: "#000",
@@ -230,6 +232,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     minWidth: 120,
     justifyContent: "center",
+    borderWidth: 1,
   },
   buttonText: {
     fontSize: 16,

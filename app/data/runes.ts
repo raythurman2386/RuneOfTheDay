@@ -4,7 +4,7 @@ export interface Rune {
   meaning: string;
 }
 
-export const runes: Rune[] = [
+const runes: Rune[] = [
   {
     symbol: "ᚠ",
     name: "Fehu",
@@ -127,3 +127,6 @@ export const runes: Rune[] = [
     meaning: "Heritage, home, ancestry, property, legacy",
   },
 ];
+
+export { runes };
+export default runes;

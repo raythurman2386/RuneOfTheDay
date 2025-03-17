@@ -13,8 +13,7 @@ const Tab = createBottomTabNavigator();
 
 const App = () => {
   const [fontLoaded, setFontLoaded] = useState(false);
-  const theme = useColorTheme();
-  const isDark = theme === "dark";
+  const { theme, colors } = useColorTheme();
 
   useEffect(() => {
     const loadFont = async () => {
@@ -33,41 +32,41 @@ const App = () => {
           flex: 1,
           justifyContent: "center",
           alignItems: "center",
-          backgroundColor: isDark ? "#000" : "#fff",
+          backgroundColor: colors.background,
         }}
       >
-        <ActivityIndicator size="large" color={isDark ? "#fff" : "#000"} />
+        <ActivityIndicator size="large" color={colors.text} />
       </View>
     );
   }
 
   return (
     <SafeAreaView
-      style={{ flex: 1, backgroundColor: isDark ? "#000" : "#fff" }}
+      style={{ flex: 1, backgroundColor: colors.background }}
     >
-      <StatusBar style={isDark ? "light" : "dark"} />
+      <StatusBar style={theme === 'dark' ? "light" : "dark"}/>
       <Tab.Navigator
         screenOptions={{
           headerStyle: {
-            backgroundColor: isDark ? "#000" : "#fff",
+            backgroundColor: colors.background,
             elevation: 0,
             shadowOpacity: 0,
             borderBottomWidth: 0,
           },
-          headerTintColor: isDark ? "#fff" : "#000",
+          headerTintColor: colors.text,
           headerTitleStyle: {
             fontWeight: "bold",
           },
           tabBarStyle: {
-            backgroundColor: isDark ? "#111" : "#f5f5f5",
+            backgroundColor: colors.surface,
             borderTopWidth: 0,
             elevation: 0,
             height: 60,
             paddingBottom: 8,
             paddingTop: 8,
           },
-          tabBarActiveTintColor: isDark ? "#fff" : "#000",
-          tabBarInactiveTintColor: isDark ? "#666" : "#999",
+          tabBarActiveTintColor: colors.text,
+          tabBarInactiveTintColor: colors.icon,
         }}
       >
         <Tab.Screen

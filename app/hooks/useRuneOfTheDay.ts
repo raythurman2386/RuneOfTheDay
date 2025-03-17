@@ -9,7 +9,7 @@ interface StoredData {
   index: number;
 }
 
-export const useRuneOfTheDay = (): Rune | null => {
+const useRuneOfTheDay = (): Rune | null => {
   const [rune, setRune] = useState<Rune | null>(null);
 
   useEffect(() => {
@@ -53,3 +53,6 @@ export const useRuneOfTheDay = (): Rune | null => {
 
   return rune;
 };
+
+export { useRuneOfTheDay };
+export default useRuneOfTheDay;
