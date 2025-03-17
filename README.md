@@ -1,50 +1,76 @@
-# Welcome to your Expo app 👋
+# Rune of the Day
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A React Native app built with Expo that delivers a daily rune from the Elder Futhark set, complete with its symbol, name, and meaning. The app also includes features like a rune list and interactive flashcards to help users learn about runes.
 
-## Get started
+## Features
 
-1. Install dependencies
+- **Daily Rune**: A randomly selected rune displayed each day with its symbol, name, and meaning.
+- **Rune List**: A comprehensive view of all 24 Elder Futhark runes.
+- **Flashcards**: Interactive flashcards with flip animations for learning rune meanings.
+- **Theming**: Light and dark mode support based on the user’s system preferences.
+- **Navigation**: Bottom tab navigation for seamless access to app sections.
 
+## Getting Started
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) (v14 or later)
+- [Expo CLI](https://docs.expo.dev/get-started/installation/) (`npm install -g expo-cli`)
+- [Yarn](https://yarnpkg.com/) or [npm](https://www.npmjs.com/)
+
+### Installation
+
+1. **Clone the repository**:
    ```bash
-   npm install
+   git clone https://github.com/yourusername/rune-of-the-day.git
+   cd rune-of-the-day
    ```
 
-2. Start the app
-
+2. **Install dependencies**:
    ```bash
-    npx expo start
+   yarn install
    ```
 
-In the output, you'll find options to open the app in a
+3. **Start the development server**:
+   ```bash
+   expo start
+   ```
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+4. **Run the app**:
+   - iOS: Press `i` in the terminal to open in an iOS simulator.
+   - Android: Press `a` to open in an Android emulator.
+   - Web: Press `w` to run in a browser.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+### Project Structure
 
-## Get a fresh project
+- `assets/`: Static assets like custom fonts.
+- `app/`: Core source code.
+  - `components/`: Reusable UI components.
+  - `data/`: Rune data (symbols, names, meanings).
+  - `hooks/`: Custom React hooks.
+  - `screens/`: Screen components for each tab.
+- `index.tsx`: Main app entry point.
 
-When you're ready, run:
+### Custom Font
 
-```bash
-npm run reset-project
-```
+The app uses a custom font to render rune symbols. Ensure the font file is in `assets/fonts/` and properly loaded in `App.tsx`.
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### Navigation
 
-## Learn more
+Built with `@react-navigation/native` and a bottom tab navigator for switching between the Daily Rune, Rune List, and Flashcard screens.
 
-To learn more about developing your project with Expo, look at the following resources:
+### Theming
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+The app adapts to light and dark modes using a custom `useTheme` hook tied to the system’s color scheme.
 
-## Join the community
+## Contributing
 
-Join our community of developers creating universal apps.
+1. Fork the repository.
+2. Create a feature branch: `git checkout -b feature/your-feature`.
+3. Commit your changes: `git commit -m 'Add your feature'`.
+4. Push to the branch: `git push origin feature/your-feature`.
+5. Submit a pull request.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## License
+
+Licensed under the MIT License.
