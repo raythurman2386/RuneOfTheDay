@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { View, ActivityIndicator, SafeAreaView } from "react-native";
 import * as Font from "expo-font";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
 import { StatusBar } from "expo-status-bar";
-import MainScreen from "./screens/MainScreen";
-import RuneListScreen from "./screens/RuneListScreen";
-import FlashcardScreen from "./screens/FlashcardScreen";
-import RuneIcon from "./components/RuneIcon";
-import CustomTabBar from "./components/CustomTabBar";
+import SettingsScreen from "./screens/SettingsScreen";
+import TabNavigator from "./components/TabNavigator";
 import { useColorTheme } from "./hooks/useColorTheme";
 
-const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
 const App = () => {
   const [fontLoaded, setFontLoaded] = useState(false);
@@ -44,59 +41,22 @@ const App = () => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <StatusBar style={theme === "dark" ? "light" : "dark"} />
-      <Tab.Navigator
-        tabBar={(props) => <CustomTabBar {...props} />}
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: colors.background,
-            elevation: 0,
-            shadowOpacity: 0,
-            borderBottomWidth: 0,
-          },
-          headerTintColor: colors.text,
-          headerTitleStyle: {
-            fontWeight: "bold",
-          },
-          tabBarStyle: {
-            backgroundColor: colors.surface,
-            borderTopWidth: 0,
-            elevation: 0,
-          },
-          tabBarActiveTintColor: colors.text,
-          tabBarInactiveTintColor: colors.icon,
-        }}
-      >
-        <Tab.Screen
-          name="Today"
-          component={MainScreen}
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Main"
+          component={TabNavigator}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Settings"
+          component={SettingsScreen}
           options={{
-            tabBarIcon: ({ color, size }) => (
-              <RuneIcon symbol="ᚠ" color={color} size={size} />
-            ), // Fehu
-            tabBarLabel: "Today",
+            headerTitle: "Settings",
+            headerStyle: { backgroundColor: colors.background },
+            headerTintColor: colors.text,
           }}
         />
-        <Tab.Screen
-          name="Runes"
-          component={RuneListScreen}
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <RuneIcon symbol="ᚱ" color={color} size={size} />
-            ), // Raidho
-            tabBarLabel: "Runes",
-          }}
-        />
-        <Tab.Screen
-          name="Learn"
-          component={FlashcardScreen}
-          options={{
-            tabBarIcon: ({ color, size }) => (
-              <RuneIcon symbol="ᚨ" color={color} size={size} />
-            ), // Ansuz
-            tabBarLabel: "Learn",
-          }}
-        />
-      </Tab.Navigator>
+      </Stack.Navigator>
     </SafeAreaView>
   );
 };

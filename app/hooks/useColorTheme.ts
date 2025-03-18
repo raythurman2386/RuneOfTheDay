@@ -1,23 +1,26 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Appearance, ColorSchemeName } from "react-native";
 import { Colors } from "../constants/Colors";
+import { useSettings } from "../contexts/SettingsContext";
 
 export type ColorTheme = typeof Colors.light | typeof Colors.dark;
 
 const useColorTheme = () => {
-  const [theme, setTheme] = useState<ColorSchemeName>(
+  const { theme } = useSettings();
+  const [systemTheme, setSystemTheme] = useState<ColorSchemeName>(
     Appearance.getColorScheme(),
   );
 
   useEffect(() => {
     const listener = Appearance.addChangeListener(({ colorScheme }) => {
-      setTheme(colorScheme);
+      setSystemTheme(colorScheme);
     });
     return () => listener.remove();
   }, []);
 
-  const colors = theme === "dark" ? Colors.dark : Colors.light;
-  return { theme, colors };
+  const effectiveTheme = theme === "system" ? systemTheme : theme;
+  const colors = effectiveTheme === "dark" ? Colors.dark : Colors.light;
+  return { theme: effectiveTheme as ColorSchemeName, colors };
 };
 
 export { useColorTheme };

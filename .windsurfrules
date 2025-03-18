@@ -1,0 +1,31 @@
+This is a react native app built with Expo and typescript.
+
+If you need more information ask, do not blindly make changes.
+
+Always check the ROADMAP.md file for the current development progress in the docs folder.
+
+Always check the README.md file for context on the project.
+
+Never modify files that are not directly related to the current task.
+
+Never remove files that are not directly related to the current task.
+
+Never add files that are not directly related to the current task.
+
+Never delete files that are not directly related to the current task.
+
+If a similar function or method already exists, modify it instead of creating a new one.
+
+If a similar class or object already exists, modify it instead of creating a new one.
+
+If a similar variable or constant already exists, modify it instead of creating a new one.
+
+If a similar file already exists, modify it instead of creating a new one.
+
+Only add comments when necessary.
+
+Never add, remove, or modify files that are not directly related to the current task.
+
+Tests should always be written for new functionality.
+
+Only work on one task at a time, if the user did not ask for the changes, do not make additional changes.
