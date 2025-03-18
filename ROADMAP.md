@@ -41,9 +41,9 @@ This roadmap tracks the development progress of the "Rune of the Day" app, detai
 
 ## Styling
 
-- [ ] Polish the UI for a cohesive design:
-  - [ ] Standardize typography, colors, and spacing across screens.
-  - [ ] Add smooth animations (e.g., flashcard flips, screen transitions).
+- [x] Polish the UI for a cohesive design:
+  - [x] Standardize typography, colors, and spacing across screens.
+  - [x] Add smooth animations (e.g., flashcard flips, screen transitions).
 - [ ] Ensure responsiveness across screen sizes and orientations.
 - [ ] Enhance tab bar with custom rune-inspired icons.
 
@@ -59,14 +59,14 @@ This roadmap tracks the development progress of the "Rune of the Day" app, detai
 ## Debugging
 
 - [x] Fix navigation container nesting issue causing render errors.
-- [ ] Troubleshoot font loading/rendering glitches on some devices.
+- [x] Troubleshoot font loading/rendering glitches on some devices.
 - [ ] Confirm `AsyncStorage` reliability across platforms.
-- [ ] Optimize performance for faster navigation and animations.
+- [x] Optimize performance for faster navigation and animations.
 
 ## Future Enhancements
 
-- [ ] Add a settings screen (e.g., manual theme toggle).
-- [ ] Implement a rune history log for past daily runes.
+- [x] Add a settings screen (e.g., manual theme toggle).
+- [ ] Implement a rune details page that is linked to from the runes list.
 - [ ] Create a quiz mode to test rune knowledge.
 - [ ] Support multiple languages via localization.
 - [ ] Explore backend integration for user accounts and rune sharing.
