@@ -1,11 +1,13 @@
 import * as Haptics from "expo-haptics";
 import { Platform } from "react-native";
+import { useSettings } from "../contexts/SettingsContext";
 
 const useHaptics = () => {
+  const { haptics: hapticsEnabled } = useSettings();
   const isSupported = Platform.OS !== "web";
 
   const safeHaptics = async (callback: () => Promise<void>) => {
-    if (!isSupported) return;
+    if (!isSupported || !hapticsEnabled) return;
     try {
       await callback();
     } catch (error) {
