@@ -10,10 +10,21 @@ import {
 import { runes, Rune } from "../data/runes";
 import { useColorTheme } from "../hooks/useColorTheme";
 import useHaptics from "../hooks/useHaptics";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RunesStackParamList } from "../components/RunesStackNavigator";
+
+type RuneListNavigationProp = StackNavigationProp<RunesStackParamList, "RuneList">;
 
 const RuneListScreen = () => {
   const { colors } = useColorTheme();
   const { lightFeedback } = useHaptics();
+  const navigation = useNavigation<RuneListNavigationProp>();
+
+  const handleRunePress = (rune: Rune) => {
+    lightFeedback();
+    navigation.navigate("RuneDetails", { rune });
+  };
 
   const renderItem = ({ item }: { item: Rune }) => (
     <Pressable
@@ -21,7 +32,9 @@ const RuneListScreen = () => {
         styles.runeItem,
         { backgroundColor: colors.surface, borderColor: colors.icon },
       ]}
-      onPress={() => lightFeedback()}
+      onPress={() => handleRunePress(item)}
+      accessibilityLabel={`View details for ${item.name} rune`}
+      accessibilityRole="button"
     >
       <View style={styles.runeContent}>
         <Text style={[styles.symbol, { color: colors.text }]}>

@@ -69,9 +69,20 @@ This roadmap tracks the development progress of the "Rune of the Day" app, detai
 - [x] Add a settings screen (e.g., manual theme toggle).
 - [x] Enhance runes and rune details and properly expand on rune knowledge
 - [ ] Implement a rune details page that is linked to from the runes list.
+  - [x] Create basic RuneDetailsScreen component
+  - [x] Set up navigation from RuneListScreen
+  - [x] Add animations for smooth transitions between screens
+  - [ ] Add sharing functionality for rune details
+  - [ ] Include historical images and additional visual elements
 - [ ] Create a quiz mode to test rune knowledge.
+  - [ ] Multiple choice questions about rune meanings
+  - [ ] Matching runes to their names and meanings
+  - [ ] Track user progress and show mastery level
 - [ ] Support multiple languages via localization.
 - [ ] Explore backend integration for user accounts and rune sharing.
+  - [ ] User profiles with favorite runes
+  - [ ] Daily rune history
+  - [ ] Community interpretations
 
 ## Documentation
 

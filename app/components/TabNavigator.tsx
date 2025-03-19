@@ -2,12 +2,12 @@ import React from "react";
 import { Pressable } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MainScreen from "../screens/MainScreen";
-import RuneListScreen from "../screens/RuneListScreen";
 import FlashcardScreen from "../screens/FlashcardScreen";
 import RuneIcon from "./RuneIcon";
 import SettingsIcon from "./SettingsIcon";
 import { useColorTheme } from "../hooks/useColorTheme";
 import useHaptics from "../hooks/useHaptics";
+import RunesStackNavigator from "./RunesStackNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -65,9 +65,9 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name="Runes"
-        component={RuneListScreen}
+        component={RunesStackNavigator}
         options={{
-          headerRight: () => <SettingsIcon color={colors.text} />,
+          headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <RuneIcon symbol="ᚱ" color={color} size={size} />
           ),
