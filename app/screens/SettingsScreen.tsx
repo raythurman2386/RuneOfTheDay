@@ -1,5 +1,12 @@
 import React from "react";
-import { View, Text, Switch, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  Switch,
+  StyleSheet,
+  ScrollView,
+  Pressable,
+} from "react-native";
 import { useSettings } from "../contexts/SettingsContext";
 import { useColorTheme } from "../hooks/useColorTheme";
 import { useNavigation } from "@react-navigation/native";
@@ -16,55 +23,78 @@ const SettingsScreen = () => {
     >
       <View style={[styles.section, { backgroundColor: colors.surface }]}>
         <Text style={[styles.sectionTitle, { color: colors.text }]}>Theme</Text>
-        <View
-          style={[
-            styles.option,
-            styles.optionBorder,
-            { borderBottomColor: colors.background },
-          ]}
-        >
-          <Text style={[styles.optionText, { color: colors.text }]}>
-            System
-          </Text>
-          <Switch
-            value={theme === "system"}
-            onValueChange={() => setTheme("system")}
-            trackColor={{
-              false: colors.tabIconDefault,
-              true: colors.tabIconSelected,
-            }}
-            thumbColor={colors.background}
-          />
-        </View>
-        <View
-          style={[
-            styles.option,
-            styles.optionBorder,
-            { borderBottomColor: colors.background },
-          ]}
-        >
-          <Text style={[styles.optionText, { color: colors.text }]}>Light</Text>
-          <Switch
-            value={theme === "light"}
-            onValueChange={() => setTheme("light")}
-            trackColor={{
-              false: colors.tabIconDefault,
-              true: colors.tabIconSelected,
-            }}
-            thumbColor={colors.background}
-          />
-        </View>
-        <View style={styles.option}>
-          <Text style={[styles.optionText, { color: colors.text }]}>Dark</Text>
-          <Switch
-            value={theme === "dark"}
-            onValueChange={() => setTheme("dark")}
-            trackColor={{
-              false: colors.tabIconDefault,
-              true: colors.tabIconSelected,
-            }}
-            thumbColor={colors.background}
-          />
+        <View style={styles.themeButtonContainer}>
+          <Pressable
+            style={[
+              styles.themeButton,
+              theme === "system" && [
+                styles.themeButtonActive,
+                { backgroundColor: colors.tabIconSelected },
+              ],
+              { borderColor: colors.text },
+            ]}
+            onPress={() => setTheme("system")}
+            accessibilityLabel="System theme"
+            accessibilityRole="button"
+            accessibilityState={{ selected: theme === "system" }}
+          >
+            <Text
+              style={[
+                styles.themeButtonText,
+                { color: theme === "system" ? colors.background : colors.text },
+              ]}
+            >
+              System
+            </Text>
+          </Pressable>
+
+          <Pressable
+            style={[
+              styles.themeButton,
+              theme === "light" && [
+                styles.themeButtonActive,
+                { backgroundColor: colors.tabIconSelected },
+              ],
+              { borderColor: colors.text },
+            ]}
+            onPress={() => setTheme("light")}
+            accessibilityLabel="Light theme"
+            accessibilityRole="button"
+            accessibilityState={{ selected: theme === "light" }}
+          >
+            <Text
+              style={[
+                styles.themeButtonText,
+                { color: theme === "light" ? colors.background : colors.text },
+              ]}
+            >
+              Light
+            </Text>
+          </Pressable>
+
+          <Pressable
+            style={[
+              styles.themeButton,
+              theme === "dark" && [
+                styles.themeButtonActive,
+                { backgroundColor: colors.tabIconSelected },
+              ],
+              { borderColor: colors.text },
+            ]}
+            onPress={() => setTheme("dark")}
+            accessibilityLabel="Dark theme"
+            accessibilityRole="button"
+            accessibilityState={{ selected: theme === "dark" }}
+          >
+            <Text
+              style={[
+                styles.themeButtonText,
+                { color: theme === "dark" ? colors.background : colors.text },
+              ]}
+            >
+              Dark
+            </Text>
+          </Pressable>
         </View>
       </View>
 
@@ -127,6 +157,28 @@ const styles = StyleSheet.create({
   },
   optionText: {
     fontSize: 16,
+    fontWeight: "500",
+  },
+  themeButtonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 8,
+  },
+  themeButton: {
+    flex: 1,
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+    marginHorizontal: 4,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  themeButtonActive: {
+    // The backgroundColor is now applied directly in the component
+  },
+  themeButtonText: {
+    fontSize: 14,
     fontWeight: "500",
   },
 });

@@ -9,17 +9,10 @@ import {
   Platform,
 } from "react-native";
 import FlipCard from "react-native-flip-card";
-import { runes } from "../data/runes";
+import { runes, Rune } from "../data/runes";
 import { useColorTheme } from "../hooks/useColorTheme";
 import useHaptics from "../hooks/useHaptics";
 import { MaterialIcons } from "@expo/vector-icons";
-
-interface Rune {
-  symbol: string;
-  name: string;
-  meaning: string;
-  deity: string;
-}
 
 const { width } = Dimensions.get("window");
 const CARD_WIDTH = Math.min(width - 48, 320);
@@ -101,6 +94,9 @@ const FlashcardScreen = () => {
             <Text style={[styles.name, { color: colors.text }]}>
               {currentRune.name}
             </Text>
+            <Text style={[styles.pronunciation, { color: colors.icon }]}>
+              {currentRune.pronunciation}
+            </Text>
           </View>
 
           {/* Back: Rune Name and Meaning */}
@@ -110,14 +106,45 @@ const FlashcardScreen = () => {
               { backgroundColor: colors.surface, borderColor: colors.icon },
             ]}
           >
-            <Text style={[styles.meaning, { color: colors.icon }]}>
-              {currentRune.meaning}
+            <Text style={[styles.backTitle, { color: colors.text }]}>
+              {currentRune.name}
             </Text>
-            {currentRune.deity !== "None specified" && (
-              <Text style={[styles.deity, { color: colors.icon }]}>
-                Associated Deity: {currentRune.deity}
-              </Text>
-            )}
+
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>
+              Meaning
+            </Text>
+            <Text style={[styles.meaning, { color: colors.icon }]}>
+              {currentRune.meaning.primaryThemes}
+            </Text>
+
+            {currentRune.associations.godsGoddesses &&
+              currentRune.associations.godsGoddesses.length > 0 && (
+                <>
+                  <Text
+                    style={[
+                      styles.sectionTitle,
+                      { color: colors.text, marginTop: 12 },
+                    ]}
+                  >
+                    Associated Deities
+                  </Text>
+                  <Text style={[styles.deity, { color: colors.icon }]}>
+                    {currentRune.associations.godsGoddesses.join(", ")}
+                  </Text>
+                </>
+              )}
+
+            <Text
+              style={[
+                styles.sectionTitle,
+                { color: colors.text, marginTop: 12 },
+              ]}
+            >
+              Translation
+            </Text>
+            <Text style={[styles.translation, { color: colors.icon }]}>
+              {currentRune.translation}
+            </Text>
           </View>
         </FlipCard>
       </Animated.View>
@@ -199,29 +226,49 @@ const styles = StyleSheet.create({
   symbol: {
     fontFamily: "ElderFuthark",
     fontSize: CARD_WIDTH * 0.4,
-    textShadowColor: "rgba(128,128,128,0.2)",
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 8,
+    marginBottom: 16,
   },
   name: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: "700",
+    textAlign: "center",
     textTransform: "uppercase",
-    letterSpacing: 2,
-    marginTop: 24,
+    letterSpacing: 1,
+    marginBottom: 8,
+  },
+  pronunciation: {
+    fontSize: 18,
+    fontStyle: "italic",
     textAlign: "center",
   },
-  meaning: {
-    fontSize: 18,
+  backTitle: {
+    fontSize: 24,
+    fontWeight: "700",
     textAlign: "center",
-    lineHeight: 28,
-    marginBottom: 20,
+    textTransform: "uppercase",
+    letterSpacing: 1,
+    marginBottom: 16,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    textAlign: "center",
+    marginBottom: 8,
+    width: "100%",
+  },
+  meaning: {
+    fontSize: 16,
+    lineHeight: 22,
+    textAlign: "center",
   },
   deity: {
     fontSize: 16,
+    textAlign: "center",
+  },
+  translation: {
+    fontSize: 16,
     fontStyle: "italic",
     textAlign: "center",
-    marginTop: 10,
   },
   controls: {
     flexDirection: "row",
@@ -232,17 +279,16 @@ const styles = StyleSheet.create({
   button: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 12,
-    minWidth: 120,
     justifyContent: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 12,
     borderWidth: 1,
+    minWidth: 120,
   },
   buttonText: {
     fontSize: 16,
     fontWeight: "600",
-    marginHorizontal: 4,
   },
 });
 

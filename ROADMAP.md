@@ -22,6 +22,7 @@ This roadmap tracks the development progress of the "Rune of the Day" app, detai
   - [x] Main screen: Below rune meaning
   - [x] Rune list: As subtitle
   - [x] Flashcards: On back of card
+- [ ] Properly refactor to use Expo Router
 
 ## App Store Preparation
 
@@ -66,6 +67,7 @@ This roadmap tracks the development progress of the "Rune of the Day" app, detai
 ## Future Enhancements
 
 - [x] Add a settings screen (e.g., manual theme toggle).
+- [x] Enhance runes and rune details and properly expand on rune knowledge
 - [ ] Implement a rune details page that is linked to from the runes list.
 - [ ] Create a quiz mode to test rune knowledge.
 - [ ] Support multiple languages via localization.

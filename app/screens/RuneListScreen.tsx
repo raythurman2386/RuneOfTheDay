@@ -7,16 +7,9 @@ import {
   Pressable,
   Platform,
 } from "react-native";
-import { runes } from "../data/runes";
+import { runes, Rune } from "../data/runes";
 import { useColorTheme } from "../hooks/useColorTheme";
 import useHaptics from "../hooks/useHaptics";
-
-interface Rune {
-  symbol: string;
-  name: string;
-  meaning: string;
-  deity: string;
-}
 
 const RuneListScreen = () => {
   const { colors } = useColorTheme();
@@ -36,14 +29,21 @@ const RuneListScreen = () => {
         </Text>
         <View style={styles.textContainer}>
           <Text style={[styles.name, { color: colors.text }]}>{item.name}</Text>
-          <Text style={[styles.meaning, { color: colors.icon }]}>
-            {item.meaning}
+          <Text style={[styles.pronunciation, { color: colors.icon }]}>
+            {item.pronunciation}
           </Text>
-          {item.deity !== "None specified" && (
-            <Text style={[styles.deity, { color: colors.icon }]}>
-              Associated Deity: {item.deity}
-            </Text>
-          )}
+          <Text
+            style={[styles.meaning, { color: colors.icon }]}
+            numberOfLines={2}
+          >
+            {item.meaning.primaryThemes}
+          </Text>
+          {item.associations.godsGoddesses &&
+            item.associations.godsGoddesses.length > 0 && (
+              <Text style={[styles.deity, { color: colors.icon }]}>
+                Deities: {item.associations.godsGoddesses.join(", ")}
+              </Text>
+            )}
         </View>
       </View>
     </Pressable>
@@ -100,18 +100,23 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 20,
     fontWeight: "600",
-    marginBottom: 4,
+    marginBottom: 2,
     textTransform: "uppercase",
     letterSpacing: 1,
+  },
+  pronunciation: {
+    fontSize: 14,
+    fontStyle: "italic",
+    marginBottom: 4,
   },
   meaning: {
     fontSize: 14,
     lineHeight: 20,
+    marginBottom: 4,
   },
   deity: {
     fontSize: 14,
     fontStyle: "italic",
-    marginTop: 8,
   },
 });
 

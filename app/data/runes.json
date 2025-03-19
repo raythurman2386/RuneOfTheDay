@@ -1,0 +1,854 @@
+[
+  {
+    "symbol": "ᚠ",
+    "name": "Fehu",
+    "pronunciation": "fey-who",
+    "letterSound": "F",
+    "translation": "cattle, wealth, money",
+    "meaning": {
+      "primaryThemes": "Wealth (especially moveable wealth like cattle), prosperity, abundance, reward, good health, beginnings. It emphasizes sharing fortune to maintain positive relationships and warns against greed.",
+      "additionalMeanings": "Symbolizes new beginnings and completion (cyclical nature), and in some modern systems, romantic love.",
+      "reversed": "Loss of wealth, property, or self-esteem; need to regroup, budget, or reevaluate priorities."
+    },
+    "historicalContext": "For ancient Germanic peoples, cattle were a form of wealth critical for survival and trade. Used in inscriptions from the first century C.E. for magical and mundane purposes, later replaced by the Latin alphabet as Christianity spread.",
+    "associations": {
+      "godsGoddesses": ["Freyr (Frey)", "Freya"]
+    },
+    "otherDetails": {
+      "keywords": [
+        "wealth",
+        "prosperity",
+        "abundance",
+        "reward",
+        "good health",
+        "beginnings"
+      ],
+      "magicalUses": [
+        "Increase wealth",
+        "Strengthen psychic ability",
+        "Attract and improve social relationships",
+        "\"Sending\" magical workings into the invisible world to manifest"
+      ],
+      "astrologicalAssociations": ["Taurus", "Aries", "Venus", "the Moon"],
+      "elements": ["Fire", "Earth"],
+      "associatedColors": ["Brown", "gold", "light red"],
+      "miscCorrespondences": ["Moss agate", "amber", "nettle"]
+    }
+  },
+  {
+    "symbol": "ᚢ",
+    "name": "Uruz",
+    "pronunciation": "oo-rooze",
+    "letterSound": "U (as in \"brute\")",
+    "translation": "aurochs (wild European ox), brute strength",
+    "meaning": {
+      "primaryThemes": "Raw strength (physical, emotional, spiritual), power, energy, endurance, creative force. Warns against untamed energy and controlling others.",
+      "additionalMeanings": "Health, sudden changes with unpredictable outcomes, creative risk.",
+      "reversed": "Missed opportunities, lack of willpower or motivation, stagnation due to fear."
+    },
+    "historicalContext": "Represents the wild aurochs, admired for its strength but feared for its untamability, used in early Germanic magical practices.",
+    "associations": {
+      "godsGoddesses": ["Thor", "Urd", "Odin"]
+    },
+    "otherDetails": {
+      "keywords": [
+        "strength",
+        "health",
+        "power",
+        "energy",
+        "endurance",
+        "creative force"
+      ],
+      "magicalUses": [
+        "Bring new circumstances",
+        "Strengthen personal will",
+        "Harness sudden change",
+        "Healing",
+        "Deeper self-understanding"
+      ],
+      "astrologicalAssociations": ["Taurus", "Mars"],
+      "elements": ["Water", "Earth"],
+      "associatedColors": ["Dark green"],
+      "miscCorrespondences": ["Tiger eye", "Iceland moss"]
+    }
+  },
+  {
+    "symbol": "ᚦ",
+    "name": "Thurisaz",
+    "pronunciation": "thoo-ree-sahz",
+    "letterSound": "TH (as in \"thorn\")",
+    "translation": "thorn, thorn bush, giant, the god Thor",
+    "meaning": {
+      "primaryThemes": "Protection, resistance to danger, warning, contemplation, decisions. Advises defensive stance and mindfulness of motives.",
+      "additionalMeanings": "Important decisions requiring careful consideration, luck (positive or negative), chaos necessary for transformation.",
+      "reversed": "Danger passing, vulnerability, refusal to heed advice."
+    },
+    "historicalContext": "Linked to Thor and Loki, used in protective magical inscriptions and warnings in ancient Germanic culture.",
+    "associations": {
+      "godsGoddesses": ["Thor", "Loki"]
+    },
+    "otherDetails": {
+      "keywords": [
+        "protection",
+        "warning",
+        "contemplation",
+        "decisions",
+        "luck"
+      ],
+      "magicalUses": [
+        "Defensive magic",
+        "Protection",
+        "Help with decisions",
+        "Good luck"
+      ],
+      "astrologicalAssociations": ["Mars", "Jupiter"],
+      "elements": ["Fire"],
+      "associatedColors": ["White", "red"],
+      "miscCorrespondences": ["Sapphire", "hematite", "blackthorn branch"]
+    }
+  },
+  {
+    "symbol": "ᚨ",
+    "name": "Ansuz",
+    "pronunciation": "ahn-sooze",
+    "letterSound": "A (as in \"father\")",
+    "translation": "a god, ancestral god (sometimes interpreted as Odin)",
+    "meaning": {
+      "primaryThemes": "Communication (verbal, written, sung), wisdom, divine power, messages. Associated with knowledge and spiritual growth.",
+      "additionalMeanings": "Chance encounters, advice from older/wiser individuals, divine order via the ash tree (Yggdrasil).",
+      "reversed": "Trickery, deceit, struggle to communicate clearly, disconnection from divine."
+    },
+    "historicalContext": "Sacred to Odin, used for magical communication and wisdom in Norse and Germanic traditions.",
+    "associations": {
+      "godsGoddesses": ["Odin", "Loki", "Eostre"]
+    },
+    "otherDetails": {
+      "keywords": ["communication", "wisdom", "divine power", "a message"],
+      "magicalUses": [
+        "Wisdom",
+        "Discernment",
+        "Enhance magical workings",
+        "Success in dialogue/public speaking",
+        "Inspiration",
+        "Divine communication"
+      ],
+      "astrologicalAssociations": ["Venus", "Mercury", "Libra"],
+      "elements": ["Air"],
+      "associatedColors": ["Purple", "dark blue", "red"],
+      "miscCorrespondences": ["Emerald", "lapis lazuli", "ash"]
+    }
+  },
+  {
+    "symbol": "ᚱ",
+    "name": "Raidho",
+    "pronunciation": "rye-though",
+    "letterSound": "R",
+    "translation": "wagon, riding, a vehicle",
+    "meaning": {
+      "primaryThemes": "Travel (physical or spiritual), movement, reunion, changes. Focus on the journey, not just the destination.",
+      "additionalMeanings": "Reunions, negotiations, alignment with life’s cycles (Wheel of the Year).",
+      "reversed": "Travel problems, stagnation, avoidance of internal transformation."
+    },
+    "historicalContext": "Used for safe travel inscriptions in ancient Germanic culture, reflecting the importance of wagons as transport.",
+    "associations": {
+      "godsGoddesses": ["Ing", "Nerthus"]
+    },
+    "otherDetails": {
+      "keywords": ["travel", "a journey", "movement", "reunion", "changes"],
+      "magicalUses": [
+        "Safe travels",
+        "Navigating inner journeys",
+        "Maintaining equanimity",
+        "Justice in disputes"
+      ],
+      "astrologicalAssociations": ["Sagittarius", "Mercury"],
+      "elements": ["Air"],
+      "associatedColors": ["Blue", "bright red"],
+      "miscCorrespondences": ["Turquoise", "mugwort"]
+    }
+  },
+  {
+    "symbol": "ᚲ",
+    "name": "Kenaz",
+    "pronunciation": "kay-nahz",
+    "letterSound": "K",
+    "translation": "beacon, torch, fire, fire brand",
+    "meaning": {
+      "primaryThemes": "Light, heat, illumination, breakthrough, creative fire. Brings clarity and enlightenment.",
+      "additionalMeanings": "Creativity, new relationships, destructive potential of fire.",
+      "reversed": "Feeling in the dark, endings, lack of creative inspiration."
+    },
+    "historicalContext": "Linked to fire as a source of light and heat in pre-electricity times, used in magical illumination.",
+    "associations": {
+      "godsGoddesses": ["Heimdall", "Freyja", "Frey"]
+    },
+    "otherDetails": {
+      "keywords": [
+        "light",
+        "heat",
+        "illumination",
+        "breakthrough",
+        "creative fire"
+      ],
+      "magicalUses": [
+        "Creativity",
+        "Inspiration",
+        "Healing",
+        "Love",
+        "Balanced relationships",
+        "Adds power to talismans"
+      ],
+      "astrologicalAssociations": ["Venus", "Mars", "the Sun"],
+      "elements": ["Fire"],
+      "associatedColors": ["Yellow", "light red", "orange"],
+      "miscCorrespondences": ["Bloodstone", "amber", "clear quartz", "cowslip"]
+    }
+  },
+  {
+    "symbol": "ᚷ",
+    "name": "Gebo",
+    "pronunciation": "gay-boo",
+    "letterSound": "G (as in \"gift\")",
+    "translation": "gift, hospitality, generosity",
+    "meaning": {
+      "primaryThemes": "Gifts, generosity, friendship, harmony, talents/abilities. Emphasizes reciprocity in relationships.",
+      "additionalMeanings": "Gifts from higher realms (skills, talents), no reversed meaning.",
+      "reversed": null
+    },
+    "historicalContext": "Used in ancient times for contracts and exchanges, reflecting social bonds.",
+    "associations": {
+      "godsGoddesses": ["Odin", "Gefn"]
+    },
+    "otherDetails": {
+      "keywords": [
+        "gift",
+        "generosity",
+        "friendship",
+        "harmony",
+        "talents/abilities"
+      ],
+      "magicalUses": [
+        "Love",
+        "Sex",
+        "Harmonious relationships",
+        "Connect with divine energies",
+        "Boost magical energy"
+      ],
+      "astrologicalAssociations": ["Pisces", "Venus"],
+      "elements": ["Air", "Water"],
+      "associatedColors": ["Blue", "deep green"],
+      "miscCorrespondences": ["Opal", "jasper", "ash", "apple", "heartsease"]
+    }
+  },
+  {
+    "symbol": "ᚹ",
+    "name": "Wunjo",
+    "pronunciation": "woon-you",
+    "letterSound": "W",
+    "translation": "joy, pleasure, hope",
+    "meaning": {
+      "primaryThemes": "Joy, happiness, harmony, bliss, happy relationships, well-being, success. Encourages focusing on positives.",
+      "additionalMeanings": "Business success, rewards of ambition.",
+      "reversed": "Unhappiness, conflict, lack of energy, unsuitable for decisions."
+    },
+    "historicalContext": "Reflects the joy and optimism valued in Germanic culture, used in magical workings for well-being.",
+    "associations": {
+      "godsGoddesses": ["Odin", "Frigg", "Frey"]
+    },
+    "otherDetails": {
+      "keywords": [
+        "joy",
+        "happiness",
+        "harmony",
+        "bliss",
+        "happy relationships",
+        "well-being",
+        "success"
+      ],
+      "magicalUses": [
+        "General well-being",
+        "Fulfillment",
+        "Success",
+        "Raise vibrational frequency",
+        "Harmonious relationships",
+        "Powerful in bind runes"
+      ],
+      "astrologicalAssociations": ["Leo", "Mars", "Venus", "Saturn"],
+      "elements": ["Water", "Earth"],
+      "associatedColors": ["Yellow", "purple"],
+      "miscCorrespondences": ["Diamond", "clear quartz", "ivy"]
+    }
+  },
+  {
+    "symbol": "ᚺ",
+    "name": "Hagalaz",
+    "pronunciation": "hah-gah-lahz",
+    "letterSound": "H",
+    "translation": "hail, hailstone",
+    "meaning": {
+      "primaryThemes": "Destruction, chaos, interference, misfortune, transformation. Indicates uncontrollable forces requiring patience.",
+      "additionalMeanings": "Significant change leading to improvement, no reversed meaning.",
+      "reversed": null
+    },
+    "historicalContext": "Represents natural disasters like hail, used in magic to navigate chaos.",
+    "associations": {
+      "godsGoddesses": ["Hagal", "Heimdall", "Urd"]
+    },
+    "otherDetails": {
+      "keywords": [
+        "destruction",
+        "chaos",
+        "interference",
+        "misfortune",
+        "transformation"
+      ],
+      "magicalUses": [
+        "Protection",
+        "Luck",
+        "Quick transformations",
+        "Success in difficult situations",
+        "Break unhealthy patterns"
+      ],
+      "astrologicalAssociations": ["Aquarius", "Saturn"],
+      "elements": ["Water", "Ice"],
+      "associatedColors": ["White", "light blue"],
+      "miscCorrespondences": ["Jet", "onyx", "nightshade"]
+    }
+  },
+  {
+    "symbol": "ᚾ",
+    "name": "Nauthiz",
+    "pronunciation": "now-theez",
+    "letterSound": "N",
+    "translation": "need, necessity",
+    "meaning": {
+      "primaryThemes": "Hardship, need, scarcity, restriction, patience. Advises resilience and learning from limitations.",
+      "additionalMeanings": "Warning against greed, hasty decisions, no reversed meaning in some traditions.",
+      "reversed": null
+    },
+    "historicalContext": "Linked to ritual fires lit during extreme hardship, used in magical protection and patience.",
+    "associations": {
+      "godsGoddesses": ["Urd", "Verdandi", "Skuld (the Norns)"]
+    },
+    "otherDetails": {
+      "keywords": [
+        "need",
+        "necessity",
+        "scarcity",
+        "absence",
+        "restriction",
+        "have patience"
+      ],
+      "magicalUses": [
+        "Protection",
+        "Maintaining equanimity",
+        "Activates attraction magic"
+      ],
+      "astrologicalAssociations": ["Capricorn", "Saturn"],
+      "elements": ["Fire"],
+      "associatedColors": ["Blue", "black"],
+      "miscCorrespondences": ["Lapis lazuli", "rowan"]
+    }
+  },
+  {
+    "symbol": "ᛁ",
+    "name": "Isa",
+    "pronunciation": "ee-sah",
+    "letterSound": "I (as in \"ice\")",
+    "translation": "ice",
+    "meaning": {
+      "primaryThemes": "Obstacles, standstill, stagnation, delay, coldness. Advises acceptance and present-moment focus.",
+      "additionalMeanings": "Emotional coldness in relationships, clarity through detachment, no reversed meaning.",
+      "reversed": null
+    },
+    "historicalContext": "Ice was an obstacle in Northern Europe, used in magic to maintain status quo.",
+    "associations": {
+      "godsGoddesses": ["Verdandi"]
+    },
+    "otherDetails": {
+      "keywords": [
+        "obstacles",
+        "standstill",
+        "stagnation",
+        "delay",
+        "coldness"
+      ],
+      "magicalUses": [
+        "Maintaining status quo",
+        "Protection against unwanted energies",
+        "Bringing clarity"
+      ],
+      "astrologicalAssociations": ["The Moon", "Jupiter"],
+      "elements": ["Water", "Ice"],
+      "associatedColors": ["White", "black"],
+      "miscCorrespondences": [
+        "Cat’s eye",
+        "black tourmaline",
+        "henbane",
+        "alder"
+      ]
+    }
+  },
+  {
+    "symbol": "ᛃ",
+    "name": "Jera",
+    "pronunciation": "yair-ah",
+    "letterSound": "Y (as in \"year\") (J in Germanic languages)",
+    "translation": "year, harvest",
+    "meaning": {
+      "primaryThemes": "Harvest, reward, natural cycles, fruition, fertility, growth. Emphasizes patience and cyclical nature.",
+      "additionalMeanings": "Fertility, union of opposites, personal growth, no reversed meaning.",
+      "reversed": null
+    },
+    "historicalContext": "Reflects agricultural cycles in Germanic culture, used for fertility and growth magic.",
+    "associations": {
+      "godsGoddesses": ["Frey", "Freyja"]
+    },
+    "otherDetails": {
+      "keywords": [
+        "harvest",
+        "reward",
+        "natural cycles",
+        "fruition",
+        "fertility",
+        "growth"
+      ],
+      "magicalUses": [
+        "Fertility",
+        "Creativity",
+        "Bringing desired events",
+        "Family matters",
+        "Growth",
+        "Patience"
+      ],
+      "astrologicalAssociations": ["The Sun", "Mercury"],
+      "elements": ["Earth"],
+      "associatedColors": ["Brown", "light blue", "green"],
+      "miscCorrespondences": ["Carnelian", "moss agate", "rosemary"]
+    }
+  },
+  {
+    "symbol": "ᛇ",
+    "name": "Eihwaz",
+    "pronunciation": "eeh-wahz",
+    "letterSound": "Uncertain (possibly \"E\" as in \"need\" or \"A\" as in \"cat\")",
+    "translation": "yew",
+    "meaning": {
+      "primaryThemes": "Death, regeneration, rebirth, changes, magic. Indicates endings leading to new beginnings.",
+      "additionalMeanings": "Magical protection, underworld gateway, unresolved past issues, no reversed meaning.",
+      "reversed": null
+    },
+    "historicalContext": "Yew trees were toxic yet regenerative, used in magical transformations and protection.",
+    "associations": {
+      "godsGoddesses": ["Ullr", "Odin"]
+    },
+    "otherDetails": {
+      "keywords": ["death", "regeneration", "rebirth", "changes", "magic"],
+      "magicalUses": [
+        "Protection",
+        "Overcoming obstacles",
+        "Spiritual development",
+        "Personal/magical power",
+        "Banishing",
+        "Divination"
+      ],
+      "astrologicalAssociations": ["Scorpio", "Venus", "Jupiter"],
+      "elements": ["Air"],
+      "associatedColors": ["Green", "dark blue"],
+      "miscCorrespondences": ["Topaz", "smoky quartz", "mandrake", "hemlock"]
+    }
+  },
+  {
+    "symbol": "ᛈ",
+    "name": "Perthro",
+    "pronunciation": "pair-throh",
+    "letterSound": "P",
+    "translation": "[unknown]",
+    "meaning": {
+      "primaryThemes": "Mystery, secrets, revelation, chance. Advises trust in intuition for hidden knowledge.",
+      "additionalMeanings": "Fertility, pregnancy, birth, potential disappointment.",
+      "reversed": "Unpleasant surprises, secrets hard to keep, caution against expectations."
+    },
+    "historicalContext": "Most mysterious rune, possibly used for casting lots in divination, rooted in Germanic esoteric practices.",
+    "associations": {
+      "godsGoddesses": ["Frigg", "the Norns"]
+    },
+    "otherDetails": {
+      "keywords": ["mystery", "secrets", "revelation", "chance"],
+      "magicalUses": [
+        "Good luck in gambling",
+        "Protect investments",
+        "Divination",
+        "Health/healing",
+        "Spiritual clarity",
+        "Fertility"
+      ],
+      "astrologicalAssociations": ["Saturn", "Mars"],
+      "elements": ["Water"],
+      "associatedColors": ["Red", "black", "white"],
+      "miscCorrespondences": ["Aquamarine", "onyx", "bone", "elder"]
+    }
+  },
+  {
+    "symbol": "ᛉ",
+    "name": "Elhaz",
+    "pronunciation": "el-hahz",
+    "letterSound": "Z",
+    "translation": "protection, elk, sedge plant",
+    "meaning": {
+      "primaryThemes": "Protection, defense, opportunity. Indicates safety if alert, warns against losing intuition.",
+      "additionalMeanings": "Upcoming opportunities, caution against exploitation.",
+      "reversed": "Vulnerability, potential danger, need for caution."
+    },
+    "historicalContext": "Used for protective magic, linked to natural defenses in Germanic lore.",
+    "associations": {
+      "godsGoddesses": ["Heimdall"]
+    },
+    "otherDetails": {
+      "keywords": ["protection", "defense", "opportunity"],
+      "magicalUses": [
+        "Protection from negative energy/people",
+        "Property protection",
+        "Strengthen friendships",
+        "Astral communication"
+      ],
+      "astrologicalAssociations": ["Cancer"],
+      "elements": ["Air", "Fire", "Water"],
+      "associatedColors": ["Purple", "gold"],
+      "miscCorrespondences": [
+        "Black tourmaline",
+        "Iceland spar",
+        "rowan",
+        "angelica",
+        "yew"
+      ]
+    }
+  },
+  {
+    "symbol": "ᛋ",
+    "name": "Sowilo",
+    "pronunciation": "so-we-loh",
+    "letterSound": "S",
+    "translation": "Sun",
+    "meaning": {
+      "primaryThemes": "Light, energy, good health, success. Brings clarity and vitality, warns against imbalance.",
+      "additionalMeanings": "Balance of energies, avoiding overexposure or deceit.",
+      "reversed": null
+    },
+    "historicalContext": "Represents the life-giving Sun, used in magic for success and healing.",
+    "associations": {
+      "godsGoddesses": ["Baldur"]
+    },
+    "otherDetails": {
+      "keywords": ["light", "energy", "good health", "success"],
+      "magicalUses": [
+        "Strengthen self-confidence",
+        "Motivation",
+        "Success",
+        "Healing",
+        "Victory",
+        "Spiritual guidance"
+      ],
+      "astrologicalAssociations": ["The Sun"],
+      "elements": ["Fire"],
+      "associatedColors": ["Yellow", "white", "gold"],
+      "miscCorrespondences": ["Ruby", "sunstone", "juniper", "rose"]
+    }
+  },
+  {
+    "symbol": "ᛏ",
+    "name": "Tiwaz",
+    "pronunciation": "tee-wahz",
+    "letterSound": "T",
+    "translation": "the god Tyr",
+    "meaning": {
+      "primaryThemes": "Courage, victory, strength, passion, masculine energy. Emphasizes sacrifice for the greater good and action.",
+      "additionalMeanings": "Romance, passion, male influence in relationships.",
+      "reversed": "Lack of courage, hasty decisions, blocked energy."
+    },
+    "historicalContext": "Linked to Tyr’s sacrifice, used in magic for victory and legal success.",
+    "associations": {
+      "godsGoddesses": ["Tyr"]
+    },
+    "otherDetails": {
+      "keywords": [
+        "courage",
+        "victory",
+        "strength",
+        "passion",
+        "masculine energy"
+      ],
+      "magicalUses": [
+        "Healing",
+        "Success",
+        "Victory in competitions",
+        "Strengthen willpower",
+        "Courage",
+        "Healthy masculine energy",
+        "Strengthen spiritual faith"
+      ],
+      "astrologicalAssociations": ["Mars", "Libra"],
+      "elements": ["Air"],
+      "associatedColors": ["Red"],
+      "miscCorrespondences": ["Bloodstone", "hematite", "oak"]
+    }
+  },
+  {
+    "symbol": "ᛒ",
+    "name": "Berkana",
+    "pronunciation": "bair-kah-nah",
+    "letterSound": "B",
+    "translation": "birch, birch goddess",
+    "meaning": {
+      "primaryThemes": "Birth, new beginnings, family, growth, regeneration. Emphasizes nurturing and support.",
+      "additionalMeanings": "Female energy, caretaking, rebirth after difficulties.",
+      "reversed": "Stagnation, obstacles to new beginnings, family conflicts."
+    },
+    "historicalContext": "Birch trees were symbols of renewal, used in fertility and growth magic in Germanic traditions.",
+    "associations": {
+      "godsGoddesses": ["Nerthus", "Holda", "the Birch Goddess"]
+    },
+    "otherDetails": {
+      "keywords": [
+        "birth",
+        "new beginnings",
+        "family",
+        "growth",
+        "regeneration"
+      ],
+      "magicalUses": [
+        "Fertility",
+        "Female health",
+        "Strengthen family ties",
+        "Love",
+        "Protection",
+        "Bringing ideas into manifestation",
+        "Creativity"
+      ],
+      "astrologicalAssociations": ["Jupiter", "the Moon", "Virgo"],
+      "elements": ["Earth"],
+      "associatedColors": ["Blue", "dark green"],
+      "miscCorrespondences": ["Moonstone", "birch", "alder"]
+    }
+  },
+  {
+    "symbol": "ᛖ",
+    "name": "Ehwaz",
+    "pronunciation": "ay-wahz",
+    "letterSound": "E (\"eh\" as in \"element\")",
+    "translation": "horse",
+    "meaning": {
+      "primaryThemes": "Changes, faith, loyalty, trust, movement, travel. Emphasizes partnership and progress.",
+      "additionalMeanings": "Internal journeys, astral travel, avoiding escapism.",
+      "reversed": "Lack of faith, travel issues, stagnation."
+    },
+    "historicalContext": "Horses were sacred in Germanic culture, used in travel and shamanic practices.",
+    "associations": {
+      "godsGoddesses": ["Frey", "Freya"]
+    },
+    "otherDetails": {
+      "keywords": [
+        "changes",
+        "faith",
+        "loyalty",
+        "trust",
+        "movement",
+        "travel"
+      ],
+      "magicalUses": [
+        "Safe travels",
+        "Physical/mental stamina",
+        "Trustworthy relationships",
+        "Swift change",
+        "Astral travel"
+      ],
+      "astrologicalAssociations": ["Gemini", "Mercury"],
+      "elements": ["Earth", "Water"],
+      "associatedColors": ["White", "red", "orange"],
+      "miscCorrespondences": ["Iceland spar", "turquoise", "ragwort"]
+    }
+  },
+  {
+    "symbol": "ᛗ",
+    "name": "Mannaz",
+    "pronunciation": "mah-nahz",
+    "letterSound": "M",
+    "translation": "man, mankind, human",
+    "meaning": {
+      "primaryThemes": "Humanity, the self, support, assistance, intelligence, family. Emphasizes self-awareness and community.",
+      "additionalMeanings": "Isolation, low self-esteem, family matters.",
+      "reversed": "Isolation, self-preoccupation, lack of support."
+    },
+    "historicalContext": "Reflects the importance of community and intelligence in Germanic society.",
+    "associations": {
+      "godsGoddesses": ["Heimdall", "Odin", "Frigg"]
+    },
+    "otherDetails": {
+      "keywords": [
+        "humanity",
+        "the self",
+        "support",
+        "assistance",
+        "intelligence",
+        "family"
+      ],
+      "magicalUses": [
+        "Help from others",
+        "Increase mental agility",
+        "Improve memory",
+        "Harmonious relationships",
+        "Legal/academic success"
+      ],
+      "astrologicalAssociations": ["Jupiter"],
+      "elements": ["Earth", "Air"],
+      "associatedColors": ["Purple", "deep red"],
+      "miscCorrespondences": ["Garnet", "alder", "holly", "elder"]
+    }
+  },
+  {
+    "symbol": "ᛚ",
+    "name": "Laguz",
+    "pronunciation": "lah-gooze",
+    "letterSound": "L",
+    "translation": "water",
+    "meaning": {
+      "primaryThemes": "Water, flow, intuition, the unconscious, psychic ability, the feminine, growth. Advises adaptability and emotional release.",
+      "additionalMeanings": "Feminine strength, creativity, avoiding escapism.",
+      "reversed": "Stagnation, blocked emotions, unhealthy impulses."
+    },
+    "historicalContext": "Water was a powerful force in Northern Europe, used in magic for intuition and healing.",
+    "associations": {
+      "godsGoddesses": ["Njord", "Nerthus"]
+    },
+    "otherDetails": {
+      "keywords": [
+        "water",
+        "flow",
+        "intuition",
+        "the unconscious",
+        "psychic ability",
+        "the feminine",
+        "growth"
+      ],
+      "magicalUses": [
+        "Increase intuitive/psychic abilities",
+        "Healthy feminine energy",
+        "Creativity",
+        "Maintaining equanimity"
+      ],
+      "astrologicalAssociations": ["The Moon"],
+      "elements": ["Water"],
+      "associatedColors": ["Green", "deep green", "blue-green"],
+      "miscCorrespondences": ["Pearl", "moonstone", "willow"]
+    }
+  },
+  {
+    "symbol": "ᛝ",
+    "name": "Ingwaz",
+    "pronunciation": "eeng-wahz",
+    "letterSound": "NG (as in \"wing\")",
+    "translation": "the god Ing (also known as Ingwaz)",
+    "meaning": {
+      "primaryThemes": "Fertility, male procreative force, channeling energy, completion, safety. Indicates positive energy and relief.",
+      "additionalMeanings": "Home safety, family harmony, no reversed meaning.",
+      "reversed": null
+    },
+    "historicalContext": "Linked to the god Ing (Freyr), used in fertility and completion magic.",
+    "associations": {
+      "godsGoddesses": ["Ing", "Frey"]
+    },
+    "otherDetails": {
+      "keywords": [
+        "fertility",
+        "male procreative force",
+        "channeling energy",
+        "completion",
+        "safety"
+      ],
+      "magicalUses": [
+        "Fertility",
+        "Bringing situations to an end",
+        "Building/releasing magical energy",
+        "Protection",
+        "Passion"
+      ],
+      "astrologicalAssociations": ["Venus", "Cancer"],
+      "elements": ["Fire", "Earth"],
+      "associatedColors": ["Black", "yellow"],
+      "miscCorrespondences": ["Amber", "apple", "self-heal"]
+    }
+  },
+  {
+    "symbol": "ᛞ",
+    "name": "Dagaz",
+    "pronunciation": "dah-gahz",
+    "letterSound": "D",
+    "translation": "day",
+    "meaning": {
+      "primaryThemes": "Daylight, success, hope, breakthrough, transformation, balance. Indicates clarity and new beginnings.",
+      "additionalMeanings": "Protection, spiritual insight, no reversed meaning.",
+      "reversed": null
+    },
+    "historicalContext": "Daylight was precious in long winters, used in magic for success and protection.",
+    "associations": {
+      "godsGoddesses": ["Heimdall"]
+    },
+    "otherDetails": {
+      "keywords": [
+        "daylight",
+        "success",
+        "hope",
+        "breakthrough",
+        "transformation",
+        "balance"
+      ],
+      "magicalUses": [
+        "Good luck",
+        "Promote transformations",
+        "Increase wealth",
+        "Turning the corner",
+        "Spiritual/creative breakthrough"
+      ],
+      "astrologicalAssociations": ["The Sun"],
+      "elements": ["Fire", "Water", "Air"],
+      "associatedColors": ["Yellow", "light blue"],
+      "miscCorrespondences": ["Chrysocolla", "fluorite", "clary sage"]
+    }
+  },
+  {
+    "symbol": "ᛟ",
+    "name": "Othala",
+    "pronunciation": "oh-thee-lah",
+    "letterSound": "O (as in \"snow\")",
+    "translation": "inheritance",
+    "meaning": {
+      "primaryThemes": "Heritage, tradition, inheritance, ancestral property, family ties. Emphasizes family and cultural roots.",
+      "additionalMeanings": "Assistance from elders, past-life connections, potential family conflicts.",
+      "reversed": "Family disharmony, loss of property, isolation."
+    },
+    "historicalContext": "Land inheritance was crucial in Germanic society, used in magic for family and property protection.",
+    "associations": {
+      "godsGoddesses": ["Odin"]
+    },
+    "otherDetails": {
+      "keywords": [
+        "heritage",
+        "tradition",
+        "inheritance",
+        "ancestral property",
+        "family ties"
+      ],
+      "magicalUses": [
+        "Gaining/holding wealth",
+        "Healing",
+        "Harmonious family relationships",
+        "Clarity",
+        "Ancestral communication"
+      ],
+      "astrologicalAssociations": ["Saturn", "Mars"],
+      "elements": ["Earth"],
+      "associatedColors": ["Yellow", "gold", "green"],
+      "miscCorrespondences": ["Star ruby", "moss agate", "hawthorn"]
+    }
+  }
+]
