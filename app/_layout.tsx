@@ -48,31 +48,31 @@ function RootLayoutNav() {
       }}
     >
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen 
-        name="(modals)/settings" 
-        options={{ 
-          presentation: 'modal',
+      <Stack.Screen
+        name="(modals)/settings"
+        options={{
+          presentation: "modal",
           headerShown: true,
-          title: 'Settings',
+          title: "Settings",
           animation: Platform.select({
-            ios: 'default',
-            android: 'fade',
+            ios: "default",
+            android: "fade",
           }),
-        }} 
+        }}
       />
-      <Stack.Screen 
-        name="rune/[id]" 
-        options={{ 
+      <Stack.Screen
+        name="rune/[id]"
+        options={{
           headerShown: true,
-          animation: 'default',
+          animation: "default",
           animationDuration: 200,
           gestureEnabled: true,
-          gestureDirection: 'horizontal',
+          gestureDirection: "horizontal",
           contentStyle: {
             backgroundColor: colors.background,
           },
-          presentation: 'card',
-        }} 
+          presentation: "card",
+        }}
       />
     </Stack>
   );

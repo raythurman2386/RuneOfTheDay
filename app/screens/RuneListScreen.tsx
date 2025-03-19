@@ -14,7 +14,10 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RunesStackParamList } from "../components/RunesStackNavigator";
 
-type RuneListNavigationProp = StackNavigationProp<RunesStackParamList, "RuneList">;
+type RuneListNavigationProp = StackNavigationProp<
+  RunesStackParamList,
+  "RuneList"
+>;
 
 const RuneListScreen = () => {
   const { colors } = useColorTheme();

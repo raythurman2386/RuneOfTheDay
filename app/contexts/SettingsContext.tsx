@@ -34,10 +34,10 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   initialSettings = {},
 }) => {
   const [theme, setTheme] = useState<"system" | "light" | "dark">(
-    initialSettings.theme || "system"
+    initialSettings.theme || "system",
   );
   const [haptics, setHaptics] = useState(
-    initialSettings.haptics === undefined ? true : initialSettings.haptics
+    initialSettings.haptics === undefined ? true : initialSettings.haptics,
   );
 
   useEffect(() => {

@@ -17,8 +17,8 @@ const SettingsIcon = ({ color }: SettingsIconProps) => {
   };
 
   return (
-    <TouchableOpacity 
-      style={styles.container} 
+    <TouchableOpacity
+      style={styles.container}
       onPress={handlePress}
       accessibilityLabel="Settings"
       accessibilityRole="button"

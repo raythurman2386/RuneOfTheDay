@@ -15,17 +15,17 @@ import { runes } from "../data/runes";
 export default function RuneDetailsScreen() {
   // Get the rune ID from the URL params
   const { id } = useLocalSearchParams<{ id: string }>();
-  
+
   // Find the rune by name
-  const rune = runes.find(r => r.name === id);
-  
+  const rune = runes.find((r) => r.name === id);
+
   const { colors } = useColorTheme();
   const { width } = useWindowDimensions();
   const symbolSize = Math.min(width * 0.4, 180);
-  
+
   // Animation values
   const fadeAnim = new Animated.Value(0);
-  
+
   useEffect(() => {
     // Start the fade-in animation when the component mounts
     Animated.timing(fadeAnim, {
@@ -45,38 +45,50 @@ export default function RuneDetailsScreen() {
 
   return (
     <>
-      <Stack.Screen 
+      <Stack.Screen
         options={{
           title: rune.name,
           headerTintColor: colors.text,
           headerStyle: {
             backgroundColor: colors.background,
           },
-        }} 
+        }}
       />
       <Animated.ScrollView
         style={[
-          styles.container, 
-          { 
+          styles.container,
+          {
             backgroundColor: colors.background,
             opacity: fadeAnim,
-          }
+          },
         ]}
         contentContainerStyle={styles.contentContainer}
       >
         <View style={styles.header}>
-          <Text style={[styles.symbol, { color: colors.text, fontSize: symbolSize }]}>
+          <Text
+            style={[
+              styles.symbol,
+              { color: colors.text, fontSize: symbolSize },
+            ]}
+          >
             {rune.symbol}
           </Text>
           <View style={styles.nameContainer}>
-            <Text style={[styles.name, { color: colors.text }]}>{rune.name}</Text>
+            <Text style={[styles.name, { color: colors.text }]}>
+              {rune.name}
+            </Text>
             <Text style={[styles.pronunciation, { color: colors.icon }]}>
               {rune.pronunciation}
             </Text>
           </View>
         </View>
 
-        <View style={[styles.section, { backgroundColor: colors.surface, borderColor: colors.icon }]}>
+        <View
+          style={[
+            styles.section,
+            { backgroundColor: colors.surface, borderColor: colors.icon },
+          ]}
+        >
           <Text style={[styles.sectionTitle, { color: colors.text }]}>
             Translation
           </Text>
@@ -88,7 +100,12 @@ export default function RuneDetailsScreen() {
           </Text>
         </View>
 
-        <View style={[styles.section, { backgroundColor: colors.surface, borderColor: colors.icon }]}>
+        <View
+          style={[
+            styles.section,
+            { backgroundColor: colors.surface, borderColor: colors.icon },
+          ]}
+        >
           <Text style={[styles.sectionTitle, { color: colors.text }]}>
             Primary Meaning
           </Text>
@@ -98,7 +115,12 @@ export default function RuneDetailsScreen() {
         </View>
 
         {rune.meaning.additionalMeanings && (
-          <View style={[styles.section, { backgroundColor: colors.surface, borderColor: colors.icon }]}>
+          <View
+            style={[
+              styles.section,
+              { backgroundColor: colors.surface, borderColor: colors.icon },
+            ]}
+          >
             <Text style={[styles.sectionTitle, { color: colors.text }]}>
               Additional Meanings
             </Text>
@@ -109,7 +131,12 @@ export default function RuneDetailsScreen() {
         )}
 
         {rune.meaning.reversed && (
-          <View style={[styles.section, { backgroundColor: colors.surface, borderColor: colors.icon }]}>
+          <View
+            style={[
+              styles.section,
+              { backgroundColor: colors.surface, borderColor: colors.icon },
+            ]}
+          >
             <Text style={[styles.sectionTitle, { color: colors.text }]}>
               Reversed Meaning
             </Text>
@@ -119,7 +146,12 @@ export default function RuneDetailsScreen() {
           </View>
         )}
 
-        <View style={[styles.section, { backgroundColor: colors.surface, borderColor: colors.icon }]}>
+        <View
+          style={[
+            styles.section,
+            { backgroundColor: colors.surface, borderColor: colors.icon },
+          ]}
+        >
           <Text style={[styles.sectionTitle, { color: colors.text }]}>
             Historical Context
           </Text>
@@ -128,84 +160,144 @@ export default function RuneDetailsScreen() {
           </Text>
         </View>
 
-        {rune.associations.godsGoddesses && rune.associations.godsGoddesses.length > 0 && (
-          <View style={[styles.section, { backgroundColor: colors.surface, borderColor: colors.icon }]}>
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>
-              Associated Deities
-            </Text>
-            <Text style={[styles.sectionContent, { color: colors.icon }]}>
-              {rune.associations.godsGoddesses.join(", ")}
-            </Text>
-          </View>
-        )}
+        {rune.associations.godsGoddesses &&
+          rune.associations.godsGoddesses.length > 0 && (
+            <View
+              style={[
+                styles.section,
+                { backgroundColor: colors.surface, borderColor: colors.icon },
+              ]}
+            >
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>
+                Associated Deities
+              </Text>
+              <Text style={[styles.sectionContent, { color: colors.icon }]}>
+                {rune.associations.godsGoddesses.join(", ")}
+              </Text>
+            </View>
+          )}
 
         {rune.otherDetails && (
           <>
-            {rune.otherDetails.keywords && rune.otherDetails.keywords.length > 0 && (
-              <View style={[styles.section, { backgroundColor: colors.surface, borderColor: colors.icon }]}>
-                <Text style={[styles.sectionTitle, { color: colors.text }]}>
-                  Keywords
-                </Text>
-                <Text style={[styles.sectionContent, { color: colors.icon }]}>
-                  {rune.otherDetails.keywords.join(", ")}
-                </Text>
-              </View>
-            )}
+            {rune.otherDetails.keywords &&
+              rune.otherDetails.keywords.length > 0 && (
+                <View
+                  style={[
+                    styles.section,
+                    {
+                      backgroundColor: colors.surface,
+                      borderColor: colors.icon,
+                    },
+                  ]}
+                >
+                  <Text style={[styles.sectionTitle, { color: colors.text }]}>
+                    Keywords
+                  </Text>
+                  <Text style={[styles.sectionContent, { color: colors.icon }]}>
+                    {rune.otherDetails.keywords.join(", ")}
+                  </Text>
+                </View>
+              )}
 
-            {rune.otherDetails.magicalUses && rune.otherDetails.magicalUses.length > 0 && (
-              <View style={[styles.section, { backgroundColor: colors.surface, borderColor: colors.icon }]}>
-                <Text style={[styles.sectionTitle, { color: colors.text }]}>
-                  Magical Uses
-                </Text>
-                <Text style={[styles.sectionContent, { color: colors.icon }]}>
-                  {rune.otherDetails.magicalUses.join(", ")}
-                </Text>
-              </View>
-            )}
+            {rune.otherDetails.magicalUses &&
+              rune.otherDetails.magicalUses.length > 0 && (
+                <View
+                  style={[
+                    styles.section,
+                    {
+                      backgroundColor: colors.surface,
+                      borderColor: colors.icon,
+                    },
+                  ]}
+                >
+                  <Text style={[styles.sectionTitle, { color: colors.text }]}>
+                    Magical Uses
+                  </Text>
+                  <Text style={[styles.sectionContent, { color: colors.icon }]}>
+                    {rune.otherDetails.magicalUses.join(", ")}
+                  </Text>
+                </View>
+              )}
 
-            {rune.otherDetails.astrologicalAssociations && rune.otherDetails.astrologicalAssociations.length > 0 && (
-              <View style={[styles.section, { backgroundColor: colors.surface, borderColor: colors.icon }]}>
-                <Text style={[styles.sectionTitle, { color: colors.text }]}>
-                  Astrological Associations
-                </Text>
-                <Text style={[styles.sectionContent, { color: colors.icon }]}>
-                  {rune.otherDetails.astrologicalAssociations.join(", ")}
-                </Text>
-              </View>
-            )}
+            {rune.otherDetails.astrologicalAssociations &&
+              rune.otherDetails.astrologicalAssociations.length > 0 && (
+                <View
+                  style={[
+                    styles.section,
+                    {
+                      backgroundColor: colors.surface,
+                      borderColor: colors.icon,
+                    },
+                  ]}
+                >
+                  <Text style={[styles.sectionTitle, { color: colors.text }]}>
+                    Astrological Associations
+                  </Text>
+                  <Text style={[styles.sectionContent, { color: colors.icon }]}>
+                    {rune.otherDetails.astrologicalAssociations.join(", ")}
+                  </Text>
+                </View>
+              )}
 
-            {rune.otherDetails.elements && rune.otherDetails.elements.length > 0 && (
-              <View style={[styles.section, { backgroundColor: colors.surface, borderColor: colors.icon }]}>
-                <Text style={[styles.sectionTitle, { color: colors.text }]}>
-                  Elements
-                </Text>
-                <Text style={[styles.sectionContent, { color: colors.icon }]}>
-                  {rune.otherDetails.elements.join(", ")}
-                </Text>
-              </View>
-            )}
+            {rune.otherDetails.elements &&
+              rune.otherDetails.elements.length > 0 && (
+                <View
+                  style={[
+                    styles.section,
+                    {
+                      backgroundColor: colors.surface,
+                      borderColor: colors.icon,
+                    },
+                  ]}
+                >
+                  <Text style={[styles.sectionTitle, { color: colors.text }]}>
+                    Elements
+                  </Text>
+                  <Text style={[styles.sectionContent, { color: colors.icon }]}>
+                    {rune.otherDetails.elements.join(", ")}
+                  </Text>
+                </View>
+              )}
 
-            {rune.otherDetails.associatedColors && rune.otherDetails.associatedColors.length > 0 && (
-              <View style={[styles.section, { backgroundColor: colors.surface, borderColor: colors.icon }]}>
-                <Text style={[styles.sectionTitle, { color: colors.text }]}>
-                  Associated Colors
-                </Text>
-                <Text style={[styles.sectionContent, { color: colors.icon }]}>
-                  {rune.otherDetails.associatedColors.join(", ")}
-                </Text>
-              </View>
-            )}
+            {rune.otherDetails.associatedColors &&
+              rune.otherDetails.associatedColors.length > 0 && (
+                <View
+                  style={[
+                    styles.section,
+                    {
+                      backgroundColor: colors.surface,
+                      borderColor: colors.icon,
+                    },
+                  ]}
+                >
+                  <Text style={[styles.sectionTitle, { color: colors.text }]}>
+                    Associated Colors
+                  </Text>
+                  <Text style={[styles.sectionContent, { color: colors.icon }]}>
+                    {rune.otherDetails.associatedColors.join(", ")}
+                  </Text>
+                </View>
+              )}
 
-            {rune.otherDetails.miscCorrespondences && rune.otherDetails.miscCorrespondences.length > 0 && (
-              <View style={[styles.section, { backgroundColor: colors.surface, borderColor: colors.icon }]}>
-                <Text style={[styles.sectionTitle, { color: colors.text }]}>
-                  Other Correspondences
-                </Text>
-                <Text style={[styles.sectionContent, { color: colors.icon }]}>
-                  {rune.otherDetails.miscCorrespondences.join(", ")}
-                </Text>
-              </View>
-            )}
+            {rune.otherDetails.miscCorrespondences &&
+              rune.otherDetails.miscCorrespondences.length > 0 && (
+                <View
+                  style={[
+                    styles.section,
+                    {
+                      backgroundColor: colors.surface,
+                      borderColor: colors.icon,
+                    },
+                  ]}
+                >
+                  <Text style={[styles.sectionTitle, { color: colors.text }]}>
+                    Other Correspondences
+                  </Text>
+                  <Text style={[styles.sectionContent, { color: colors.icon }]}>
+                    {rune.otherDetails.miscCorrespondences.join(", ")}
+                  </Text>
+                </View>
+              )}
           </>
         )}
       </Animated.ScrollView>

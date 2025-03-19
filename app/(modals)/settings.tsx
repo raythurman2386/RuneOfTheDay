@@ -19,14 +19,14 @@ export default function SettingsScreen() {
 
   return (
     <>
-      <Stack.Screen 
+      <Stack.Screen
         options={{
           title: "Settings",
           headerTintColor: colors.text,
           headerStyle: {
             backgroundColor: colors.background,
           },
-        }} 
+        }}
       />
       <View style={[styles.container, { backgroundColor: colors.background }]}>
         <View style={styles.section}>
@@ -52,10 +52,7 @@ export default function SettingsScreen() {
                 style={[
                   styles.themeButtonText,
                   {
-                    color:
-                      theme === "system"
-                        ? colors.background
-                        : colors.text,
+                    color: theme === "system" ? colors.background : colors.text,
                   },
                 ]}
               >
@@ -65,10 +62,7 @@ export default function SettingsScreen() {
                 style={[
                   styles.themeButtonSubtext,
                   {
-                    color:
-                      theme === "system"
-                        ? colors.background
-                        : colors.icon,
+                    color: theme === "system" ? colors.background : colors.icon,
                   },
                 ]}
               >
@@ -94,10 +88,7 @@ export default function SettingsScreen() {
                 style={[
                   styles.themeButtonText,
                   {
-                    color:
-                      theme === "light"
-                        ? colors.background
-                        : colors.text,
+                    color: theme === "light" ? colors.background : colors.text,
                   },
                 ]}
               >
@@ -123,10 +114,7 @@ export default function SettingsScreen() {
                 style={[
                   styles.themeButtonText,
                   {
-                    color:
-                      theme === "dark"
-                        ? colors.background
-                        : colors.text,
+                    color: theme === "dark" ? colors.background : colors.text,
                   },
                 ]}
               >
@@ -152,8 +140,8 @@ export default function SettingsScreen() {
                 Platform.OS === "ios"
                   ? "#FFFFFF"
                   : haptics
-                  ? colors.background
-                  : "#f4f3f4"
+                    ? colors.background
+                    : "#f4f3f4"
               }
               ios_backgroundColor={colors.icon}
             />

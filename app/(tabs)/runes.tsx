@@ -1,5 +1,12 @@
 import React from "react";
-import { View, FlatList, Pressable, Text, StyleSheet, Platform } from "react-native";
+import {
+  View,
+  FlatList,
+  Pressable,
+  Text,
+  StyleSheet,
+  Platform,
+} from "react-native";
 import { runes } from "../data/runes";
 import { useColorTheme } from "../hooks/useColorTheme";
 import useHaptics from "../hooks/useHaptics";
@@ -71,7 +78,9 @@ function RuneItem({ item, index, onPress, colors }: RuneItemProps) {
             {item.symbol}
           </Text>
           <View style={styles.textContainer}>
-            <Text style={[styles.name, { color: colors.text }]}>{item.name}</Text>
+            <Text style={[styles.name, { color: colors.text }]}>
+              {item.name}
+            </Text>
             <Text style={[styles.pronunciation, { color: colors.icon }]}>
               {item.pronunciation}
             </Text>
@@ -98,22 +107,28 @@ export default function RunesScreen() {
   const { colors } = useColorTheme();
   const { lightFeedback } = useHaptics();
 
-  const handleRunePress = React.useCallback((runeId: string) => {
-    lightFeedback();
-    router.push({
-      pathname: "/rune/[id]",
-      params: { id: runeId }
-    });
-  }, [lightFeedback]);
+  const handleRunePress = React.useCallback(
+    (runeId: string) => {
+      lightFeedback();
+      router.push({
+        pathname: "/rune/[id]",
+        params: { id: runeId },
+      });
+    },
+    [lightFeedback],
+  );
 
-  const renderItem = React.useCallback(({ item, index }: { item: Rune; index: number }) => (
-    <RuneItem
-      item={item}
-      index={index}
-      onPress={handleRunePress}
-      colors={colors}
-    />
-  ), [colors, handleRunePress]);
+  const renderItem = React.useCallback(
+    ({ item, index }: { item: Rune; index: number }) => (
+      <RuneItem
+        item={item}
+        index={index}
+        onPress={handleRunePress}
+        colors={colors}
+      />
+    ),
+    [colors, handleRunePress],
+  );
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
