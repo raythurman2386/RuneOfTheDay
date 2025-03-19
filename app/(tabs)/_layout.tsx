@@ -1,22 +1,38 @@
 import React from "react";
 import { Pressable } from "react-native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import MainScreen from "../screens/MainScreen";
-import FlashcardScreen from "../screens/FlashcardScreen";
-import RuneIcon from "./RuneIcon";
-import SettingsIcon from "./SettingsIcon";
+import { Tabs, router } from "expo-router";
 import { useColorTheme } from "../hooks/useColorTheme";
 import useHaptics from "../hooks/useHaptics";
-import RunesStackNavigator from "./RunesStackNavigator";
+import RuneIcon from "../components/RuneIcon";
+import SettingsIcon from "../components/SettingsIcon";
 
-const Tab = createBottomTabNavigator();
+interface TabButtonProps {
+  onPress?: (e: any) => void;
+  [key: string]: any;
+}
 
-const TabNavigator = () => {
+export default function TabLayout() {
   const { colors } = useColorTheme();
   const { lightFeedback } = useHaptics();
 
+  const handleSettingsPress = () => {
+    lightFeedback();
+    router.push("/(modals)/settings");
+  };
+
+  const TabButton = ({ onPress, ...props }: TabButtonProps) => (
+    <Pressable
+      {...props}
+      onPress={(e) => {
+        lightFeedback();
+        onPress?.(e);
+      }}
+      accessibilityRole="button"
+    />
+  );
+
   return (
-    <Tab.Navigator
+    <Tabs
       screenOptions={{
         tabBarStyle: {
           backgroundColor: colors.surface,
@@ -42,49 +58,46 @@ const TabNavigator = () => {
         headerTitleStyle: {
           fontWeight: "bold",
         },
-        tabBarButton: (props) => (
+        tabBarButton: TabButton,
+        headerRight: () => (
           <Pressable
-            {...props}
-            onPress={(e) => {
-              lightFeedback();
-              props.onPress?.(e);
-            }}
-          />
+            onPress={handleSettingsPress}
+            style={{ marginRight: 16 }}
+            accessibilityLabel="Settings"
+            accessibilityRole="button"
+          >
+            <SettingsIcon color={colors.text} />
+          </Pressable>
         ),
       }}
     >
-      <Tab.Screen
-        name="Today"
-        component={MainScreen}
+      <Tabs.Screen
+        name="index"
         options={{
-          headerRight: () => <SettingsIcon color={colors.text} />,
+          title: "Today",
           tabBarIcon: ({ color, size }) => (
             <RuneIcon symbol="ᚠ" color={color} size={size} />
           ),
         }}
       />
-      <Tab.Screen
-        name="Runes"
-        component={RunesStackNavigator}
+      <Tabs.Screen
+        name="runes"
         options={{
-          headerShown: false,
+          title: "Runes",
           tabBarIcon: ({ color, size }) => (
             <RuneIcon symbol="ᚱ" color={color} size={size} />
           ),
         }}
       />
-      <Tab.Screen
-        name="Learn"
-        component={FlashcardScreen}
+      <Tabs.Screen
+        name="learn"
         options={{
-          headerRight: () => <SettingsIcon color={colors.text} />,
+          title: "Learn",
           tabBarIcon: ({ color, size }) => (
             <RuneIcon symbol="ᚨ" color={color} size={size} />
           ),
         }}
       />
-    </Tab.Navigator>
+    </Tabs>
   );
-};
-
-export default TabNavigator;
+}

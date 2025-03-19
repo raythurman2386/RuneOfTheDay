@@ -9,6 +9,14 @@ interface SettingsContextType {
   setHaptics: (enabled: boolean) => void;
 }
 
+interface SettingsProviderProps {
+  children: React.ReactNode;
+  initialSettings?: {
+    theme?: "system" | "light" | "dark";
+    haptics?: boolean;
+  };
+}
+
 const SettingsContext = createContext<SettingsContextType | undefined>(
   undefined,
 );
@@ -21,23 +29,33 @@ export const useSettings = () => {
   return context;
 };
 
-export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({
+export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   children,
+  initialSettings = {},
 }) => {
-  const [theme, setTheme] = useState<"system" | "light" | "dark">("system");
-  const [haptics, setHaptics] = useState(true);
+  const [theme, setTheme] = useState<"system" | "light" | "dark">(
+    initialSettings.theme || "system"
+  );
+  const [haptics, setHaptics] = useState(
+    initialSettings.haptics === undefined ? true : initialSettings.haptics
+  );
 
   useEffect(() => {
     const loadSettings = async () => {
       try {
-        const savedTheme = await AsyncStorage.getItem("theme");
-        if (savedTheme) {
-          setTheme(savedTheme as "system" | "light" | "dark");
+        // Only load from storage if we don't have initial settings
+        if (!initialSettings.theme) {
+          const savedTheme = await AsyncStorage.getItem("theme");
+          if (savedTheme) {
+            setTheme(savedTheme as "system" | "light" | "dark");
+          }
         }
 
-        const savedHaptics = await AsyncStorage.getItem("haptics");
-        if (savedHaptics !== null) {
-          setHaptics(savedHaptics === "true");
+        if (initialSettings.haptics === undefined) {
+          const savedHaptics = await AsyncStorage.getItem("haptics");
+          if (savedHaptics !== null) {
+            setHaptics(savedHaptics === "true");
+          }
         }
       } catch (error) {
         console.error("Error loading settings:", error);
@@ -45,7 +63,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({
     };
 
     loadSettings();
-  }, []);
+  }, [initialSettings]);
 
   const handleThemeChange = async (newTheme: "system" | "light" | "dark") => {
     try {

@@ -23,6 +23,11 @@ This roadmap tracks the development progress of the "Rune of the Day" app, detai
   - [x] Rune list: As subtitle
   - [x] Flashcards: On back of card
 - [ ] Properly refactor to use Expo Router
+  - [x] Create basic file-based routing structure
+  - [x] Implement tab navigation with Expo Router
+  - [x] Set up dynamic routes for rune details
+  - [ ] Add transitions and animations
+  - [ ] Complete testing across all screens
 
 ## App Store Preparation
 
