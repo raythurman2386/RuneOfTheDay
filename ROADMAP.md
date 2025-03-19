@@ -22,12 +22,12 @@ This roadmap tracks the development progress of the "Rune of the Day" app, detai
   - [x] Main screen: Below rune meaning
   - [x] Rune list: As subtitle
   - [x] Flashcards: On back of card
-- [ ] Properly refactor to use Expo Router
+- [x] Properly refactor to use Expo Router
   - [x] Create basic file-based routing structure
   - [x] Implement tab navigation with Expo Router
   - [x] Set up dynamic routes for rune details
-  - [ ] Add transitions and animations
-  - [ ] Complete testing across all screens
+  - [x] Add transitions and animations
+  - [x] Complete testing across all screens
 
 ## App Store Preparation
 
@@ -73,7 +73,7 @@ This roadmap tracks the development progress of the "Rune of the Day" app, detai
 
 - [x] Add a settings screen (e.g., manual theme toggle).
 - [x] Enhance runes and rune details and properly expand on rune knowledge
-- [ ] Implement a rune details page that is linked to from the runes list.
+- [x] Implement a rune details page that is linked to from the runes list.
   - [x] Create basic RuneDetailsScreen component
   - [x] Set up navigation from RuneListScreen
   - [x] Add animations for smooth transitions between screens

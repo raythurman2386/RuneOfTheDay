@@ -7,7 +7,6 @@ import { SplashScreen } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useColorTheme } from "./hooks/useColorTheme";
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 interface InitialSettings {
