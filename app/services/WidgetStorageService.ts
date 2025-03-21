@@ -13,10 +13,12 @@ export const useWidgetStorageService = () => {
    * Saves rune data for widget consumption
    * @param rune The rune to save for widget display
    * @param index The index of the rune in the runes array
+   * @param isReversed Whether the rune is reversed
    */
   const saveRuneData = async (
     rune: Rune | null,
     index: number,
+    isReversed: boolean = false,
   ): Promise<void> => {
     if (!rune) return;
 
@@ -24,12 +26,15 @@ export const useWidgetStorageService = () => {
       const runeData = {
         symbol: rune.symbol,
         name: rune.name,
-        primaryThemes: rune.meaning.primaryThemes,
+        primaryThemes: isReversed && rune.meaning.reversed 
+          ? rune.meaning.reversed 
+          : rune.meaning.primaryThemes,
         deity:
           rune.associations.godsGoddesses.length > 0
             ? rune.associations.godsGoddesses[0]
             : "None",
         index,
+        isReversed,
         timestamp: new Date().toISOString(),
       };
 
@@ -37,8 +42,6 @@ export const useWidgetStorageService = () => {
 
       if (Platform.OS === "android") {
         try {
-          console.log("Updating Android widget with data:", runeData);
-
           if (NativeModules.RuneWidgetModule) {
             await NativeModules.RuneWidgetModule.updateWidget(
               JSON.stringify(runeData),
@@ -49,23 +52,23 @@ export const useWidgetStorageService = () => {
             );
           }
         } catch (error) {
-          console.error("Failed to update Android widget:", error);
+          console.error("Error updating Android widget:", error);
         }
       }
     } catch (error) {
-      console.error("Error saving rune data for widget:", error);
+      console.error("Error saving widget data:", error);
     }
   };
 
   /**
-   * Retrieves the current rune data for widget
+   * Retrieves the currently stored widget data
    */
   const getRuneData = async (): Promise<any | null> => {
     try {
       const data = await AsyncStorage.getItem(WIDGET_STORAGE_KEY);
       return data ? JSON.parse(data) : null;
     } catch (error) {
-      console.error("Error retrieving rune data for widget:", error);
+      console.error("Error retrieving widget data:", error);
       return null;
     }
   };

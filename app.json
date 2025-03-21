@@ -45,21 +45,6 @@
           "resizeMode": "contain",
           "backgroundColor": "#000000"
         }
-      ],
-      [
-        "@bittingz/expo-widgets",
-        {
-          "android": {
-            "widgetName": "RuneOfTheDay",
-            "widgetLabel": "Rune of the Day",
-            "widgetDescription": "Displays your daily rune with its meaning and deity",
-            "widgetUpdateFrequency": "daily",
-            "widgetPreviewImage": "./app/widgets/android/src/main/res/drawable/widget_preview.xml",
-            "widgetProvider": "com.ravenwoodcreations.runeoftheday.RuneWidgetProvider",
-            "widgetReceiver": "com.ravenwoodcreations.runeoftheday.RuneWidgetProvider",
-            "sourceDir": "./app/widgets/android"
-          }
-        }
       ]
     ],
     "experiments": {

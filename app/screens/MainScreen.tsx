@@ -12,7 +12,7 @@ import { useColorTheme } from "../hooks/useColorTheme";
 import useHaptics from "../hooks/useHaptics";
 
 const MainScreen = () => {
-  const rune = useRuneOfTheDay();
+  const { rune, isReversed } = useRuneOfTheDay();
   const { colors } = useColorTheme();
   const { height } = useWindowDimensions();
   const { successFeedback, mediumFeedback } = useHaptics();
@@ -50,7 +50,15 @@ const MainScreen = () => {
         style={[styles.runeContainer, { minHeight: height * 0.3 }]}
         onPress={() => mediumFeedback()}
       >
-        <Text style={[styles.symbol, { color: colors.text }]}>
+        <Text
+          style={[
+            styles.symbol,
+            { 
+              color: isReversed ? colors.reversedRune : colors.text,
+              transform: isReversed ? [{ rotate: "180deg" }] : undefined,
+            },
+          ]}
+        >
           {rune.symbol}
         </Text>
         <Text style={[styles.name, { color: colors.text }]}>{rune.name}</Text>
@@ -61,10 +69,10 @@ const MainScreen = () => {
 
       <View style={styles.meaningContainer}>
         <Text style={[styles.sectionTitle, { color: colors.text }]}>
-          Primary Meaning
+          {isReversed && rune.meaning.reversed ? "Reversed Meaning" : "Primary Meaning"}
         </Text>
         <Text style={[styles.meaning, { color: colors.icon }]}>
-          {rune.meaning.primaryThemes}
+          {isReversed && rune.meaning.reversed ? rune.meaning.reversed : rune.meaning.primaryThemes}
         </Text>
 
         {rune.associations.godsGoddesses &&

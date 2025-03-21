@@ -11,14 +11,16 @@ interface StoredData {
   date: string;
   index: number;
   timestamp: number;
+  isReversed?: boolean; 
 }
 
-const useRuneOfTheDay = (): Rune | null => {
+const useRuneOfTheDay = (): { rune: Rune | null; isReversed: boolean } => {
   const [rune, setRune] = useState<Rune | null>(null);
+  const [isReversed, setIsReversed] = useState<boolean>(true);
   const { isEnabled, scheduleNotification } = useNotifications();
   const { saveRuneData } = useWidgetStorageService();
 
-  const shouldUpdateRune = (storedTimestamp: number): boolean => {
+  const shouldUpdateRune = useCallback((storedTimestamp: number): boolean => {
     const currentDate = new Date();
     const storedDate = new Date(storedTimestamp);
 
@@ -32,16 +34,21 @@ const useRuneOfTheDay = (): Rune | null => {
       (isDifferentDay && currentDate >= sixAM) ||
       (currentDate >= sixAM && storedDate < sixAM)
     );
-  };
+  }, []);
 
-  const getRandomRune = (previousIndex?: number): number => {
-    if (runes.length <= 1) return 0;
+  const getRandomRune = useCallback((previousIndex?: number): { index: number; isReversed: boolean } => {
+    if (runes.length <= 1) return { index: 0, isReversed: false };
+    
     let newIndex = Math.floor(Math.random() * runes.length);
     if (previousIndex !== undefined && newIndex === previousIndex) {
       newIndex = (newIndex + 1) % runes.length;
     }
-    return newIndex;
-  };
+
+    const canBeReversed = Boolean(runes[newIndex].meaning.reversed);
+    const isReversed = canBeReversed && Math.random() < 0.5;
+
+    return { index: newIndex, isReversed };
+  }, []);
 
   const scheduleRuneNotification = useCallback(async () => {
     if (!isEnabled) return;
@@ -71,52 +78,50 @@ const useRuneOfTheDay = (): Rune | null => {
         const storedData: StoredData = JSON.parse(storedDataStr);
 
         if (shouldUpdateRune(storedData.timestamp)) {
-          const newIndex = getRandomRune(storedData.index);
+          const { index: newIndex, isReversed } = getRandomRune(storedData.index);
           const currentDate = new Date().toISOString().split("T")[0];
           const newData: StoredData = {
             date: currentDate,
             index: newIndex,
             timestamp: currentTime,
+            isReversed,
           };
 
           await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(newData));
           setRune(runes[newIndex]);
+          setIsReversed(isReversed);
 
-          // Update widget data when rune changes
-          await saveRuneData(runes[newIndex], newIndex);
-
+          await saveRuneData(runes[newIndex], newIndex, isReversed);
           await scheduleRuneNotification();
         } else {
           setRune(runes[storedData.index]);
-
-          // Ensure widget has the current rune data
-          await saveRuneData(runes[storedData.index], storedData.index);
+          setIsReversed(storedData.isReversed ?? false);
         }
       } else {
         const currentDate = new Date().toISOString().split("T")[0];
-        const newIndex = getRandomRune();
+        const { index: newIndex, isReversed } = getRandomRune();
         const newData: StoredData = {
           date: currentDate,
           index: newIndex,
           timestamp: currentTime,
+          isReversed,
         };
 
         await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(newData));
         setRune(runes[newIndex]);
+        setIsReversed(isReversed);
 
-        // Update widget with initial rune data
-        await saveRuneData(runes[newIndex], newIndex);
-
+        await saveRuneData(runes[newIndex], newIndex, isReversed);
         await scheduleRuneNotification();
       }
     } catch (error) {
       console.error("Error in updateRuneOfTheDay:", error);
-      const index = Math.floor(Math.random() * runes.length);
+      const { index, isReversed } = getRandomRune();
       setRune(runes[index]);
+      setIsReversed(isReversed);
 
-      // Try to update widget even in error case
       try {
-        await saveRuneData(runes[index], index);
+        await saveRuneData(runes[index], index, isReversed);
       } catch (widgetError) {
         console.error(
           "Failed to update widget in error recovery:",
@@ -124,20 +129,29 @@ const useRuneOfTheDay = (): Rune | null => {
         );
       }
     }
-  }, [scheduleRuneNotification, saveRuneData]);
+  }, [scheduleRuneNotification, saveRuneData, shouldUpdateRune, getRandomRune]);
 
+  // Initial load of rune data
   useEffect(() => {
-    let interval: NodeJS.Timeout;
-
     updateRuneOfTheDay();
-    interval = setInterval(updateRuneOfTheDay, 15 * 60 * 1000);
-
-    return () => {
-      clearInterval(interval);
-    };
   }, [updateRuneOfTheDay]);
 
-  return rune;
+  // Setup periodic check
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      const storedDataStr = await AsyncStorage.getItem(STORAGE_KEY);
+      if (storedDataStr) {
+        const storedData: StoredData = JSON.parse(storedDataStr);
+        if (shouldUpdateRune(storedData.timestamp)) {
+          updateRuneOfTheDay();
+        }
+      }
+    }, 15 * 60 * 1000); // Check every 15 minutes
+
+    return () => clearInterval(interval);
+  }, [shouldUpdateRune, updateRuneOfTheDay]);
+
+  return { rune, isReversed };
 };
 
 export { useRuneOfTheDay };

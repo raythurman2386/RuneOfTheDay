@@ -1,4 +1,4 @@
-package com.ravenwoodcreations.runeoftheday
+package package_name
 
 import com.facebook.react.ReactPackage
 import com.facebook.react.bridge.NativeModule

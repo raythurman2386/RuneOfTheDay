@@ -12,6 +12,9 @@ export interface Rune {
   historicalContext: string;
   associations: {
     godsGoddesses: string[];
+    plants?: string[];
+    stones?: string[];
+    rituals?: string[];
   };
   otherDetails: {
     keywords: string[];

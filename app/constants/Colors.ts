@@ -5,6 +5,8 @@
 
 const tintColorLight = "#0a7ea4";
 const tintColorDark = "#fff";
+const reversedRuneLight = "rgba(200, 30, 30, 0.9)"; // Subtle red for light mode
+const reversedRuneDark = "rgba(255, 80, 80, 0.9)"; // Brighter red for dark mode
 
 export const Colors = {
   light: {
@@ -15,6 +17,7 @@ export const Colors = {
     icon: "#687076",
     tabIconDefault: "#687076",
     tabIconSelected: tintColorLight,
+    reversedRune: reversedRuneLight,
   },
   dark: {
     text: "#ECEDEE",
@@ -24,6 +27,7 @@ export const Colors = {
     icon: "#9BA1A6",
     tabIconDefault: "#9BA1A6",
     tabIconSelected: tintColorDark,
+    reversedRune: reversedRuneDark,
   },
 };
 

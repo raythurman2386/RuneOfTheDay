@@ -1,4 +1,4 @@
-package com.ravenwoodcreations.runeoftheday
+package package_name
 
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
