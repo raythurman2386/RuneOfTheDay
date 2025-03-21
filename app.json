@@ -56,7 +56,8 @@
             "widgetUpdateFrequency": "daily",
             "widgetPreviewImage": "./app/widgets/android/src/main/res/drawable/widget_preview.xml",
             "widgetProvider": "com.ravenwoodcreations.runeoftheday.RuneWidgetProvider",
-            "widgetReceiver": "com.ravenwoodcreations.runeoftheday.RuneWidgetProvider"
+            "widgetReceiver": "com.ravenwoodcreations.runeoftheday.RuneWidgetProvider",
+            "sourceDir": "./app/widgets/android"
           }
         }
       ]
