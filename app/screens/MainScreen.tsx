@@ -53,7 +53,7 @@ const MainScreen = () => {
         <Text
           style={[
             styles.symbol,
-            { 
+            {
               color: isReversed ? colors.reversedRune : colors.text,
               transform: isReversed ? [{ rotate: "180deg" }] : undefined,
             },
@@ -69,10 +69,14 @@ const MainScreen = () => {
 
       <View style={styles.meaningContainer}>
         <Text style={[styles.sectionTitle, { color: colors.text }]}>
-          {isReversed && rune.meaning.reversed ? "Reversed Meaning" : "Primary Meaning"}
+          {isReversed && rune.meaning.reversed
+            ? "Reversed Meaning"
+            : "Primary Meaning"}
         </Text>
         <Text style={[styles.meaning, { color: colors.icon }]}>
-          {isReversed && rune.meaning.reversed ? rune.meaning.reversed : rune.meaning.primaryThemes}
+          {isReversed && rune.meaning.reversed
+            ? rune.meaning.reversed
+            : rune.meaning.primaryThemes}
         </Text>
 
         {rune.associations.godsGoddesses &&

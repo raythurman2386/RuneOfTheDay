@@ -11,12 +11,12 @@ interface StoredData {
   date: string;
   index: number;
   timestamp: number;
-  isReversed?: boolean; 
+  isReversed?: boolean;
 }
 
 const useRuneOfTheDay = (): { rune: Rune | null; isReversed: boolean } => {
   const [rune, setRune] = useState<Rune | null>(null);
-  const [isReversed, setIsReversed] = useState<boolean>(true);
+  const [isReversed, setIsReversed] = useState<boolean>(false);
   const { isEnabled, scheduleNotification } = useNotifications();
   const { saveRuneData } = useWidgetStorageService();
 
@@ -36,19 +36,22 @@ const useRuneOfTheDay = (): { rune: Rune | null; isReversed: boolean } => {
     );
   }, []);
 
-  const getRandomRune = useCallback((previousIndex?: number): { index: number; isReversed: boolean } => {
-    if (runes.length <= 1) return { index: 0, isReversed: false };
-    
-    let newIndex = Math.floor(Math.random() * runes.length);
-    if (previousIndex !== undefined && newIndex === previousIndex) {
-      newIndex = (newIndex + 1) % runes.length;
-    }
+  const getRandomRune = useCallback(
+    (previousIndex?: number): { index: number; isReversed: boolean } => {
+      if (runes.length <= 1) return { index: 0, isReversed: false };
 
-    const canBeReversed = Boolean(runes[newIndex].meaning.reversed);
-    const isReversed = canBeReversed && Math.random() < 0.5;
+      let newIndex = Math.floor(Math.random() * runes.length);
+      if (previousIndex !== undefined && newIndex === previousIndex) {
+        newIndex = (newIndex + 1) % runes.length;
+      }
 
-    return { index: newIndex, isReversed };
-  }, []);
+      const canBeReversed = Boolean(runes[newIndex].meaning.reversed);
+      const isReversed = canBeReversed && Math.random() < 0.5;
+
+      return { index: newIndex, isReversed };
+    },
+    [],
+  );
 
   const scheduleRuneNotification = useCallback(async () => {
     if (!isEnabled) return;
@@ -59,8 +62,8 @@ const useRuneOfTheDay = (): { rune: Rune | null; isReversed: boolean } => {
       tomorrow.setHours(6, 0, 0, 0);
 
       await scheduleNotification(
-        "Your Daily Rune Awaits",
-        "A new rune has been drawn for you. Tap to view its wisdom.",
+        `Your Daily Rune Awaits ${rune?.symbol}`,
+        `${rune?.name} - ${isReversed ? rune?.meaning.reversed : rune?.meaning.primaryThemes}`,
         tomorrow,
         NOTIFICATION_IDENTIFIER,
       );
@@ -78,7 +81,9 @@ const useRuneOfTheDay = (): { rune: Rune | null; isReversed: boolean } => {
         const storedData: StoredData = JSON.parse(storedDataStr);
 
         if (shouldUpdateRune(storedData.timestamp)) {
-          const { index: newIndex, isReversed } = getRandomRune(storedData.index);
+          const { index: newIndex, isReversed } = getRandomRune(
+            storedData.index,
+          );
           const currentDate = new Date().toISOString().split("T")[0];
           const newData: StoredData = {
             date: currentDate,
@@ -138,15 +143,18 @@ const useRuneOfTheDay = (): { rune: Rune | null; isReversed: boolean } => {
 
   // Setup periodic check
   useEffect(() => {
-    const interval = setInterval(async () => {
-      const storedDataStr = await AsyncStorage.getItem(STORAGE_KEY);
-      if (storedDataStr) {
-        const storedData: StoredData = JSON.parse(storedDataStr);
-        if (shouldUpdateRune(storedData.timestamp)) {
-          updateRuneOfTheDay();
+    const interval = setInterval(
+      async () => {
+        const storedDataStr = await AsyncStorage.getItem(STORAGE_KEY);
+        if (storedDataStr) {
+          const storedData: StoredData = JSON.parse(storedDataStr);
+          if (shouldUpdateRune(storedData.timestamp)) {
+            updateRuneOfTheDay();
+          }
         }
-      }
-    }, 15 * 60 * 1000); // Check every 15 minutes
+      },
+      15 * 60 * 1000,
+    ); // Check every 15 minutes
 
     return () => clearInterval(interval);
   }, [shouldUpdateRune, updateRuneOfTheDay]);

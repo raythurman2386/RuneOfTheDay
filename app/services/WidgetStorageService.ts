@@ -26,9 +26,10 @@ export const useWidgetStorageService = () => {
       const runeData = {
         symbol: rune.symbol,
         name: rune.name,
-        primaryThemes: isReversed && rune.meaning.reversed 
-          ? rune.meaning.reversed 
-          : rune.meaning.primaryThemes,
+        primaryThemes:
+          isReversed && rune.meaning.reversed
+            ? rune.meaning.reversed
+            : rune.meaning.primaryThemes,
         deity:
           rune.associations.godsGoddesses.length > 0
             ? rune.associations.godsGoddesses[0]
