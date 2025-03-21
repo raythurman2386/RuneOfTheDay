@@ -61,19 +61,19 @@ class RuneWidgetProvider : AppWidgetProvider() {
                 val runeData = JSONObject(runeDataString)
                 
                 // Set the widget text views with rune data
-                views.setTextViewText(R.id.widget_rune_symbol, runeData.optString("symbol", "ᚠ"))
-                views.setTextViewText(R.id.widget_rune_name, runeData.optString("name", "Fehu"))
-                views.setTextViewText(R.id.widget_rune_meaning, runeData.optString("primaryThemes", "Wealth, Abundance"))
+                views.setTextViewText(R.id.widget_rune_symbol, runeData.optString("symbol", context.getString(R.string.default_rune_symbol)))
+                views.setTextViewText(R.id.widget_rune_name, runeData.optString("name", context.getString(R.string.default_rune_name)))
+                views.setTextViewText(R.id.widget_rune_meaning, runeData.optString("primaryThemes", context.getString(R.string.default_rune_meaning)))
                 
-                val deity = runeData.optString("deity", "None")
+                val deity = runeData.optString("deity", context.getString(R.string.default_rune_deity))
                 views.setTextViewText(R.id.widget_rune_deity, "Deity: $deity")
             } catch (e: Exception) {
                 // Set default values if there's an error parsing the JSON
-                setDefaultValues(views)
+                setDefaultValues(views, context)
             }
         } else {
             // Set default values if no data is available
-            setDefaultValues(views)
+            setDefaultValues(views, context)
         }
         
         // Create an Intent to open the app when widget is clicked
@@ -91,10 +91,10 @@ class RuneWidgetProvider : AppWidgetProvider() {
         appWidgetManager.updateAppWidget(appWidgetId, views)
     }
     
-    private fun setDefaultValues(views: RemoteViews) {
-        views.setTextViewText(R.id.widget_rune_symbol, "ᚠ")
-        views.setTextViewText(R.id.widget_rune_name, "Fehu")
-        views.setTextViewText(R.id.widget_rune_meaning, "Wealth, Abundance")
-        views.setTextViewText(R.id.widget_rune_deity, "Deity: Freyr")
+    private fun setDefaultValues(views: RemoteViews, context: Context) {
+        views.setTextViewText(R.id.widget_rune_symbol, context.getString(R.string.default_rune_symbol))
+        views.setTextViewText(R.id.widget_rune_name, context.getString(R.string.default_rune_name))
+        views.setTextViewText(R.id.widget_rune_meaning, context.getString(R.string.default_rune_meaning))
+        views.setTextViewText(R.id.widget_rune_deity, "Deity: ${context.getString(R.string.default_rune_deity)}")
     }
 }

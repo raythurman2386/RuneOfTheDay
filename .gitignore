@@ -38,8 +38,7 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
-# Android/iOS build files
-ios/
+
 *.keystore
 google-services.json
 GoogleService-Info.plist
