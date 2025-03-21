@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { runes, Rune } from "../data/runes";
 import useNotifications from "./useNotifications";
+import useWidgetStorageService from "../services/WidgetStorageService";
 
 const STORAGE_KEY = "runeOfTheDay";
 const NOTIFICATION_IDENTIFIER = "runeOfTheDayNotification";
@@ -15,6 +16,7 @@ interface StoredData {
 const useRuneOfTheDay = (): Rune | null => {
   const [rune, setRune] = useState<Rune | null>(null);
   const { isEnabled, scheduleNotification } = useNotifications();
+  const { saveRuneData } = useWidgetStorageService();
 
   const shouldUpdateRune = (storedTimestamp: number): boolean => {
     const currentDate = new Date();
@@ -80,9 +82,15 @@ const useRuneOfTheDay = (): Rune | null => {
           await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(newData));
           setRune(runes[newIndex]);
 
+          // Update widget data when rune changes
+          await saveRuneData(runes[newIndex], newIndex);
+
           await scheduleRuneNotification();
         } else {
           setRune(runes[storedData.index]);
+
+          // Ensure widget has the current rune data
+          await saveRuneData(runes[storedData.index], storedData.index);
         }
       } else {
         const currentDate = new Date().toISOString().split("T")[0];
@@ -96,14 +104,27 @@ const useRuneOfTheDay = (): Rune | null => {
         await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(newData));
         setRune(runes[newIndex]);
 
+        // Update widget with initial rune data
+        await saveRuneData(runes[newIndex], newIndex);
+
         await scheduleRuneNotification();
       }
     } catch (error) {
       console.error("Error in updateRuneOfTheDay:", error);
       const index = Math.floor(Math.random() * runes.length);
       setRune(runes[index]);
+
+      // Try to update widget even in error case
+      try {
+        await saveRuneData(runes[index], index);
+      } catch (widgetError) {
+        console.error(
+          "Failed to update widget in error recovery:",
+          widgetError,
+        );
+      }
     }
-  }, [scheduleRuneNotification]);
+  }, [scheduleRuneNotification, saveRuneData]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;

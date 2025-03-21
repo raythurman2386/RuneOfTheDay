@@ -28,6 +28,10 @@ This roadmap tracks the development progress of the "Rune of the Day" app, detai
   - [x] Set up dynamic routes for rune details
   - [x] Add transitions and animations
   - [x] Complete testing across all screens
+  - [x] Add notifications for daily rune selection
+  - [ ] Add widget support for daily rune selection
+    - [x] Android widget support
+    - [ ] iOS widget support
 
 ## App Store Preparation
 
@@ -52,6 +56,7 @@ This roadmap tracks the development progress of the "Rune of the Day" app, detai
   - [x] Add smooth animations (e.g., flashcard flips, screen transitions).
 - [ ] Ensure responsiveness across screen sizes and orientations.
 - [ ] Enhance tab bar with custom rune-inspired icons.
+- [ ] Ensure notifications are styled and consistent.
 
 ## Testing
 

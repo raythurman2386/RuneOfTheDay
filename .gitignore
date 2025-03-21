@@ -39,7 +39,6 @@ yarn-error.*
 *.tsbuildinfo
 
 # Android/iOS build files
-android/
 ios/
 *.keystore
 google-services.json

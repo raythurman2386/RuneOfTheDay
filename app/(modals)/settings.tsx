@@ -7,10 +7,12 @@ import {
   Pressable,
   Platform,
   useColorScheme,
+  ScrollView,
 } from "react-native";
 import { useSettings } from "../contexts/SettingsContext";
 import { useColorTheme } from "../hooks/useColorTheme";
 import { Stack } from "expo-router";
+import RuneWidget from "../components/RuneWidget";
 
 export default function SettingsScreen() {
   const { theme, setTheme, haptics, setHaptics } = useSettings();
@@ -28,7 +30,9 @@ export default function SettingsScreen() {
           },
         }}
       />
-      <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <ScrollView
+        style={[styles.container, { backgroundColor: colors.background }]}
+      >
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: colors.text }]}>
             Appearance
@@ -147,7 +151,47 @@ export default function SettingsScreen() {
             />
           </View>
         </View>
-      </View>
+
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>
+            Home Screen Widget
+          </Text>
+          <View style={[styles.card, { backgroundColor: colors.surface }]}>
+            <Text style={[styles.description, { color: colors.text }]}>
+              Add the Rune of the Day widget to your home screen to see your
+              daily rune at a glance.
+            </Text>
+            <Text style={[styles.instructions, { color: colors.text }]}>
+              To add the widget to your home screen:
+            </Text>
+            <Text style={[styles.step, { color: colors.icon }]}>
+              1. Long press on an empty area of your home screen
+            </Text>
+            <Text style={[styles.step, { color: colors.icon }]}>
+              2. Tap "Widgets" or "Add widget"
+            </Text>
+            <Text style={[styles.step, { color: colors.icon }]}>
+              3. Find "Rune of the Day" in the list
+            </Text>
+            <Text style={[styles.step, { color: colors.icon }]}>
+              4. Tap and hold to place on your home screen
+            </Text>
+          </View>
+
+          <RuneWidget />
+
+          <View style={[styles.card, { backgroundColor: colors.surface }]}>
+            <Text style={[styles.description, { color: colors.text }]}>
+              The widget updates automatically at 6 AM each day with your new
+              daily rune.
+            </Text>
+            <Text style={[styles.description, { color: colors.text }]}>
+              Tap the widget at any time to open the app and see more details
+              about your daily rune.
+            </Text>
+          </View>
+        </View>
+      </ScrollView>
     </>
   );
 }
@@ -205,5 +249,26 @@ const styles = StyleSheet.create({
   themeButtonSubtext: {
     fontSize: 12,
     marginTop: 4,
+  },
+  card: {
+    borderRadius: 8,
+    padding: 16,
+    marginBottom: 16,
+  },
+  description: {
+    fontSize: 16,
+    marginBottom: 12,
+    lineHeight: 22,
+  },
+  instructions: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginTop: 8,
+    marginBottom: 8,
+  },
+  step: {
+    fontSize: 14,
+    marginBottom: 4,
+    paddingLeft: 16,
   },
 });
