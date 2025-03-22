@@ -60,12 +60,18 @@ const FlashcardScreen = () => {
   const progress = `${currentIndex + 1} / ${runes.length}`;
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <View
+      style={[styles.container, { backgroundColor: colors.background }]}
+      testID="flashcard-screen"
+    >
       <View style={styles.header}>
-        <Text style={[styles.progress, { color: colors.text }]}>
+        <Text
+          style={[styles.progress, { color: colors.text }]}
+          testID="progress-text"
+        >
           {progress}
         </Text>
-        <Text style={[styles.hint, { color: colors.icon }]}>
+        <Text style={[styles.hint, { color: colors.icon }]} testID="flip-hint">
           Tap card to flip
         </Text>
       </View>
@@ -87,14 +93,24 @@ const FlashcardScreen = () => {
               styles.card,
               { backgroundColor: colors.surface, borderColor: colors.icon },
             ]}
+            testID="card-front"
           >
-            <Text style={[styles.symbol, { color: colors.text }]}>
+            <Text
+              style={[styles.symbol, { color: colors.text }]}
+              testID="rune-symbol"
+            >
               {currentRune.symbol}
             </Text>
-            <Text style={[styles.name, { color: colors.text }]}>
+            <Text
+              style={[styles.name, { color: colors.text }]}
+              testID="rune-name"
+            >
               {currentRune.name}
             </Text>
-            <Text style={[styles.pronunciation, { color: colors.icon }]}>
+            <Text
+              style={[styles.pronunciation, { color: colors.icon }]}
+              testID="rune-pronunciation"
+            >
               {currentRune.pronunciation}
             </Text>
           </View>
@@ -105,15 +121,25 @@ const FlashcardScreen = () => {
               styles.card,
               { backgroundColor: colors.surface, borderColor: colors.icon },
             ]}
+            testID="card-back"
           >
-            <Text style={[styles.backTitle, { color: colors.text }]}>
+            <Text
+              style={[styles.backTitle, { color: colors.text }]}
+              testID="rune-name-back"
+            >
               {currentRune.name}
             </Text>
 
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>
+            <Text
+              style={[styles.sectionTitle, { color: colors.text }]}
+              testID="meaning-title"
+            >
               Meaning
             </Text>
-            <Text style={[styles.meaning, { color: colors.icon }]}>
+            <Text
+              style={[styles.meaning, { color: colors.icon }]}
+              testID="rune-meaning"
+            >
               {currentRune.meaning.primaryThemes}
             </Text>
 
@@ -125,10 +151,14 @@ const FlashcardScreen = () => {
                       styles.sectionTitle,
                       { color: colors.text, marginTop: 12 },
                     ]}
+                    testID="associated-deities-title"
                   >
                     Associated Deities
                   </Text>
-                  <Text style={[styles.deity, { color: colors.icon }]}>
+                  <Text
+                    style={[styles.deity, { color: colors.icon }]}
+                    testID="associated-deities"
+                  >
                     {currentRune.associations.godsGoddesses.join(", ")}
                   </Text>
                 </>
@@ -139,10 +169,14 @@ const FlashcardScreen = () => {
                 styles.sectionTitle,
                 { color: colors.text, marginTop: 12 },
               ]}
+              testID="translation-title"
             >
               Translation
             </Text>
-            <Text style={[styles.translation, { color: colors.icon }]}>
+            <Text
+              style={[styles.translation, { color: colors.icon }]}
+              testID="rune-translation"
+            >
               {currentRune.translation}
             </Text>
           </View>
@@ -156,9 +190,13 @@ const FlashcardScreen = () => {
             { backgroundColor: colors.surface, borderColor: colors.icon },
           ]}
           onPress={previousRune}
+          testID="prev-button"
         >
           <MaterialIcons name="chevron-left" size={24} color={colors.text} />
-          <Text style={[styles.buttonText, { color: colors.text }]}>
+          <Text
+            style={[styles.buttonText, { color: colors.text }]}
+            testID="prev-button-text"
+          >
             Previous
           </Text>
         </Pressable>
@@ -169,8 +207,14 @@ const FlashcardScreen = () => {
             { backgroundColor: colors.surface, borderColor: colors.icon },
           ]}
           onPress={nextRune}
+          testID="next-button"
         >
-          <Text style={[styles.buttonText, { color: colors.text }]}>Next</Text>
+          <Text
+            style={[styles.buttonText, { color: colors.text }]}
+            testID="next-button-text"
+          >
+            Next
+          </Text>
           <MaterialIcons name="chevron-right" size={24} color={colors.text} />
         </Pressable>
       </View>
