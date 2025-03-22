@@ -38,10 +38,8 @@ const useRuneOfTheDay = (): { rune: Rune | null; isReversed: boolean } => {
     index: number;
     isReversed: boolean;
   } => {
-    // True random selection - no bias against previous pulls
     const index = Math.floor(Math.random() * runes.length);
 
-    // Carefully check if this rune has a valid reversed meaning
     const selectedRune = runes[index];
     const hasReversedMeaning = Boolean(
       selectedRune?.meaning?.reversed &&
