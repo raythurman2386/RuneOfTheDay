@@ -30,7 +30,7 @@ This roadmap tracks the development progress of the "Rune of the Day" app, detai
   - [x] Complete testing across all screens
   - [x] Add notifications for daily rune selection
   - [ ] Add widget support for daily rune selection
-    - [x] Android widget support
+    - [ ] Android widget support
     - [ ] iOS widget support
 
 ## App Store Preparation

@@ -4,10 +4,27 @@ import { Platform } from "react-native";
 
 const NOTIFICATION_CHANNEL_ID = "rune-daily-updates";
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
+
 const useNotifications = () => {
   const [isEnabled, setIsEnabled] = useState<boolean>(false);
-  const notificationListener = useRef<Notifications.Subscription>();
-  const responseListener = useRef<Notifications.Subscription>();
+  const notificationListener = useRef<Notifications.EventSubscription>();
+  const responseListener = useRef<Notifications.EventSubscription>();
+
+  const checkNotificationPermissions = async (): Promise<void> => {
+    try {
+      const { status } = await Notifications.getPermissionsAsync();
+      setIsEnabled(status === "granted");
+    } catch (error) {
+      console.error("Error checking notification permissions:", error);
+    }
+  };
 
   const requestPermissions = async (): Promise<boolean> => {
     try {
@@ -29,6 +46,7 @@ const useNotifications = () => {
             importance: Notifications.AndroidImportance.HIGH,
             vibrationPattern: [0, 250, 250, 250],
             lightColor: "#FF231F7C",
+            enableVibrate: true,
           },
         );
       }
@@ -46,7 +64,13 @@ const useNotifications = () => {
     triggerDate: Date,
     identifier: string,
   ): Promise<boolean> => {
-    if (!isEnabled) return false;
+    // Always check permission status before scheduling
+    await checkNotificationPermissions();
+
+    if (!isEnabled) {
+      console.log("Cannot schedule notification: permissions not granted");
+      return false;
+    }
 
     try {
       if (triggerDate.getTime() <= Date.now()) {
@@ -54,36 +78,56 @@ const useNotifications = () => {
         return false;
       }
 
-      await Notifications.cancelScheduledNotificationAsync(identifier);
+      // Cancel any existing notification with this identifier
+      await Notifications.cancelScheduledNotificationAsync(identifier).catch(
+        () => {
+          // Ignore error if notification didn't exist
+        },
+      );
 
       const content = {
         title,
         body,
         sound: true,
+        priority: Notifications.AndroidNotificationPriority.HIGH,
       };
 
-      if (Platform.OS === "android") {
-        await Notifications.scheduleNotificationAsync({
-          content,
-          trigger: {
-            channelId: NOTIFICATION_CHANNEL_ID,
-            date: triggerDate,
-          },
-          identifier,
-        });
-      } else {
-        const secondsFromNow = Math.max(
-          0,
-          Math.floor((triggerDate.getTime() - Date.now()) / 1000),
+      const secondsFromNow = Math.max(
+        Math.floor((triggerDate.getTime() - Date.now()) / 1000),
+      );
+
+      const trigger =
+        Platform.OS === "android"
+          ? ({
+              seconds: secondsFromNow,
+              channelId: NOTIFICATION_CHANNEL_ID,
+            } as Notifications.NotificationTriggerInput)
+          : ({
+              seconds: secondsFromNow,
+            } as Notifications.TimeIntervalTriggerInput);
+
+      await Notifications.scheduleNotificationAsync({
+        content,
+        trigger,
+        identifier,
+      });
+
+      // Debug logging for notification scheduling
+      console.log(
+        `Scheduled notification "${title}" for ${triggerDate.toLocaleString()} (${secondsFromNow}s from now)`,
+      );
+
+      // For debugging: verify notification was actually scheduled
+      const scheduledNotifications =
+        await Notifications.getAllScheduledNotificationsAsync();
+      const wasScheduled = scheduledNotifications.some(
+        (n) => n.identifier === identifier,
+      );
+
+      if (!wasScheduled) {
+        console.error(
+          "Notification verification failed - not found in scheduled list",
         );
-        await Notifications.scheduleNotificationAsync({
-          content,
-          trigger: {
-            seconds: secondsFromNow,
-            type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
-          },
-          identifier,
-        });
       }
 
       return true;
@@ -110,6 +154,9 @@ const useNotifications = () => {
   };
 
   useEffect(() => {
+    requestPermissions();
+    checkNotificationPermissions();
+
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
         console.log("Notification received:", notification);
@@ -120,6 +167,11 @@ const useNotifications = () => {
         console.log("Notification response:", response);
       });
 
+    const permissionCheckInterval = setInterval(
+      checkNotificationPermissions,
+      3600000,
+    ); // Check hourly
+
     return () => {
       if (notificationListener.current) {
         Notifications.removeNotificationSubscription(
@@ -129,6 +181,7 @@ const useNotifications = () => {
       if (responseListener.current) {
         Notifications.removeNotificationSubscription(responseListener.current);
       }
+      clearInterval(permissionCheckInterval);
     };
   }, []);
 
