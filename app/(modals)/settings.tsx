@@ -47,15 +47,101 @@ export default function SettingsScreen() {
         }}
       />
       <View style={[styles.container, { backgroundColor: colors.background }]}>
-        {/* Appearance section - unchanged */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: colors.text }]}>
             Appearance
           </Text>
-          {/* ... existing appearance options ... */}
+          <View style={styles.optionsContainer}>
+            <Pressable
+              style={[
+                styles.themeButton,
+                {
+                  backgroundColor:
+                    theme === "system" ? colors.tint : colors.surface,
+                  borderColor: colors.icon,
+                },
+              ]}
+              onPress={() => setTheme("system")}
+              accessibilityLabel="Use system theme"
+              accessibilityRole="button"
+              accessibilityState={{ selected: theme === "system" }}
+            >
+              <Text
+                style={[
+                  styles.themeButtonText,
+                  {
+                    color: theme === "system" ? colors.background : colors.text,
+                  },
+                ]}
+              >
+                System
+              </Text>
+              <Text
+                style={[
+                  styles.themeButtonSubtext,
+                  {
+                    color: theme === "system" ? colors.background : colors.icon,
+                  },
+                ]}
+              >
+                {systemColorScheme === "dark" ? "Dark" : "Light"}
+              </Text>
+            </Pressable>
+
+            <Pressable
+              style={[
+                styles.themeButton,
+                {
+                  backgroundColor:
+                    theme === "light" ? colors.tint : colors.surface,
+                  borderColor: colors.icon,
+                },
+              ]}
+              onPress={() => setTheme("light")}
+              accessibilityLabel="Use light theme"
+              accessibilityRole="button"
+              accessibilityState={{ selected: theme === "light" }}
+            >
+              <Text
+                style={[
+                  styles.themeButtonText,
+                  {
+                    color: theme === "light" ? colors.background : colors.text,
+                  },
+                ]}
+              >
+                Light
+              </Text>
+            </Pressable>
+
+            <Pressable
+              style={[
+                styles.themeButton,
+                {
+                  backgroundColor:
+                    theme === "dark" ? colors.tint : colors.surface,
+                  borderColor: colors.icon,
+                },
+              ]}
+              onPress={() => setTheme("dark")}
+              accessibilityLabel="Use dark theme"
+              accessibilityRole="button"
+              accessibilityState={{ selected: theme === "dark" }}
+            >
+              <Text
+                style={[
+                  styles.themeButtonText,
+                  {
+                    color: theme === "dark" ? colors.background : colors.text,
+                  },
+                ]}
+              >
+                Dark
+              </Text>
+            </Pressable>
+          </View>
         </View>
 
-        {/* Haptics section - unchanged */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: colors.text }]}>
             Haptics
