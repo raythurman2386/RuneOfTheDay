@@ -12,7 +12,7 @@ import {
 import { useSettings } from "../contexts/SettingsContext";
 import { useColorTheme } from "../hooks/useColorTheme";
 import { Stack } from "expo-router";
-import useNotifications from "../hooks/useNotifications"; // Import the notifications hook
+import useNotifications from "../hooks/useNotifications";
 
 export default function SettingsScreen() {
   const { theme, setTheme, haptics, setHaptics } = useSettings();

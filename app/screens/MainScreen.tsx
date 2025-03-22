@@ -7,7 +7,7 @@ import {
   Pressable,
   ScrollView,
 } from "react-native";
-import { useRuneOfTheDay } from "../hooks/useRuneOfTheDay";
+import useRuneOfTheDay from "../hooks/useRuneOfTheDay";
 import { useColorTheme } from "../hooks/useColorTheme";
 import useHaptics from "../hooks/useHaptics";
 
