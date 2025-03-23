@@ -60,12 +60,12 @@ This roadmap tracks the development progress of the "Rune of the Day" app, detai
 
 ## Testing
 
-- [ ] Write unit tests for key logic:
-  - [ ] Test daily rune selection consistency.
+- [x] Write unit tests for key logic:
+  - [x] Test daily rune selection consistency.
   - [ ] Verify `AsyncStorage` persistence.
 - [ ] Perform cross-platform testing (iOS, Android, web).
 - [ ] Add accessibility features (e.g., screen reader compatibility).
-- [ ] Validate theme switching and style consistency.
+- [x] Validate theme switching and style consistency.
 
 ## Debugging
 
