@@ -30,7 +30,7 @@
   "submit": {
     "production": {
       "android": {
-        "serviceAccountId": "@env:ANDROID_ACCOUNT_ID",
+        "serviceAccountKeyPath": "@env:ANDROID_SERVICE_ACCOUNT_KEY_PATH",
         "track": "production",
         "releaseStatus": "completed",
         "applicationId": "@env:ANDROID_PACKAGE_NAME"
