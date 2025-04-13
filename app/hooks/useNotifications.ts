@@ -63,25 +63,23 @@ const useNotifications = () => {
     body: string,
     triggerDate: Date,
     identifier: string,
+    repeatsDaily: boolean = false,
   ): Promise<boolean> => {
-    // Always check permission status before scheduling
     await checkNotificationPermissions();
-
     if (!isEnabled) {
       console.log("Cannot schedule notification: permissions not granted");
       return false;
     }
 
     try {
-      if (triggerDate.getTime() <= Date.now()) {
-        console.warn("Cannot schedule notification in the past");
-        return false;
-      }
-
-      // Cancel any existing notification with this identifier
       await Notifications.cancelScheduledNotificationAsync(identifier).catch(
-        () => {
-          // Ignore error if notification didn't exist
+        (err) => {
+          if (!err.message.includes("Could not find")) {
+            console.warn(
+              `Error cancelling potentially existing notification ${identifier}:`,
+              err,
+            );
+          }
         },
       );
 
@@ -92,32 +90,73 @@ const useNotifications = () => {
         priority: Notifications.AndroidNotificationPriority.HIGH,
       };
 
-      const secondsFromNow = Math.max(
-        Math.floor((triggerDate.getTime() - Date.now()) / 1000),
-      );
+      if (repeatsDaily) {
+        let nextTriggerTimeLog = "";
+        if (triggerDate.getTime() <= Date.now()) {
+          let nextTriggerCalc = new Date(triggerDate);
+          nextTriggerCalc.setHours(
+            triggerDate.getHours(),
+            triggerDate.getMinutes(),
+            0,
+            0,
+          );
+          if (nextTriggerCalc.getTime() <= Date.now()) {
+            nextTriggerCalc.setDate(nextTriggerCalc.getDate() + 1);
+          }
+          nextTriggerTimeLog = ` Next occurrence approx: ${nextTriggerCalc.toLocaleString()}`;
+        }
+        console.log(
+          `Scheduling daily notification for ${String(triggerDate.getHours()).padStart(2, "0")}:${String(triggerDate.getMinutes()).padStart(2, "0")}.${nextTriggerTimeLog}`,
+        );
 
-      const trigger =
-        Platform.OS === "android"
-          ? ({
-              seconds: secondsFromNow,
-              channelId: NOTIFICATION_CHANNEL_ID,
-            } as Notifications.NotificationTriggerInput)
-          : ({
-              seconds: secondsFromNow,
-            } as Notifications.TimeIntervalTriggerInput);
+        const dailyTrigger: Notifications.DailyTriggerInput = {
+          type: Notifications.SchedulableTriggerInputTypes.DAILY,
+          hour: triggerDate.getHours(),
+          minute: triggerDate.getMinutes(),
+          channelId:
+            Platform.OS === "android" ? NOTIFICATION_CHANNEL_ID : undefined,
+        };
 
-      await Notifications.scheduleNotificationAsync({
-        content,
-        trigger,
-        identifier,
-      });
+        await Notifications.scheduleNotificationAsync({
+          content,
+          trigger: dailyTrigger,
+          identifier,
+        });
+        console.log(
+          `Scheduled daily notification "${title}" (ID: ${identifier})`,
+        );
+      } else {
+        if (triggerDate.getTime() <= Date.now()) {
+          console.warn("Cannot schedule one-time notification in the past");
+          return false;
+        }
+        const secondsFromNow = Math.max(
+          Math.floor((triggerDate.getTime() - Date.now()) / 1000),
+          1,
+        );
+        console.log(
+          `Scheduling one-time notification for ${triggerDate.toLocaleString()} (${secondsFromNow}s from now)`,
+        );
 
-      // Debug logging for notification scheduling
-      console.log(
-        `Scheduled notification "${title}" for ${triggerDate.toLocaleString()} (${secondsFromNow}s from now)`,
-      );
+        const timeIntervalTrigger: Notifications.TimeIntervalTriggerInput = {
+          type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
+          seconds: secondsFromNow,
+          repeats: false,
+          channelId:
+            Platform.OS === "android" ? NOTIFICATION_CHANNEL_ID : undefined,
+        };
 
-      // For debugging: verify notification was actually scheduled
+        await Notifications.scheduleNotificationAsync({
+          content,
+          trigger: timeIntervalTrigger,
+          identifier,
+        });
+        console.log(
+          `Scheduled one-time notification "${title}" (ID: ${identifier})`,
+        );
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 150));
       const scheduledNotifications =
         await Notifications.getAllScheduledNotificationsAsync();
       const wasScheduled = scheduledNotifications.some(
@@ -126,13 +165,20 @@ const useNotifications = () => {
 
       if (!wasScheduled) {
         console.error(
-          "Notification verification failed - not found in scheduled list",
+          `Verification failed for "${identifier}" - not found in scheduled list. List:`,
+          scheduledNotifications,
         );
+      } else {
+        console.log(`Verification successful for "${identifier}".`);
       }
 
       return true;
     } catch (error) {
-      console.error("Error scheduling notification:", error);
+      console.error(`Error scheduling notification "${identifier}":`, error);
+      if (error instanceof Error) {
+        console.error("Error message:", error.message);
+        console.error("Error stack:", error.stack);
+      }
       return false;
     }
   };
@@ -170,7 +216,7 @@ const useNotifications = () => {
     const permissionCheckInterval = setInterval(
       checkNotificationPermissions,
       3600000,
-    ); // Check hourly
+    );
 
     return () => {
       if (notificationListener.current) {

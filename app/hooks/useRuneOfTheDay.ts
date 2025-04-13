@@ -71,6 +71,7 @@ const useRuneOfTheDay = (): { rune: Rune | null; isReversed: boolean } => {
         `${rune.name} - ${meaningText}`,
         tomorrow,
         NOTIFICATION_IDENTIFIER,
+        true,
       );
     } catch (error) {
       console.error("Error scheduling rune notification:", error);
