@@ -6,6 +6,7 @@ import {
   useWindowDimensions,
   Pressable,
   ScrollView,
+  Platform,
 } from "react-native";
 import useRuneOfTheDay from "../hooks/useRuneOfTheDay";
 import { useColorTheme } from "../hooks/useColorTheme";
@@ -68,42 +69,54 @@ const MainScreen = () => {
       </Pressable>
 
       <View style={styles.meaningContainer}>
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>
-          {isReversed && rune.meaning.reversed
-            ? "Reversed Meaning"
-            : "Primary Meaning"}
-        </Text>
-        <Text style={[styles.meaning, { color: colors.icon }]}>
-          {isReversed && rune.meaning.reversed
-            ? rune.meaning.reversed
-            : rune.meaning.primaryThemes}
-        </Text>
+        <View
+          style={[
+            styles.section,
+            { backgroundColor: colors.surface, borderColor: colors.icon },
+          ]}
+        >
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>
+            {isReversed && rune.meaning.reversed
+              ? "Reversed Meaning"
+              : "Primary Meaning"}
+          </Text>
+          <Text style={[styles.meaning, { color: colors.icon }]}>
+            {isReversed && rune.meaning.reversed
+              ? rune.meaning.reversed
+              : rune.meaning.primaryThemes}
+          </Text>
+        </View>
 
         {rune.associations.godsGoddesses &&
           rune.associations.godsGoddesses.length > 0 && (
-            <>
-              <Text
-                style={[
-                  styles.sectionTitle,
-                  { color: colors.text, marginTop: 16 },
-                ]}
-              >
+            <View
+              style={[
+                styles.section,
+                { backgroundColor: colors.surface, borderColor: colors.icon },
+              ]}
+            >
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>
                 Associated Deities
               </Text>
               <Text style={[styles.deity, { color: colors.icon }]}>
                 {rune.associations.godsGoddesses.join(", ")}
               </Text>
-            </>
+            </View>
           )}
 
-        <Text
-          style={[styles.sectionTitle, { color: colors.text, marginTop: 16 }]}
+        <View
+          style={[
+            styles.section,
+            { backgroundColor: colors.surface, borderColor: colors.icon },
+          ]}
         >
-          Translation
-        </Text>
-        <Text style={[styles.translation, { color: colors.icon }]}>
-          {rune.translation}
-        </Text>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>
+            Translation
+          </Text>
+          <Text style={[styles.translation, { color: colors.icon }]}>
+            {rune.translation}
+          </Text>
+        </View>
       </View>
     </ScrollView>
   );
@@ -130,7 +143,7 @@ const styles = StyleSheet.create({
   },
   meaningContainer: {
     flex: 1,
-    paddingHorizontal: 30,
+    paddingHorizontal: 16,
   },
   loading: {
     fontSize: 18,
@@ -156,6 +169,23 @@ const styles = StyleSheet.create({
   pronunciation: {
     fontSize: 18,
     fontStyle: "italic",
+  },
+  section: {
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 16,
+    borderWidth: 1,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
   },
   sectionTitle: {
     fontSize: 20,

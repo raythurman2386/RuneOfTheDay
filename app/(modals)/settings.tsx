@@ -8,6 +8,7 @@ import {
   Platform,
   useColorScheme,
   Linking,
+  ScrollView,
 } from "react-native";
 import { useSettings } from "../contexts/SettingsContext";
 import { useColorTheme } from "../hooks/useColorTheme";
@@ -46,8 +47,15 @@ export default function SettingsScreen() {
           },
         }}
       />
-      <View style={[styles.container, { backgroundColor: colors.background }]}>
-        <View style={styles.section}>
+      <ScrollView
+        style={[styles.container, { backgroundColor: colors.background }]}
+      >
+        <View
+          style={[
+            styles.section,
+            { backgroundColor: colors.surface, borderColor: colors.icon },
+          ]}
+        >
           <Text style={[styles.sectionTitle, { color: colors.text }]}>
             Appearance
           </Text>
@@ -57,7 +65,7 @@ export default function SettingsScreen() {
                 styles.themeButton,
                 {
                   backgroundColor:
-                    theme === "system" ? colors.tint : colors.surface,
+                    theme === "system" ? colors.tint : colors.background,
                   borderColor: colors.icon,
                 },
               ]}
@@ -93,7 +101,7 @@ export default function SettingsScreen() {
                 styles.themeButton,
                 {
                   backgroundColor:
-                    theme === "light" ? colors.tint : colors.surface,
+                    theme === "light" ? colors.tint : colors.background,
                   borderColor: colors.icon,
                 },
               ]}
@@ -119,7 +127,7 @@ export default function SettingsScreen() {
                 styles.themeButton,
                 {
                   backgroundColor:
-                    theme === "dark" ? colors.tint : colors.surface,
+                    theme === "dark" ? colors.tint : colors.background,
                   borderColor: colors.icon,
                 },
               ]}
@@ -142,7 +150,12 @@ export default function SettingsScreen() {
           </View>
         </View>
 
-        <View style={styles.section}>
+        <View
+          style={[
+            styles.section,
+            { backgroundColor: colors.surface, borderColor: colors.icon },
+          ]}
+        >
           <Text style={[styles.sectionTitle, { color: colors.text }]}>
             Haptics
           </Text>
@@ -166,7 +179,12 @@ export default function SettingsScreen() {
           </View>
         </View>
 
-        <View style={styles.section}>
+        <View
+          style={[
+            styles.section,
+            { backgroundColor: colors.surface, borderColor: colors.icon },
+          ]}
+        >
           <Text style={[styles.sectionTitle, { color: colors.text }]}>
             Notifications
           </Text>
@@ -200,7 +218,7 @@ export default function SettingsScreen() {
             </Pressable>
           </View>
         </View>
-      </View>
+      </ScrollView>
     </>
   );
 }
@@ -212,6 +230,20 @@ const styles = StyleSheet.create({
   },
   section: {
     marginBottom: 24,
+    borderRadius: 16,
+    padding: 16,
+    borderWidth: 1,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
   },
   sectionTitle: {
     fontSize: 18,
@@ -239,17 +271,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginHorizontal: 4,
-    ...Platform.select({
-      ios: {
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.2,
-        shadowRadius: 1.41,
-      },
-      android: {
-        elevation: 2,
-      },
-    }),
   },
   themeButtonText: {
     fontSize: 16,

@@ -17,10 +17,25 @@ const useNotifications = () => {
   const notificationListener = useRef<Notifications.EventSubscription>();
   const responseListener = useRef<Notifications.EventSubscription>();
 
+  const setupAndroidChannel = async () => {
+    if (Platform.OS === "android") {
+      await Notifications.setNotificationChannelAsync(NOTIFICATION_CHANNEL_ID, {
+        name: "Daily Rune Updates",
+        importance: Notifications.AndroidImportance.HIGH,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: "#FF231F7C",
+        enableVibrate: true,
+      });
+    }
+  };
+
   const checkNotificationPermissions = async (): Promise<void> => {
     try {
       const { status } = await Notifications.getPermissionsAsync();
       setIsEnabled(status === "granted");
+      if (status === "granted") {
+        await setupAndroidChannel();
+      }
     } catch (error) {
       console.error("Error checking notification permissions:", error);
     }
@@ -30,25 +45,18 @@ const useNotifications = () => {
     try {
       const { status: existingStatus } =
         await Notifications.getPermissionsAsync();
+
       if (existingStatus === "granted") {
         setIsEnabled(true);
+        await setupAndroidChannel();
         return true;
       }
 
       const { status } = await Notifications.requestPermissionsAsync();
       setIsEnabled(status === "granted");
 
-      if (Platform.OS === "android" && status === "granted") {
-        await Notifications.setNotificationChannelAsync(
-          NOTIFICATION_CHANNEL_ID,
-          {
-            name: "Daily Rune Updates",
-            importance: Notifications.AndroidImportance.HIGH,
-            vibrationPattern: [0, 250, 250, 250],
-            lightColor: "#FF231F7C",
-            enableVibrate: true,
-          },
-        );
+      if (status === "granted") {
+        await setupAndroidChannel();
       }
 
       return status === "granted";
@@ -201,7 +209,6 @@ const useNotifications = () => {
 
   useEffect(() => {
     requestPermissions();
-    checkNotificationPermissions();
 
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {

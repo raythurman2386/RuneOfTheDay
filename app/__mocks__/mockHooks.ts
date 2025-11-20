@@ -6,13 +6,16 @@ export const mockColorTheme = {
   colors: mockColors,
 };
 
+// Using a dummy function instead of jest.fn() to avoid runtime errors when not in test environment
+const noop = () => {};
+
 export const mockHaptics = {
   isSupported: true,
-  lightFeedback: jest.fn(),
-  mediumFeedback: jest.fn(),
-  heavyFeedback: jest.fn(),
-  successFeedback: jest.fn(),
-  errorFeedback: jest.fn(),
+  lightFeedback: typeof jest !== 'undefined' ? jest.fn() : noop,
+  mediumFeedback: typeof jest !== 'undefined' ? jest.fn() : noop,
+  heavyFeedback: typeof jest !== 'undefined' ? jest.fn() : noop,
+  successFeedback: typeof jest !== 'undefined' ? jest.fn() : noop,
+  errorFeedback: typeof jest !== 'undefined' ? jest.fn() : noop,
 };
 
 export const mockRunesArray = [
@@ -101,8 +104,8 @@ export const mockRuneOfTheDay = {
 export const mockSettings = {
   theme: "light",
   haptics: true,
-  setTheme: jest.fn(),
-  setHaptics: jest.fn(),
+  setTheme: typeof jest !== 'undefined' ? jest.fn() : noop,
+  setHaptics: typeof jest !== 'undefined' ? jest.fn() : noop,
 };
 
-export const mockUseSettings = jest.fn(() => mockSettings);
+export const mockUseSettings = typeof jest !== 'undefined' ? jest.fn(() => mockSettings) : () => mockSettings;
