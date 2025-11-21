@@ -1,5 +1,11 @@
 import { Colors } from "../constants/Colors";
 
+// Helper to safely use jest.fn() - returns jest.fn() in test environment, no-op otherwise
+const mockFn = <T extends (...args: any[]) => any>(implementation?: T) =>
+  typeof jest !== 'undefined'
+    ? jest.fn(implementation)
+    : (implementation || (() => { }));
+
 export const mockColors = Colors.light;
 export const mockColorTheme = {
   theme: "light" as const,
@@ -7,7 +13,7 @@ export const mockColorTheme = {
 };
 
 // Using a dummy function instead of jest.fn() to avoid runtime errors when not in test environment
-const noop = () => {};
+const noop = () => { };
 
 export const mockHaptics = {
   isSupported: true,
