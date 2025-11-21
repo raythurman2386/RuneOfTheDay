@@ -1,5 +1,11 @@
 import { Colors } from "../constants/Colors";
 
+// Helper to safely use jest.fn() - returns jest.fn() in test environment, no-op otherwise
+const mockFn = <T extends (...args: any[]) => any>(implementation?: T) =>
+  typeof jest !== 'undefined'
+    ? jest.fn(implementation)
+    : (implementation || (() => { }));
+
 export const mockColors = Colors.light;
 export const mockColorTheme = {
   theme: "light" as const,
@@ -8,11 +14,11 @@ export const mockColorTheme = {
 
 export const mockHaptics = {
   isSupported: true,
-  lightFeedback: jest.fn(),
-  mediumFeedback: jest.fn(),
-  heavyFeedback: jest.fn(),
-  successFeedback: jest.fn(),
-  errorFeedback: jest.fn(),
+  lightFeedback: mockFn(),
+  mediumFeedback: mockFn(),
+  heavyFeedback: mockFn(),
+  successFeedback: mockFn(),
+  errorFeedback: mockFn(),
 };
 
 export const mockRunesArray = [
@@ -101,8 +107,8 @@ export const mockRuneOfTheDay = {
 export const mockSettings = {
   theme: "light",
   haptics: true,
-  setTheme: jest.fn(),
-  setHaptics: jest.fn(),
+  setTheme: mockFn(),
+  setHaptics: mockFn(),
 };
 
-export const mockUseSettings = jest.fn(() => mockSettings);
+export const mockUseSettings = mockFn(() => mockSettings);
