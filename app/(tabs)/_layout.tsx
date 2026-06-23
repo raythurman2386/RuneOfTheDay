@@ -1,35 +1,30 @@
 import React from "react";
 import { Pressable } from "react-native";
-import { Tabs, router } from "expo-router";
+import { Tabs } from "expo-router";
+import type { BottomTabBarButtonProps } from "expo-router/build/react-navigation/bottom-tabs/types";
 import { useColorTheme } from "../hooks/useColorTheme";
 import useHaptics from "../hooks/useHaptics";
 import RuneIcon from "../components/RuneIcon";
 import SettingsIcon from "../components/SettingsIcon";
 
-interface TabButtonProps {
-  onPress?: (e: any) => void;
-  [key: string]: any;
-}
-
-export default function TabLayout() {
-  const { colors } = useColorTheme();
+// Moved outside TabLayout so React treats it as a stable component type.
+// Previously defined inside the render, causing all tab buttons to unmount
+// and remount on every parent render (losing state, replaying animations).
+const TabButton = ({ onPress, ref, ...props }: BottomTabBarButtonProps) => {
   const { lightFeedback } = useHaptics();
-
-  const handleSettingsPress = () => {
-    lightFeedback();
-    router.push("/(modals)/settings");
-  };
-
-  const TabButton = ({ onPress, ...props }: TabButtonProps) => (
+  return (
     <Pressable
       {...props}
       onPress={(e) => {
         lightFeedback();
         onPress?.(e);
       }}
-      accessibilityRole="button"
     />
   );
+};
+
+export default function TabLayout() {
+  const { colors } = useColorTheme();
 
   return (
     <Tabs
@@ -59,16 +54,7 @@ export default function TabLayout() {
           fontWeight: "bold",
         },
         tabBarButton: TabButton,
-        headerRight: () => (
-          <Pressable
-            onPress={handleSettingsPress}
-            style={{ marginRight: 16 }}
-            accessibilityLabel="Settings"
-            accessibilityRole="button"
-          >
-            <SettingsIcon color={colors.text} />
-          </Pressable>
-        ),
+        headerRight: () => <SettingsIcon color={colors.text} />,
       }}
     >
       <Tabs.Screen

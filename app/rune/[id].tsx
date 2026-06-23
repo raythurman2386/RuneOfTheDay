@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -22,8 +22,9 @@ export default function RuneDetailsScreen() {
   const { width } = useWindowDimensions();
   const symbolSize = Math.min(width * 0.4, 180);
 
-  // Animation values
-  const fadeAnim = new Animated.Value(0);
+  // Animation value — useState with lazy init persists across renders without
+  // accessing a ref's .current during render.
+  const [fadeAnim] = useState(() => new Animated.Value(0));
 
   useEffect(() => {
     // Start the fade-in animation when the component mounts
@@ -32,7 +33,7 @@ export default function RuneDetailsScreen() {
       duration: 400,
       useNativeDriver: true,
     }).start();
-  }, []);
+  }, [fadeAnim]);
 
   if (!rune) {
     return (

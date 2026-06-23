@@ -5,6 +5,8 @@ import useNotifications from "./useNotifications";
 
 const STORAGE_KEY = "runeOfTheDay";
 const NOTIFICATION_IDENTIFIER = "runeOfTheDayNotification";
+const DAILY_RESET_HOUR = 6;
+const DAILY_CHECK_INTERVAL_MS = 15 * 60 * 1000;
 
 interface StoredData {
   date: string;
@@ -33,12 +35,12 @@ const useRuneOfTheDay = (): { rune: Rune | null; isReversed: boolean } => {
     const isDifferentDay =
       currentDate.toDateString() !== storedDate.toDateString();
 
-    const sixAM = new Date(currentDate);
-    sixAM.setHours(6, 0, 0, 0);
+    const dailyReset = new Date(currentDate);
+    dailyReset.setHours(DAILY_RESET_HOUR, 0, 0, 0);
 
     return (
-      (isDifferentDay && currentDate >= sixAM) ||
-      (currentDate >= sixAM && storedDate < sixAM)
+      (isDifferentDay && currentDate >= dailyReset) ||
+      (currentDate >= dailyReset && storedDate < dailyReset)
     );
   }, []);
 
@@ -71,7 +73,7 @@ const useRuneOfTheDay = (): { rune: Rune | null; isReversed: boolean } => {
       try {
         const tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
-        tomorrow.setHours(6, 0, 0, 0);
+        tomorrow.setHours(DAILY_RESET_HOUR, 0, 0, 0);
 
         const meaningText =
           pickedIsReversed && pickedRune.meaning.reversed
@@ -100,7 +102,18 @@ const useRuneOfTheDay = (): { rune: Rune | null; isReversed: boolean } => {
       try {
         const storedDataStr = await AsyncStorage.getItem(STORAGE_KEY);
         if (storedDataStr) {
-          storedData = JSON.parse(storedDataStr);
+          const parsed = JSON.parse(storedDataStr) as StoredData;
+          // Validate the parsed shape before using it — corrupted storage
+          // (schema drift, manual edits) should fall through to re-pick.
+          if (
+            typeof parsed?.index === "number" &&
+            parsed.index >= 0 &&
+            parsed.index < runes.length &&
+            typeof parsed?.timestamp === "number" &&
+            !Number.isNaN(parsed.timestamp)
+          ) {
+            storedData = parsed;
+          }
         }
       } catch (storageError) {
         console.error("Error reading from AsyncStorage:", storageError);
@@ -163,14 +176,18 @@ const useRuneOfTheDay = (): { rune: Rune | null; isReversed: boolean } => {
   }, [updateRuneOfTheDay]);
 
   useEffect(() => {
-    const checkInterval = 15 * 60 * 1000; // 15 minutes
+    const checkInterval = DAILY_CHECK_INTERVAL_MS;
 
     const intervalCheck = async () => {
       try {
         const storedDataStr = await AsyncStorage.getItem(STORAGE_KEY);
         if (storedDataStr) {
-          const storedData: StoredData = JSON.parse(storedDataStr);
-          if (shouldUpdateRune(storedData.timestamp)) {
+          const storedData = JSON.parse(storedDataStr) as StoredData;
+          if (
+            typeof storedData?.timestamp === "number" &&
+            !Number.isNaN(storedData.timestamp) &&
+            shouldUpdateRune(storedData.timestamp)
+          ) {
             await updateRuneOfTheDay();
           }
         } else {

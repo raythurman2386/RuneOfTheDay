@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -17,29 +17,40 @@ import { MaterialIcons } from "@expo/vector-icons";
 const { width } = Dimensions.get("window");
 const CARD_WIDTH = Math.min(width - 48, 320);
 const CARD_HEIGHT = CARD_WIDTH * 1.5;
+const TRANSITION_DURATION_MS = 200;
 
 const FlashcardScreen = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fadeAnim] = useState(new Animated.Value(1));
   const { colors } = useColorTheme();
   const { mediumFeedback, lightFeedback } = useHaptics();
+  const transitionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Clean up pending transition timer on unmount to avoid setState after unmount.
+  useEffect(() => {
+    return () => {
+      if (transitionTimerRef.current !== null) {
+        clearTimeout(transitionTimerRef.current);
+      }
+    };
+  }, []);
 
   const animateTransition = (callback: () => void) => {
     Animated.sequence([
       Animated.timing(fadeAnim, {
         toValue: 0,
-        duration: 200,
+        duration: TRANSITION_DURATION_MS,
         useNativeDriver: true,
       }),
       Animated.timing(fadeAnim, {
         toValue: 1,
-        duration: 200,
+        duration: TRANSITION_DURATION_MS,
         useNativeDriver: true,
       }),
     ]).start();
 
     lightFeedback();
-    setTimeout(callback, 200);
+    transitionTimerRef.current = setTimeout(callback, TRANSITION_DURATION_MS);
   };
 
   const nextRune = () => {

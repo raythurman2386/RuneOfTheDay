@@ -54,3 +54,6 @@ upload-keystore.jks
 google-play-service-account.json
 *.keystore
 android.keystore
+
+# Coverage reports
+coverage/

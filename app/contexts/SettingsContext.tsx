@@ -1,10 +1,18 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ColorSchemeName } from "react-native";
+
+type ThemeMode = "system" | "light" | "dark";
 
 interface SettingsContextType {
-  theme: "system" | "light" | "dark";
-  setTheme: (theme: "system" | "light" | "dark") => void;
+  theme: ThemeMode;
+  setTheme: (theme: ThemeMode) => void;
   haptics: boolean;
   setHaptics: (enabled: boolean) => void;
 }
@@ -12,10 +20,15 @@ interface SettingsContextType {
 interface SettingsProviderProps {
   children: React.ReactNode;
   initialSettings?: {
-    theme?: "system" | "light" | "dark";
+    theme?: ThemeMode;
     haptics?: boolean;
   };
 }
+
+const VALID_THEMES: ThemeMode[] = ["system", "light", "dark"];
+
+const isThemeMode = (value: string | null): value is ThemeMode =>
+  value !== null && VALID_THEMES.includes(value as ThemeMode);
 
 const SettingsContext = createContext<SettingsContextType | undefined>(
   undefined,
@@ -33,7 +46,7 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   children,
   initialSettings = {},
 }) => {
-  const [theme, setTheme] = useState<"system" | "light" | "dark">(
+  const [theme, setTheme] = useState<ThemeMode>(
     initialSettings.theme || "system",
   );
   const [haptics, setHaptics] = useState(
@@ -43,11 +56,10 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
   useEffect(() => {
     const loadSettings = async () => {
       try {
-        // Only load from storage if we don't have initial settings
         if (!initialSettings.theme) {
           const savedTheme = await AsyncStorage.getItem("theme");
-          if (savedTheme) {
-            setTheme(savedTheme as "system" | "light" | "dark");
+          if (isThemeMode(savedTheme)) {
+            setTheme(savedTheme);
           }
         }
 
@@ -63,35 +75,39 @@ export const SettingsProvider: React.FC<SettingsProviderProps> = ({
     };
 
     loadSettings();
-  }, [initialSettings]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const handleThemeChange = async (newTheme: "system" | "light" | "dark") => {
+  const handleThemeChange = useCallback(async (newTheme: ThemeMode) => {
     try {
       await AsyncStorage.setItem("theme", newTheme);
       setTheme(newTheme);
     } catch (error) {
       console.error("Error saving theme:", error);
     }
-  };
+  }, []);
 
-  const handleHapticsChange = async (enabled: boolean) => {
+  const handleHapticsChange = useCallback(async (enabled: boolean) => {
     try {
       await AsyncStorage.setItem("haptics", String(enabled));
       setHaptics(enabled);
     } catch (error) {
       console.error("Error saving haptics setting:", error);
     }
-  };
+  }, []);
+
+  const value = useMemo(
+    () => ({
+      theme,
+      setTheme: handleThemeChange,
+      haptics,
+      setHaptics: handleHapticsChange,
+    }),
+    [theme, haptics, handleThemeChange, handleHapticsChange],
+  );
 
   return (
-    <SettingsContext.Provider
-      value={{
-        theme,
-        setTheme: handleThemeChange,
-        haptics,
-        setHaptics: handleHapticsChange,
-      }}
-    >
+    <SettingsContext.Provider value={value}>
       {children}
     </SettingsContext.Provider>
   );
