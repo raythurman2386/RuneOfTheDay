@@ -8,6 +8,8 @@ const CHANNEL_ACCENT_COLOR = "#FF231F7C";
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
+    shouldShowBanner: true,
+    shouldShowList: true,
     shouldPlaySound: true,
     shouldSetBadge: false,
   }),
@@ -15,7 +17,9 @@ Notifications.setNotificationHandler({
 
 const useNotifications = () => {
   const [isEnabled, setIsEnabled] = useState<boolean>(false);
-  const notificationListener = useRef<Notifications.EventSubscription>();
+  const notificationListener = useRef<
+    Notifications.EventSubscription | undefined
+  >(undefined);
 
   const setupAndroidChannel = async () => {
     if (Platform.OS === "android") {
@@ -215,7 +219,11 @@ const useNotifications = () => {
   };
 
   useEffect(() => {
-    requestPermissions();
+    // Check permissions on mount. Wrapped in an async IIFE so the linter
+    // can see the setState happens after an await, not synchronously.
+    (async () => {
+      await requestPermissions();
+    })();
 
     // Foreground received listener kept here; tap (response) handling lives in
     // the root layout so it has access to the router for deep-linking.
@@ -231,12 +239,11 @@ const useNotifications = () => {
 
     return () => {
       if (notificationListener.current) {
-        Notifications.removeNotificationSubscription(
-          notificationListener.current,
-        );
+        notificationListener.current.remove();
       }
       clearInterval(permissionCheckInterval);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return {

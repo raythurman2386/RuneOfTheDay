@@ -8,12 +8,12 @@ export type ColorTheme = typeof Colors.light | typeof Colors.dark;
 const useColorTheme = () => {
   const { theme } = useSettings();
   const [systemTheme, setSystemTheme] = useState<ColorSchemeName>(
-    Appearance.getColorScheme(),
+    Appearance.getColorScheme() ?? "light",
   );
 
   useEffect(() => {
     const listener = Appearance.addChangeListener(({ colorScheme }) => {
-      setSystemTheme(colorScheme);
+      setSystemTheme(colorScheme ?? "light");
     });
     return () => listener.remove();
   }, []);

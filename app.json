@@ -7,13 +7,6 @@
     "icon": "./assets/images/icon.png",
     "scheme": "runeoftheday",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
-    "splash": {
-      "image": "./assets/images/splash-light.png",
-      "darkImage": "./assets/images/splash-dark.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.ravenwoodcreations.runeoftheday",
@@ -24,7 +17,7 @@
     },
     "android": {
       "package": "com.ravenwoodcreations.runeoftheday",
-      "versionCode": 1,
+      "versionCode": 19,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#000000"
@@ -33,11 +26,7 @@
         "android.permissions.POST_NOTIFICATIONS",
         "android.permission.VIBRATE",
         "android.permissions.RECEIVE_BOOT_COMPLETED"
-      ],
-      "notification": {
-        "icon": "./assets/images/notification-icon.png",
-        "color": "#FF231F7C"
-      }
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -49,10 +38,23 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-dark.png",
+          "image": "./assets/images/splash-light.png",
+          "dark": {
+            "image": "./assets/images/splash-dark.png",
+            "backgroundColor": "#000000"
+          },
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#000000"
+          "backgroundColor": "#ffffff"
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "minifyEnabled": true,
+            "shrinkResourcesEnabled": true
+          }
         }
       ]
     ],

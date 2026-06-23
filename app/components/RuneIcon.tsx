@@ -1,9 +1,9 @@
 import React from "react";
-import { Text } from "react-native";
+import { Text, ColorValue } from "react-native";
 
 interface RuneIconProps {
   symbol: string;
-  color: string;
+  color: ColorValue;
   size: number;
 }
 

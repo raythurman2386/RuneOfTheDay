@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { Stack, router } from "expo-router";
+import { Stack, router, SplashScreen } from "expo-router";
 import { View, ActivityIndicator, Platform } from "react-native";
 import * as Font from "expo-font";
 import * as Notifications from "expo-notifications";
 import { SettingsProvider } from "./contexts/SettingsContext";
-import { SplashScreen } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useColorTheme } from "./hooks/useColorTheme";
 
@@ -82,7 +81,9 @@ function RootLayoutNav() {
 export default function RootLayout() {
   const [isReady, setIsReady] = useState(false);
   const [initialSettings, setInitialSettings] = useState<InitialSettings>({});
-  const responseListener = useRef<Notifications.EventSubscription>();
+  const responseListener = useRef<Notifications.EventSubscription | undefined>(
+    undefined,
+  );
 
   useEffect(() => {
     // Tap (response) handling lives here so the router is in scope. Switches
@@ -103,7 +104,7 @@ export default function RootLayout() {
 
     return () => {
       if (responseListener.current) {
-        Notifications.removeNotificationSubscription(responseListener.current);
+        responseListener.current.remove();
       }
     };
   }, []);

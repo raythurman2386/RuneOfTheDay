@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   FlatList,
@@ -33,8 +33,8 @@ interface RuneItemProps {
 }
 
 function RuneItem({ item, index, onPress, colors }: RuneItemProps) {
-  const opacity = React.useRef(new Animated.Value(0)).current;
-  const translateY = React.useRef(new Animated.Value(20)).current;
+  const [opacity] = useState(() => new Animated.Value(0));
+  const [translateY] = useState(() => new Animated.Value(20));
 
   React.useEffect(() => {
     Animated.parallel([

@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
   useWindowDimensions,
   Platform,
   Animated,
