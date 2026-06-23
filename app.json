@@ -30,11 +30,14 @@
         "backgroundColor": "#000000"
       },
       "permissions": [
-        "android.permissions.SCHEDULE_EXACT_ALARM",
         "android.permissions.POST_NOTIFICATIONS",
         "android.permission.VIBRATE",
         "android.permissions.RECEIVE_BOOT_COMPLETED"
-      ]
+      ],
+      "notification": {
+        "icon": "./assets/images/notification-icon.png",
+        "color": "#FF231F7C"
+      }
     },
     "web": {
       "bundler": "metro",

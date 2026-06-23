@@ -49,3 +49,8 @@ upload-keystore.jks
 *.swp
 *.swo
 .windsurfrules
+# Secrets
+*.json.bak
+google-play-service-account.json
+*.keystore
+android.keystore

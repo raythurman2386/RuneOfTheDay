@@ -3,6 +3,7 @@ import * as Notifications from "expo-notifications";
 import { Platform } from "react-native";
 
 const NOTIFICATION_CHANNEL_ID = "rune-daily-updates";
+const CHANNEL_ACCENT_COLOR = "#FF231F7C";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -15,7 +16,6 @@ Notifications.setNotificationHandler({
 const useNotifications = () => {
   const [isEnabled, setIsEnabled] = useState<boolean>(false);
   const notificationListener = useRef<Notifications.EventSubscription>();
-  const responseListener = useRef<Notifications.EventSubscription>();
 
   const setupAndroidChannel = async () => {
     if (Platform.OS === "android") {
@@ -23,21 +23,27 @@ const useNotifications = () => {
         name: "Daily Rune Updates",
         importance: Notifications.AndroidImportance.HIGH,
         vibrationPattern: [0, 250, 250, 250],
-        lightColor: "#FF231F7C",
+        lightColor: CHANNEL_ACCENT_COLOR,
         enableVibrate: true,
       });
     }
   };
 
-  const checkNotificationPermissions = async (): Promise<void> => {
+  // Resolves the current permission status (reflecting any recent grant) and
+  // mirrors it into state for UI consumers. Returning the boolean avoids the
+  // stale-closure bug where scheduling read `isEnabled` before re-render.
+  const checkNotificationPermissions = async (): Promise<boolean> => {
     try {
       const { status } = await Notifications.getPermissionsAsync();
-      setIsEnabled(status === "granted");
-      if (status === "granted") {
+      const granted = status === "granted";
+      setIsEnabled(granted);
+      if (granted) {
         await setupAndroidChannel();
       }
+      return granted;
     } catch (error) {
       console.error("Error checking notification permissions:", error);
+      return false;
     }
   };
 
@@ -53,13 +59,14 @@ const useNotifications = () => {
       }
 
       const { status } = await Notifications.requestPermissionsAsync();
-      setIsEnabled(status === "granted");
+      const granted = status === "granted";
+      setIsEnabled(granted);
 
-      if (status === "granted") {
+      if (granted) {
         await setupAndroidChannel();
       }
 
-      return status === "granted";
+      return granted;
     } catch (error) {
       console.error("Error requesting permissions:", error);
       return false;
@@ -73,8 +80,8 @@ const useNotifications = () => {
     identifier: string,
     repeatsDaily: boolean = false,
   ): Promise<boolean> => {
-    await checkNotificationPermissions();
-    if (!isEnabled) {
+    const hasPermission = await checkNotificationPermissions();
+    if (!hasPermission) {
       console.log("Cannot schedule notification: permissions not granted");
       return false;
     }
@@ -210,14 +217,11 @@ const useNotifications = () => {
   useEffect(() => {
     requestPermissions();
 
+    // Foreground received listener kept here; tap (response) handling lives in
+    // the root layout so it has access to the router for deep-linking.
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
         console.log("Notification received:", notification);
-      });
-
-    responseListener.current =
-      Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log("Notification response:", response);
       });
 
     const permissionCheckInterval = setInterval(
@@ -230,9 +234,6 @@ const useNotifications = () => {
         Notifications.removeNotificationSubscription(
           notificationListener.current,
         );
-      }
-      if (responseListener.current) {
-        Notifications.removeNotificationSubscription(responseListener.current);
       }
       clearInterval(permissionCheckInterval);
     };

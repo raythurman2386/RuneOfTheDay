@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
-import { Stack } from "expo-router";
+import { useEffect, useRef, useState } from "react";
+import { Stack, router } from "expo-router";
 import { View, ActivityIndicator, Platform } from "react-native";
 import * as Font from "expo-font";
+import * as Notifications from "expo-notifications";
 import { SettingsProvider } from "./contexts/SettingsContext";
 import { SplashScreen } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -81,6 +82,31 @@ function RootLayoutNav() {
 export default function RootLayout() {
   const [isReady, setIsReady] = useState(false);
   const [initialSettings, setInitialSettings] = useState<InitialSettings>({});
+  const responseListener = useRef<Notifications.EventSubscription>();
+
+  useEffect(() => {
+    // Tap (response) handling lives here so the router is in scope. Switches
+    // to the Today tab when the user taps a daily rune notification. Use
+    // replace for a cold start (no existing stack) and navigate otherwise.
+    responseListener.current =
+      Notifications.addNotificationResponseReceivedListener(() => {
+        try {
+          if (router.canGoBack()) {
+            router.navigate("/(tabs)");
+          } else {
+            router.replace("/(tabs)");
+          }
+        } catch (error) {
+          console.error("Error navigating from notification:", error);
+        }
+      });
+
+    return () => {
+      if (responseListener.current) {
+        Notifications.removeNotificationSubscription(responseListener.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     async function prepare() {
