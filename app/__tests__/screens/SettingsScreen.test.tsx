@@ -4,15 +4,21 @@ import SettingsScreen from "../../(modals)/settings";
 
 const mockSetTheme = jest.fn();
 const mockSetHaptics = jest.fn();
+const mockSetDailyResetTime = jest.fn();
 const mockRequestPermissions = jest.fn(() => Promise.resolve(true));
+const mockUseSettings = jest.fn(() => ({
+  theme: "system" as const,
+  setTheme: mockSetTheme,
+  haptics: true,
+  setHaptics: mockSetHaptics,
+  dailyResetHour: 6,
+  dailyResetMinute: 0,
+  setDailyResetTime: mockSetDailyResetTime,
+}));
 
 jest.mock("../../contexts/SettingsContext", () => ({
-  useSettings: jest.fn(() => ({
-    theme: "system" as const,
-    setTheme: mockSetTheme,
-    haptics: true,
-    setHaptics: mockSetHaptics,
-  })),
+  useSettings: () => mockUseSettings(),
+  VALID_MINUTES: [0, 15, 30, 45],
 }));
 
 jest.mock("../../hooks/useColorTheme", () => ({
@@ -112,5 +118,55 @@ describe("SettingsScreen", () => {
   it("has accessibility label for notification management button", () => {
     const { getByLabelText } = render(<SettingsScreen />);
     expect(getByLabelText("Enable notifications")).toBeTruthy();
+  });
+
+  it("renders the notification time section with current hour and minute", () => {
+    const { getByText, getByTestId } = render(<SettingsScreen />);
+    expect(getByText("Notification time")).toBeTruthy();
+    expect(getByText("Daily rune unlocks at this time")).toBeTruthy();
+    expect(getByTestId("notification-hour-value").props.children).toBe("06");
+    expect(getByTestId("notification-minute-value").props.children).toBe("00");
+  });
+
+  it("renders the configured hour from settings", () => {
+    mockUseSettings.mockReturnValueOnce({
+      theme: "system",
+      setTheme: mockSetTheme,
+      haptics: true,
+      setHaptics: mockSetHaptics,
+      dailyResetHour: 8,
+      dailyResetMinute: 30,
+      setDailyResetTime: mockSetDailyResetTime,
+    });
+
+    const { getByTestId } = render(<SettingsScreen />);
+    expect(getByTestId("notification-hour-value").props.children).toBe("08");
+    expect(getByTestId("notification-minute-value").props.children).toBe("30");
+  });
+
+  it("opens the hour picker when the hour button is pressed", () => {
+    const { getByTestId, getByText } = render(<SettingsScreen />);
+    fireEvent.press(getByTestId("notification-hour-button"));
+    expect(getByText("Select hour")).toBeTruthy();
+  });
+
+  it("opens the minute picker when the minute button is pressed", () => {
+    const { getByTestId, getByText } = render(<SettingsScreen />);
+    fireEvent.press(getByTestId("notification-minute-button"));
+    expect(getByText("Select minute")).toBeTruthy();
+  });
+
+  it("calls setDailyResetTime with the selected hour when an hour is picked", () => {
+    const { getByTestId, getByLabelText } = render(<SettingsScreen />);
+    fireEvent.press(getByTestId("notification-hour-button"));
+    fireEvent.press(getByLabelText("Select 08:00"));
+    expect(mockSetDailyResetTime).toHaveBeenCalledWith(8, 0);
+  });
+
+  it("calls setDailyResetTime with the selected minute when a minute is picked", () => {
+    const { getByTestId, getByLabelText } = render(<SettingsScreen />);
+    fireEvent.press(getByTestId("notification-minute-button"));
+    fireEvent.press(getByLabelText("Select 06:30"));
+    expect(mockSetDailyResetTime).toHaveBeenCalledWith(6, 30);
   });
 });

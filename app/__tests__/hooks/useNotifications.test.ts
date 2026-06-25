@@ -150,6 +150,7 @@ describe("useNotifications", () => {
     expect(call.content.body).toBe("Fehu - Wealth");
     expect(call.trigger.type).toBe("daily");
     expect(call.trigger.hour).toBe(6);
+    expect(call.trigger.minute).toBe(0);
     expect(call.identifier).toBe("rune-daily");
   });
 

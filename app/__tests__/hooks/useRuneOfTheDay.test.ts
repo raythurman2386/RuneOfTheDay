@@ -2,8 +2,14 @@ import { renderHook, act } from "@testing-library/react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import useRuneOfTheDay from "../../hooks/useRuneOfTheDay";
 import { runes } from "../../data/runes";
+import { seededIntFromKey, seededRandomFromKey } from "../../utils/seededRandom";
+import { getLocalDateKey } from "../../utils/dateKey";
 
 const mockScheduleNotification = jest.fn(() => Promise.resolve(true));
+const mockUseSettings = jest.fn(() => ({
+  dailyResetHour: 6,
+  dailyResetMinute: 0,
+}));
 
 jest.mock("../../hooks/useNotifications", () => ({
   __esModule: true,
@@ -14,6 +20,10 @@ jest.mock("../../hooks/useNotifications", () => ({
     cancelNotification: jest.fn(() => Promise.resolve()),
     cancelAllNotifications: jest.fn(() => Promise.resolve()),
   }),
+}));
+
+jest.mock("../../contexts/SettingsContext", () => ({
+  useSettings: () => mockUseSettings(),
 }));
 
 jest.mock("@react-native-async-storage/async-storage", () => ({
@@ -44,6 +54,7 @@ describe("useRuneOfTheDay", () => {
     jest.clearAllMocks();
     (AsyncStorage.getItem as jest.Mock).mockResolvedValue(null);
     (AsyncStorage.setItem as jest.Mock).mockResolvedValue(undefined);
+    mockUseSettings.mockReturnValue({ dailyResetHour: 6, dailyResetMinute: 0 });
   });
 
   afterEach(() => {
@@ -62,52 +73,61 @@ describe("useRuneOfTheDay", () => {
     expect(typeof result.current.isReversed).toBe("boolean");
   });
 
-  it("schedules a daily notification for the picked rune on first run", async () => {
-    const runeIndex = 5;
-    const isReversed = false;
-    const randomSpy = jest
-      .spyOn(Math, "random")
-      .mockReturnValueOnce(runeIndex / runes.length)
-      .mockReturnValueOnce(isReversed ? 0.1 : 0.9);
-
+  it("picks a deterministic rune for today's date key on first run", async () => {
     renderHook(() => useRuneOfTheDay());
 
     await act(async () => {
       await flushPromises();
     });
 
-    expect(randomSpy).toHaveBeenCalled();
     expect(mockScheduleNotification).toHaveBeenCalledTimes(1);
 
     const call = mockScheduleNotification.mock.calls[0];
     const [title, body, triggerDate, identifier, repeatsDaily] = call;
-    const expectedRune = runes[runeIndex];
+    const todayKey = getLocalDateKey(new Date());
+    const expectedIndex = seededIntFromKey(todayKey, runes.length);
+    const expectedRune = runes[expectedIndex];
+    const reversedRoll = seededRandomFromKey(`${todayKey}:reversed`);
+    const hasReversedMeaning = Boolean(
+      expectedRune?.meaning?.reversed &&
+        typeof expectedRune.meaning.reversed === "string" &&
+        expectedRune.meaning.reversed.trim() !== "",
+    );
+    const expectedIsReversed = hasReversedMeaning ? reversedRoll < 0.5 : false;
+    const expectedMeaning =
+      expectedIsReversed && expectedRune.meaning.reversed
+        ? expectedRune.meaning.reversed
+        : expectedRune.meaning.primaryThemes;
 
     expect(identifier).toBe("runeOfTheDayNotification");
     expect(repeatsDaily).toBe(true);
     expect(title).toContain(expectedRune.symbol);
     expect(body).toContain(expectedRune.name);
-    expect(body).toContain(expectedRune.meaning.primaryThemes);
+    expect(body).toContain(expectedMeaning);
 
-    const expectedHour = 6;
-    expect(triggerDate.getHours()).toBe(expectedHour);
+    expect(triggerDate.getHours()).toBe(6);
     expect(triggerDate.getMinutes()).toBe(0);
 
     expect(AsyncStorage.setItem).toHaveBeenCalledTimes(1);
     const [key, valueStr] = (AsyncStorage.setItem as jest.Mock).mock.calls[0];
     expect(key).toBe("runeOfTheDay");
     const persisted = JSON.parse(valueStr);
-    expect(persisted.index).toBe(runeIndex);
-    expect(persisted.isReversed).toBe(isReversed);
-    expect(persisted.date).toBe(new Date().toISOString().split("T")[0]);
+    expect(persisted.index).toBe(expectedIndex);
+    expect(persisted.isReversed).toBe(expectedIsReversed);
+    expect(persisted.date).toBe(todayKey);
   });
 
-  it("uses the reversed meaning when the rune is picked reversed", async () => {
-    const runeIndex = 0;
-    const randomSpy = jest
-      .spyOn(Math, "random")
-      .mockReturnValueOnce(runeIndex / runes.length)
-      .mockReturnValueOnce(0.1);
+  it("uses the reversed meaning when the seed rolls reversed", async () => {
+    const todayKey = getLocalDateKey(new Date());
+    const expectedIndex = seededIntFromKey(todayKey, runes.length);
+    const expectedRune = runes[expectedIndex];
+    const hasReversedMeaning = Boolean(
+      expectedRune?.meaning?.reversed &&
+        typeof expectedRune.meaning.reversed === "string" &&
+        expectedRune.meaning.reversed.trim() !== "",
+    );
+    const reversedRoll = seededRandomFromKey(`${todayKey}:reversed`);
+    const expectReversed = hasReversedMeaning && reversedRoll < 0.5;
 
     renderHook(() => useRuneOfTheDay());
 
@@ -115,23 +135,23 @@ describe("useRuneOfTheDay", () => {
       await flushPromises();
     });
 
-    expect(randomSpy).toHaveBeenCalled();
     const call = mockScheduleNotification.mock.calls[0];
     const body = call[1];
-    const expectedRune = runes[runeIndex];
-    expect(body).toContain(expectedRune.name);
-    expect(body).toContain(expectedRune.meaning.reversed as string);
+
+    if (expectReversed) {
+      expect(body).toContain(expectedRune.meaning.reversed as string);
+    } else {
+      expect(body).toContain(expectedRune.meaning.primaryThemes);
+    }
   });
 
-  it("does not schedule a new notification when today's rune is still valid", async () => {
-    const now = new Date();
-    if (now.getHours() < 6) {
-      now.setHours(6, 0, 0, 0);
-    }
+  it("uses the stored rune when stored date matches today and the index matches the seed", async () => {
+    const todayKey = getLocalDateKey(new Date());
+    const seededIndex = seededIntFromKey(todayKey, runes.length);
     const stored = {
-      date: now.toISOString().split("T")[0],
-      index: 3,
-      timestamp: now.getTime(),
+      date: todayKey,
+      index: seededIndex,
+      timestamp: Date.now(),
       isReversed: false,
     };
     (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
@@ -144,7 +164,43 @@ describe("useRuneOfTheDay", () => {
       await flushPromises();
     });
 
-    expect(mockScheduleNotification).not.toHaveBeenCalled();
+    expect(mockScheduleNotification).toHaveBeenCalledTimes(1);
+    const call = mockScheduleNotification.mock.calls[0];
+    expect(call[1]).toContain(runes[seededIndex].name);
     expect(AsyncStorage.setItem).not.toHaveBeenCalled();
+  });
+
+  it("uses the configured daily reset hour and minute for the notification trigger", async () => {
+    mockUseSettings.mockReturnValue({
+      dailyResetHour: 8,
+      dailyResetMinute: 30,
+    });
+
+    renderHook(() => useRuneOfTheDay());
+
+    await act(async () => {
+      await flushPromises();
+    });
+
+    const call = mockScheduleNotification.mock.calls[0];
+    const triggerDate = call[2];
+    expect(triggerDate.getHours()).toBe(8);
+    expect(triggerDate.getMinutes()).toBe(30);
+  });
+
+  it("schedules the notification with today's rune, not yesterday's", async () => {
+    const todayKey = getLocalDateKey(new Date());
+    const todayIndex = seededIntFromKey(todayKey, runes.length);
+    const todayRune = runes[todayIndex];
+
+    renderHook(() => useRuneOfTheDay());
+
+    await act(async () => {
+      await flushPromises();
+    });
+
+    const call = mockScheduleNotification.mock.calls[0];
+    const [, body] = call;
+    expect(body).toContain(todayRune.name);
   });
 });
