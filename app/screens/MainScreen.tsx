@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
   ScrollView,
   Platform,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import useRuneOfTheDay from "../hooks/useRuneOfTheDay";
 import { useColorTheme } from "../hooks/useColorTheme";
 import useHaptics from "../hooks/useHaptics";
@@ -16,11 +17,17 @@ const MainScreen = () => {
   const { rune, isReversed } = useRuneOfTheDay();
   const { colors } = useColorTheme();
   const { height } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
   const { successFeedback, mediumFeedback } = useHaptics();
+  const successFeedbackRef = useRef(successFeedback);
+
+  useEffect(() => {
+    successFeedbackRef.current = successFeedback;
+  }, [successFeedback]);
 
   useEffect(() => {
     if (rune) {
-      successFeedback();
+      successFeedbackRef.current();
     }
   }, [rune]);
 
@@ -39,7 +46,11 @@ const MainScreen = () => {
     <ScrollView
       testID="main-container"
       style={[styles.container, { backgroundColor: colors.background }]}
-      contentContainerStyle={styles.contentContainer}
+      contentContainerStyle={[
+        styles.contentContainer,
+        { paddingBottom: insets.bottom + 30 },
+      ]}
+      contentInsetAdjustmentBehavior="automatic"
     >
       <View style={styles.header}>
         <Text style={[styles.title, { color: colors.text }]}>
@@ -128,7 +139,6 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flexGrow: 1,
-    paddingBottom: 30,
   },
   header: {
     alignItems: "center",
@@ -142,7 +152,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   meaningContainer: {
-    flex: 1,
     paddingHorizontal: 16,
   },
   loading: {

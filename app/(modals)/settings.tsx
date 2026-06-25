@@ -10,6 +10,7 @@ import {
   Linking,
   ScrollView,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSettings } from "../contexts/SettingsContext";
 import { useColorTheme } from "../hooks/useColorTheme";
 import { Stack } from "expo-router";
@@ -21,6 +22,7 @@ export default function SettingsScreen() {
   const systemColorScheme = useColorScheme();
   const { isEnabled: notificationsEnabled, requestPermissions } =
     useNotifications();
+  const insets = useSafeAreaInsets();
 
   const handleManageNotifications = async () => {
     if (!notificationsEnabled) {
@@ -49,6 +51,8 @@ export default function SettingsScreen() {
       />
       <ScrollView
         style={[styles.container, { backgroundColor: colors.background }]}
+        contentContainerStyle={{ paddingBottom: insets.bottom + 16 }}
+        contentInsetAdjustmentBehavior="automatic"
       >
         <View
           style={[
@@ -226,7 +230,8 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingTop: 16,
   },
   section: {
     marginBottom: 24,

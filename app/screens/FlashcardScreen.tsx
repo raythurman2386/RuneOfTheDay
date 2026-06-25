@@ -1,22 +1,20 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import {
   View,
   Text,
   StyleSheet,
   Pressable,
   Animated,
-  Dimensions,
+  useWindowDimensions,
   Platform,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import FlipCard from "react-native-flip-card";
 import { runes, Rune } from "../data/runes";
 import { useColorTheme } from "../hooks/useColorTheme";
 import useHaptics from "../hooks/useHaptics";
 import { MaterialIcons } from "@expo/vector-icons";
 
-const { width } = Dimensions.get("window");
-const CARD_WIDTH = Math.min(width - 48, 320);
-const CARD_HEIGHT = CARD_WIDTH * 1.5;
 const TRANSITION_DURATION_MS = 200;
 
 const FlashcardScreen = () => {
@@ -25,6 +23,11 @@ const FlashcardScreen = () => {
   const { colors } = useColorTheme();
   const { mediumFeedback, lightFeedback } = useHaptics();
   const transitionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { width } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
+
+  const cardWidth = useMemo(() => Math.min(width - 48, 320), [width]);
+  const cardHeight = useMemo(() => cardWidth * 1.5, [cardWidth]);
 
   // Clean up pending transition timer on unmount to avoid setState after unmount.
   useEffect(() => {
@@ -72,7 +75,14 @@ const FlashcardScreen = () => {
 
   return (
     <View
-      style={[styles.container, { backgroundColor: colors.background }]}
+      style={[
+        styles.container,
+        {
+          backgroundColor: colors.background,
+          paddingTop: 24 + insets.top,
+          paddingBottom: 24 + insets.bottom,
+        },
+      ]}
       testID="flashcard-screen"
     >
       <View style={styles.header}>
@@ -95,7 +105,7 @@ const FlashcardScreen = () => {
           flipHorizontal={true}
           flipVertical={false}
           clickable={true}
-          style={styles.flipCard}
+          style={[styles.flipCard, { width: cardWidth, height: cardHeight }]}
           onFlipStart={() => mediumFeedback()}
         >
           {/* Front: Rune Symbol */}
@@ -107,7 +117,7 @@ const FlashcardScreen = () => {
             testID="card-front"
           >
             <Text
-              style={[styles.symbol, { color: colors.text }]}
+              style={[styles.symbol, { color: colors.text, fontSize: cardWidth * 0.4 }]}
               testID="rune-symbol"
             >
               {currentRune.symbol}
@@ -237,7 +247,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "space-between",
-    paddingVertical: 24,
   },
   header: {
     alignItems: "center",
@@ -254,8 +263,6 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   flipCard: {
-    width: CARD_WIDTH,
-    height: CARD_HEIGHT,
     alignSelf: "center",
   },
   card: {
@@ -280,7 +287,6 @@ const styles = StyleSheet.create({
   },
   symbol: {
     fontFamily: "ElderFuthark",
-    fontSize: CARD_WIDTH * 0.4,
     marginBottom: 16,
   },
   name: {

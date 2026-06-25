@@ -1,3 +1,5 @@
+import runesData from "./runes.json";
+
 export interface Rune {
   symbol: string;
   name: string;
@@ -26,5 +28,4 @@ export interface Rune {
   };
 }
 
-import runesData from "./runes.json";
 export const runes: Rune[] = runesData;

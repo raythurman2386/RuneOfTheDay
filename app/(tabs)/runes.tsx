@@ -6,12 +6,13 @@ import {
   Text,
   StyleSheet,
   Platform,
+  Animated,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { runes } from "../data/runes";
 import { useColorTheme } from "../hooks/useColorTheme";
 import useHaptics from "../hooks/useHaptics";
 import { router } from "expo-router";
-import { Animated } from "react-native";
 
 interface Rune {
   name: string;
@@ -106,6 +107,7 @@ function RuneItem({ item, index, onPress, colors }: RuneItemProps) {
 export default function RunesScreen() {
   const { colors } = useColorTheme();
   const { lightFeedback } = useHaptics();
+  const insets = useSafeAreaInsets();
 
   const handleRunePress = React.useCallback(
     (runeId: string) => {
@@ -136,7 +138,10 @@ export default function RunesScreen() {
         data={runes}
         renderItem={renderItem}
         keyExtractor={(item) => item.name}
-        contentContainerStyle={styles.listContent}
+        contentContainerStyle={[
+          styles.listContent,
+          { paddingBottom: 16 + insets.bottom + 60 },
+        ]}
         initialNumToRender={8}
         maxToRenderPerBatch={8}
         windowSize={5}
@@ -150,7 +155,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   listContent: {
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingTop: 16,
   },
   runeItem: {
     borderRadius: 12,

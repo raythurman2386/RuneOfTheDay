@@ -7,6 +7,7 @@ import {
   Platform,
   Animated,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useLocalSearchParams, Stack } from "expo-router";
 import { useColorTheme } from "../hooks/useColorTheme";
 import { runes } from "../data/runes";
@@ -20,6 +21,7 @@ export default function RuneDetailsScreen() {
 
   const { colors } = useColorTheme();
   const { width } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
   const symbolSize = Math.min(width * 0.4, 180);
 
   // Animation value — useState with lazy init persists across renders without
@@ -62,7 +64,11 @@ export default function RuneDetailsScreen() {
             opacity: fadeAnim,
           },
         ]}
-        contentContainerStyle={styles.contentContainer}
+        contentContainerStyle={[
+          styles.contentContainer,
+          { paddingBottom: insets.bottom + 24 },
+        ]}
+        contentInsetAdjustmentBehavior="automatic"
       >
         <View style={styles.header}>
           <Text
@@ -311,7 +317,6 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     padding: 16,
-    paddingBottom: 40,
   },
   header: {
     alignItems: "center",

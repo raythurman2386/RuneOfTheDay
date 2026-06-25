@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Stack, router, SplashScreen } from "expo-router";
 import { View, ActivityIndicator, Platform } from "react-native";
+import { StatusBar } from "expo-status-bar";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import * as Font from "expo-font";
 import * as Notifications from "expo-notifications";
 import { SettingsProvider } from "./contexts/SettingsContext";
@@ -30,51 +32,54 @@ function LoadingScreen() {
 }
 
 function RootLayoutNav() {
-  const { colors } = useColorTheme();
+  const { colors, theme } = useColorTheme();
 
   return (
-    <Stack
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: colors.background,
-        },
-        headerTintColor: colors.text,
-        headerTitleStyle: {
-          fontWeight: "bold",
-        },
-        contentStyle: {
-          backgroundColor: colors.background,
-        },
-      }}
-    >
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen
-        name="(modals)/settings"
-        options={{
-          presentation: "modal",
-          headerShown: true,
-          title: "Settings",
-          animation: Platform.select({
-            ios: "default",
-            android: "fade",
-          }),
-        }}
-      />
-      <Stack.Screen
-        name="rune/[id]"
-        options={{
-          headerShown: true,
-          animation: "default",
-          animationDuration: 200,
-          gestureEnabled: true,
-          gestureDirection: "horizontal",
+    <>
+      <StatusBar style={theme === "dark" ? "light" : "dark"} />
+      <Stack
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: colors.background,
+          },
+          headerTintColor: colors.text,
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
           contentStyle: {
             backgroundColor: colors.background,
           },
-          presentation: "card",
         }}
-      />
-    </Stack>
+      >
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="(modals)/settings"
+          options={{
+            presentation: "modal",
+            headerShown: true,
+            title: "Settings",
+            animation: Platform.select({
+              ios: "default",
+              android: "fade",
+            }),
+          }}
+        />
+        <Stack.Screen
+          name="rune/[id]"
+          options={{
+            headerShown: true,
+            animation: "default",
+            animationDuration: 200,
+            gestureEnabled: true,
+            gestureDirection: "horizontal",
+            contentStyle: {
+              backgroundColor: colors.background,
+            },
+            presentation: "card",
+          }}
+        />
+      </Stack>
+    </>
   );
 }
 
@@ -144,7 +149,9 @@ export default function RootLayout() {
 
   return (
     <SettingsProvider initialSettings={initialSettings}>
-      <RootLayoutNav />
+      <SafeAreaProvider>
+        <RootLayoutNav />
+      </SafeAreaProvider>
     </SettingsProvider>
   );
 }

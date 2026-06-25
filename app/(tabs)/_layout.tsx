@@ -2,6 +2,7 @@ import React from "react";
 import { Pressable } from "react-native";
 import { Tabs } from "expo-router";
 import type { BottomTabBarButtonProps } from "expo-router/build/react-navigation/bottom-tabs/types";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useColorTheme } from "../hooks/useColorTheme";
 import useHaptics from "../hooks/useHaptics";
 import RuneIcon from "../components/RuneIcon";
@@ -25,6 +26,7 @@ const TabButton = ({ onPress, ref, ...props }: BottomTabBarButtonProps) => {
 
 export default function TabLayout() {
   const { colors } = useColorTheme();
+  const insets = useSafeAreaInsets();
 
   return (
     <Tabs
@@ -33,8 +35,8 @@ export default function TabLayout() {
           backgroundColor: colors.surface,
           borderTopWidth: 0,
           elevation: 0,
-          height: 75,
-          paddingBottom: 8,
+          height: 60 + insets.bottom,
+          paddingBottom: insets.bottom,
           paddingTop: 8,
         },
         tabBarActiveTintColor: colors.tabIconSelected,

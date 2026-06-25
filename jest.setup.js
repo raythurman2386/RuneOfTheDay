@@ -72,6 +72,23 @@ jest.mock(
   { virtual: true },
 );
 
+jest.mock("react-native-safe-area-context", () => {
+  const inset = { top: 0, right: 0, bottom: 0, left: 0 };
+  const frame = { x: 0, y: 0, width: 0, height: 0 };
+  return {
+    SafeAreaProvider: ({ children }) => children,
+    SafeAreaView: ({ children }) => children,
+    SafeAreaInsetsContext: {
+      Consumer: ({ children }) => children(inset),
+      Provider: ({ children }) => children,
+    },
+    useSafeAreaInsets: () => inset,
+    useSafeAreaFrame: () => frame,
+    initialWindowMetrics: { insets: inset, frame },
+    __esModule: true,
+  };
+});
+
 const originalError = console.error;
 console.error = (...args) => {
   if (/Warning.*not wrapped in act/.test(args[0])) {
