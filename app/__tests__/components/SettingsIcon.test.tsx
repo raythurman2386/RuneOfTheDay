@@ -21,24 +21,28 @@ jest.mock("../../hooks/useHaptics", () => {
 });
 
 jest.mock("@expo/vector-icons", () => {
-  const { View, Text } = require("react-native");
-  return {
-    Ionicons: ({
-      name,
-      size,
-      color,
-    }: {
-      name: string;
-      size: number;
-      color: string;
-    }) => (
-      <View testID="mock-icon">
-        <Text>{name}</Text>
-        <Text>Size: {size}</Text>
-        <Text>Color: {color}</Text>
-      </View>
-    ),
+  const MockIonicons = ({
+    name,
+    size,
+    color,
+  }: {
+    name: string;
+    size: number;
+    color: string;
+  }) => {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const MockView = require("react-native").View;
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const MockText = require("react-native").Text;
+    return (
+      <MockView testID="mock-icon">
+        <MockText>{name}</MockText>
+        <MockText>Size: {size}</MockText>
+        <MockText>Color: {color}</MockText>
+      </MockView>
+    );
   };
+  return { Ionicons: MockIonicons };
 });
 
 describe("SettingsIcon", () => {

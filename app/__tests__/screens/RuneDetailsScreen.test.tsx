@@ -1,6 +1,7 @@
 import React from "react";
 import { render } from "@testing-library/react-native";
 import { runes } from "../../data/runes";
+import RuneDetailsScreen from "../../rune/[id]";
 
 const mockUseLocalSearchParams = jest.fn(() => ({ id: "Fehu" }));
 
@@ -26,8 +27,6 @@ jest.mock("../../hooks/useColorTheme", () => ({
     },
   }),
 }));
-
-import RuneDetailsScreen from "../../rune/[id]";
 
 describe("RuneDetailsScreen", () => {
   beforeEach(() => {

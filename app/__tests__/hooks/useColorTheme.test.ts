@@ -1,5 +1,5 @@
 import { renderHook } from "@testing-library/react-native";
-import useColorTheme from "../../hooks/useColorTheme";
+import { useColorTheme } from "../../hooks/useColorTheme";
 import { Colors } from "../../constants/Colors";
 
 jest.mock("../../contexts/SettingsContext", () => ({

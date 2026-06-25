@@ -1,5 +1,6 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
+import SettingsScreen from "../../(modals)/settings";
 
 const mockSetTheme = jest.fn();
 const mockSetHaptics = jest.fn();
@@ -51,10 +52,6 @@ jest.mock("react-native/Libraries/Utilities/useColorScheme", () => ({
   __esModule: true,
   default: jest.fn(() => "light"),
 }));
-
-// Import after mocks are set up
-import SettingsScreen from "../../(modals)/settings";
-import { useSettings } from "../../contexts/SettingsContext";
 
 describe("SettingsScreen", () => {
   beforeEach(() => {

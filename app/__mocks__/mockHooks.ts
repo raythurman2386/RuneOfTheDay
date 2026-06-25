@@ -1,11 +1,5 @@
 import { Colors } from "../constants/Colors";
 
-// Helper to safely use jest.fn() - returns jest.fn() in test environment, no-op otherwise
-const mockFn = <T extends (...args: any[]) => any>(implementation?: T) =>
-  typeof jest !== 'undefined'
-    ? jest.fn(implementation)
-    : (implementation || (() => { }));
-
 export const mockColors = Colors.light;
 export const mockColorTheme = {
   theme: "light" as const,

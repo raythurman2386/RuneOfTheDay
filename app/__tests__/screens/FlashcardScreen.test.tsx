@@ -31,17 +31,21 @@ jest.mock("../../hooks/useHaptics", () => ({
 }));
 
 jest.mock("react-native-flip-card", () => {
-  const { View } = require("react-native");
-  const MockFlipCard = ({ children }: { children: React.ReactNode }) => (
-    <View testID="flip-card">{children}</View>
-  );
+  const MockFlipCard = ({ children }: { children: React.ReactNode }) => {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const MockView = require("react-native").View;
+    return <MockView testID="flip-card">{children}</MockView>;
+  };
   MockFlipCard.displayName = "FlipCard";
   return MockFlipCard;
 });
 
 jest.mock("@expo/vector-icons/MaterialIcons", () => {
-  const { Text } = require("react-native");
-  const MockIcon = ({ name }: { name: string }) => <Text>{name}</Text>;
+  const MockIcon = ({ name }: { name: string }) => {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const MockText = require("react-native").Text;
+    return <MockText>{name}</MockText>;
+  };
   MockIcon.displayName = "MaterialIcons";
   return MockIcon;
 });

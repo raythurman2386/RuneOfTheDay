@@ -1,5 +1,6 @@
 import { renderHook, act } from "@testing-library/react-native";
 import useHaptics from "../../hooks/useHaptics";
+import { useSettings } from "../../contexts/SettingsContext";
 import * as Haptics from "expo-haptics";
 import { Platform } from "react-native";
 
@@ -75,7 +76,6 @@ describe("useHaptics", () => {
   });
 
   it("should not call haptics when haptics setting is disabled", async () => {
-    const useSettings = require("../../contexts/SettingsContext").useSettings;
     useSettings.mockReturnValueOnce({ haptics: false });
 
     const { result } = renderHook(() => useHaptics());
