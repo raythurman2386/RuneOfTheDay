@@ -2,10 +2,12 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { runes, Rune } from "../data/runes";
 import useNotifications from "./useNotifications";
+import { useSettings } from "../contexts/SettingsContext";
+import { getLocalDateKey, getTodayKey } from "../utils/dateKey";
+import { seededIntFromKey, seededRandomFromKey } from "../utils/seededRandom";
 
 const STORAGE_KEY = "runeOfTheDay";
 const NOTIFICATION_IDENTIFIER = "runeOfTheDayNotification";
-const DAILY_RESET_HOUR = 6;
 const DAILY_CHECK_INTERVAL_MS = 15 * 60 * 1000;
 
 interface StoredData {
@@ -15,11 +17,25 @@ interface StoredData {
   isReversed?: boolean;
 }
 
+const pickRuneForDate = (dateKey: string): { index: number; isReversed: boolean } => {
+  const index = seededIntFromKey(dateKey, runes.length);
+  const selectedRune = runes[index];
+  const hasReversedMeaning = Boolean(
+    selectedRune?.meaning?.reversed &&
+      typeof selectedRune.meaning.reversed === "string" &&
+      selectedRune.meaning.reversed.trim() !== "",
+  );
+  const reversedRoll = seededRandomFromKey(`${dateKey}:reversed`);
+  const isReversed = hasReversedMeaning ? reversedRoll < 0.5 : false;
+  return { index, isReversed };
+};
+
 const useRuneOfTheDay = (): { rune: Rune | null; isReversed: boolean } => {
   const [rune, setRune] = useState<Rune | null>(null);
   const [isReversed, setIsReversed] = useState<boolean>(false);
   const isMountedRef = useRef<boolean>(true);
   const { scheduleNotification } = useNotifications();
+  const { dailyResetHour, dailyResetMinute } = useSettings();
 
   const safeSetRune = useCallback((value: Rune | null) => {
     if (isMountedRef.current) setRune(value);
@@ -28,52 +44,15 @@ const useRuneOfTheDay = (): { rune: Rune | null; isReversed: boolean } => {
     if (isMountedRef.current) setIsReversed(value);
   }, []);
 
-  const shouldUpdateRune = useCallback((storedTimestamp: number): boolean => {
-    const currentDate = new Date();
-    const storedDate = new Date(storedTimestamp);
-
-    const isDifferentDay =
-      currentDate.toDateString() !== storedDate.toDateString();
-
-    const dailyReset = new Date(currentDate);
-    dailyReset.setHours(DAILY_RESET_HOUR, 0, 0, 0);
-
-    return (
-      (isDifferentDay && currentDate >= dailyReset) ||
-      (currentDate >= dailyReset && storedDate < dailyReset)
-    );
-  }, []);
-
-  const getRandomRune = useCallback((): {
-    index: number;
-    isReversed: boolean;
-  } => {
-    const index = Math.floor(Math.random() * runes.length);
-
-    const selectedRune = runes[index];
-    const hasReversedMeaning = Boolean(
-      selectedRune?.meaning?.reversed &&
-      typeof selectedRune.meaning.reversed === "string" &&
-      selectedRune.meaning.reversed.trim() !== "",
-    );
-
-    // 50/50 chance of reversed, but only if the rune has a reversed meaning
-    const isReversed = hasReversedMeaning ? Math.random() < 0.5 : false;
-
-    return { index, isReversed };
-  }, []);
-
-  // Accepts the just-picked rune so the notification body always reflects
-  // today's rune, rather than a stale closure value. Permissions are resolved
-  // inside scheduleNotification itself, so we no longer gate on `isEnabled`.
   const scheduleRuneNotification = useCallback(
-    async (pickedRune: Rune, pickedIsReversed: boolean) => {
-      if (!pickedRune) return;
-
+    async (dateKey: string) => {
       try {
+        const { index, isReversed: pickedIsReversed } = pickRuneForDate(dateKey);
+        const pickedRune = runes[index];
+
         const tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
-        tomorrow.setHours(DAILY_RESET_HOUR, 0, 0, 0);
+        tomorrow.setHours(dailyResetHour, dailyResetMinute, 0, 0);
 
         const meaningText =
           pickedIsReversed && pickedRune.meaning.reversed
@@ -91,11 +70,12 @@ const useRuneOfTheDay = (): { rune: Rune | null; isReversed: boolean } => {
         console.error("Error scheduling rune notification:", error);
       }
     },
-    [scheduleNotification],
+    [scheduleNotification, dailyResetHour, dailyResetMinute],
   );
 
   const updateRuneOfTheDay = useCallback(async () => {
     try {
+      const todayKey = getTodayKey();
       const currentTime = new Date().getTime();
       let storedData: StoredData | null = null;
 
@@ -103,8 +83,6 @@ const useRuneOfTheDay = (): { rune: Rune | null; isReversed: boolean } => {
         const storedDataStr = await AsyncStorage.getItem(STORAGE_KEY);
         if (storedDataStr) {
           const parsed = JSON.parse(storedDataStr) as StoredData;
-          // Validate the parsed shape before using it — corrupted storage
-          // (schema drift, manual edits) should fall through to re-pick.
           if (
             typeof parsed?.index === "number" &&
             parsed.index >= 0 &&
@@ -119,39 +97,41 @@ const useRuneOfTheDay = (): { rune: Rune | null; isReversed: boolean } => {
         console.error("Error reading from AsyncStorage:", storageError);
       }
 
-      if (storedData && !shouldUpdateRune(storedData.timestamp)) {
+      const storedKeyMatchesToday =
+        storedData !== null && storedData.date === todayKey;
+      const deterministic = pickRuneForDate(todayKey);
+
+      if (storedKeyMatchesToday && storedData) {
         safeSetRune(runes[storedData.index]);
         safeSetIsReversed(storedData.isReversed === true);
       } else {
-        const { index: newIndex, isReversed: pickedIsReversed } =
-          getRandomRune();
-        const currentDate = new Date().toISOString().split("T")[0];
-        const pickedRune = runes[newIndex];
+        const pickedRune = runes[deterministic.index];
         const newData: StoredData = {
-          date: currentDate,
-          index: newIndex,
+          date: todayKey,
+          index: deterministic.index,
           timestamp: currentTime,
-          isReversed: pickedIsReversed,
+          isReversed: deterministic.isReversed,
         };
 
         safeSetRune(pickedRune);
-        safeSetIsReversed(pickedIsReversed);
+        safeSetIsReversed(deterministic.isReversed);
 
         try {
           await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(newData));
         } catch (saveError) {
           console.error("Error saving to AsyncStorage:", saveError);
         }
-
-        await scheduleRuneNotification(pickedRune, pickedIsReversed);
       }
+
+      await scheduleRuneNotification(todayKey);
     } catch (error) {
       console.error("Error in updateRuneOfTheDay:", error);
 
       try {
-        const { index, isReversed } = getRandomRune();
+        const todayKey = getTodayKey();
+        const { index, isReversed: pickedIsReversed } = pickRuneForDate(todayKey);
         safeSetRune(runes[index]);
-        safeSetIsReversed(isReversed);
+        safeSetIsReversed(pickedIsReversed);
       } catch (fallbackError) {
         console.error(
           "Critical error in fallback rune selection:",
@@ -159,13 +139,7 @@ const useRuneOfTheDay = (): { rune: Rune | null; isReversed: boolean } => {
         );
       }
     }
-  }, [
-    scheduleRuneNotification,
-    shouldUpdateRune,
-    getRandomRune,
-    safeSetRune,
-    safeSetIsReversed,
-  ]);
+  }, [scheduleRuneNotification, safeSetRune, safeSetIsReversed]);
 
   useEffect(() => {
     isMountedRef.current = true;
@@ -176,21 +150,20 @@ const useRuneOfTheDay = (): { rune: Rune | null; isReversed: boolean } => {
   }, [updateRuneOfTheDay]);
 
   useEffect(() => {
-    const checkInterval = DAILY_CHECK_INTERVAL_MS;
-
     const intervalCheck = async () => {
       try {
         const storedDataStr = await AsyncStorage.getItem(STORAGE_KEY);
+        const todayKey = getTodayKey();
+        let needsUpdate = true;
+
         if (storedDataStr) {
           const storedData = JSON.parse(storedDataStr) as StoredData;
-          if (
-            typeof storedData?.timestamp === "number" &&
-            !Number.isNaN(storedData.timestamp) &&
-            shouldUpdateRune(storedData.timestamp)
-          ) {
-            await updateRuneOfTheDay();
+          if (storedData?.date === todayKey) {
+            needsUpdate = false;
           }
-        } else {
+        }
+
+        if (needsUpdate) {
           await updateRuneOfTheDay();
         }
       } catch (error) {
@@ -198,11 +171,12 @@ const useRuneOfTheDay = (): { rune: Rune | null; isReversed: boolean } => {
       }
     };
 
-    const interval = setInterval(intervalCheck, checkInterval);
+    const interval = setInterval(intervalCheck, DAILY_CHECK_INTERVAL_MS);
     return () => clearInterval(interval);
-  }, [shouldUpdateRune, updateRuneOfTheDay]);
+  }, [updateRuneOfTheDay]);
 
   return { rune, isReversed };
 };
 
 export default useRuneOfTheDay;
+export { getLocalDateKey };

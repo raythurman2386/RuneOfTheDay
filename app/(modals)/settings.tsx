@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -9,20 +9,41 @@ import {
   useColorScheme,
   Linking,
   ScrollView,
+  Modal,
+  FlatList,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useSettings } from "../contexts/SettingsContext";
+import { useSettings, VALID_MINUTES } from "../contexts/SettingsContext";
 import { useColorTheme } from "../hooks/useColorTheme";
 import { Stack } from "expo-router";
 import useNotifications from "../hooks/useNotifications";
 
+const HOUR_OPTIONS = [5, 6, 7, 8, 9];
+
+const formatTime = (hour: number, minute: number): string => {
+  const h = String(hour).padStart(2, "0");
+  const m = String(minute).padStart(2, "0");
+  return `${h}:${m}`;
+};
+
+type PickerTarget = "hour" | "minute" | null;
+
 export default function SettingsScreen() {
-  const { theme, setTheme, haptics, setHaptics } = useSettings();
+  const {
+    theme,
+    setTheme,
+    haptics,
+    setHaptics,
+    dailyResetHour,
+    dailyResetMinute,
+    setDailyResetTime,
+  } = useSettings();
   const { colors } = useColorTheme();
   const systemColorScheme = useColorScheme();
   const { isEnabled: notificationsEnabled, requestPermissions } =
     useNotifications();
   const insets = useSafeAreaInsets();
+  const [activePicker, setActivePicker] = useState<PickerTarget>(null);
 
   const handleManageNotifications = async () => {
     if (!notificationsEnabled) {
@@ -221,8 +242,131 @@ export default function SettingsScreen() {
               </Text>
             </Pressable>
           </View>
+          <View style={styles.settingRow}>
+            <View style={{ flex: 1 }}>
+              <Text style={[styles.settingLabel, { color: colors.text }]}>
+                Notification time
+              </Text>
+              <Text
+                style={{ fontSize: 13, color: colors.icon, marginTop: 4 }}
+              >
+                Daily rune unlocks at this time
+              </Text>
+            </View>
+            <Pressable
+              onPress={() => setActivePicker("hour")}
+              accessibilityLabel="Change notification hour"
+              accessibilityRole="button"
+              testID="notification-hour-button"
+              style={[
+                styles.timeButton,
+                { borderColor: colors.icon, backgroundColor: colors.background },
+              ]}
+            >
+              <Text
+                style={[styles.timeButtonText, { color: colors.text }]}
+                testID="notification-hour-value"
+              >
+                {String(dailyResetHour).padStart(2, "0")}
+              </Text>
+            </Pressable>
+            <Text style={{ color: colors.text, fontSize: 18, marginHorizontal: 4 }}>
+              :
+            </Text>
+            <Pressable
+              onPress={() => setActivePicker("minute")}
+              accessibilityLabel="Change notification minute"
+              accessibilityRole="button"
+              testID="notification-minute-button"
+              style={[
+                styles.timeButton,
+                { borderColor: colors.icon, backgroundColor: colors.background },
+              ]}
+            >
+              <Text
+                style={[styles.timeButtonText, { color: colors.text }]}
+                testID="notification-minute-value"
+              >
+                {String(dailyResetMinute).padStart(2, "0")}
+              </Text>
+            </Pressable>
+          </View>
         </View>
       </ScrollView>
+
+      <Modal
+        visible={activePicker !== null}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setActivePicker(null)}
+      >
+        <Pressable
+          style={styles.modalBackdrop}
+          onPress={() => setActivePicker(null)}
+        >
+          <Pressable
+            style={[
+              styles.modalCard,
+              { backgroundColor: colors.surface, borderColor: colors.icon },
+            ]}
+            onPress={() => {}}
+          >
+            <Text style={[styles.modalTitle, { color: colors.text }]}>
+              {activePicker === "hour" ? "Select hour" : "Select minute"}
+            </Text>
+            <FlatList
+              data={activePicker === "hour" ? HOUR_OPTIONS : VALID_MINUTES}
+              keyExtractor={(item) => String(item)}
+              numColumns={activePicker === "hour" ? 5 : 4}
+              contentContainerStyle={styles.modalGrid}
+              renderItem={({ item }) => {
+                const isSelected =
+                  activePicker === "hour"
+                    ? item === dailyResetHour
+                    : item === dailyResetMinute;
+                return (
+                  <Pressable
+                    onPress={() => {
+                      if (activePicker === "hour") {
+                        setDailyResetTime(item, dailyResetMinute);
+                      } else {
+                        setDailyResetTime(dailyResetHour, item);
+                      }
+                      setActivePicker(null);
+                    }}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Select ${formatTime(
+                      activePicker === "hour" ? item : dailyResetHour,
+                      activePicker === "hour" ? dailyResetMinute : item,
+                    )}`}
+                    accessibilityState={{ selected: isSelected }}
+                    style={[
+                      styles.modalOption,
+                      {
+                        backgroundColor: isSelected
+                          ? colors.tint
+                          : colors.background,
+                        borderColor: colors.icon,
+                      },
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.modalOptionText,
+                        {
+                          color: isSelected ? colors.background : colors.text,
+                        },
+                      ]}
+                    >
+                      {String(item).padStart(2, "0")}
+                    </Text>
+                  </Pressable>
+                );
+              }}
+            />
+          </Pressable>
+        </Pressable>
+      </Modal>
     </>
   );
 }
@@ -284,5 +428,56 @@ const styles = StyleSheet.create({
   themeButtonSubtext: {
     fontSize: 12,
     marginTop: 4,
+  },
+  timeButton: {
+    minWidth: 48,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  timeButtonText: {
+    fontSize: 18,
+    fontWeight: "700",
+  },
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 24,
+  },
+  modalCard: {
+    width: "100%",
+    maxWidth: 360,
+    borderRadius: 16,
+    borderWidth: 1,
+    padding: 20,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    marginBottom: 16,
+    textAlign: "center",
+  },
+  modalGrid: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 4,
+  },
+  modalOption: {
+    width: 56,
+    height: 56,
+    borderRadius: 12,
+    borderWidth: 1,
+    margin: 6,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  modalOptionText: {
+    fontSize: 18,
+    fontWeight: "600",
   },
 });

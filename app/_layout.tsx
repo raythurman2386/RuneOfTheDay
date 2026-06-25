@@ -14,6 +14,8 @@ SplashScreen.preventAutoHideAsync();
 interface InitialSettings {
   theme?: "system" | "light" | "dark";
   haptics?: boolean;
+  dailyResetHour?: number;
+  dailyResetMinute?: number;
 }
 
 function LoadingScreen() {
@@ -123,14 +125,30 @@ export default function RootLayout() {
         });
 
         // Load initial settings
-        const [savedTheme, savedHaptics] = await Promise.all([
+        const [
+          savedTheme,
+          savedHaptics,
+          savedDailyResetHour,
+          savedDailyResetMinute,
+        ] = await Promise.all([
           AsyncStorage.getItem("theme"),
           AsyncStorage.getItem("haptics"),
+          AsyncStorage.getItem("dailyResetHour"),
+          AsyncStorage.getItem("dailyResetMinute"),
         ]);
+
+        const parsedHour =
+          savedDailyResetHour !== null ? parseInt(savedDailyResetHour, 10) : 6;
+        const parsedMinute =
+          savedDailyResetMinute !== null
+            ? parseInt(savedDailyResetMinute, 10)
+            : 0;
 
         setInitialSettings({
           theme: (savedTheme as "system" | "light" | "dark") || "system",
           haptics: savedHaptics === null ? true : savedHaptics === "true",
+          dailyResetHour: Number.isNaN(parsedHour) ? 6 : parsedHour,
+          dailyResetMinute: Number.isNaN(parsedMinute) ? 0 : parsedMinute,
         });
       } catch (e) {
         console.warn(e);
