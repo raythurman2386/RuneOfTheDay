@@ -1,7 +1,11 @@
 "use no memo";
 
 import React from "react";
-import { FlexWidget, TextWidget, IconWidget } from "react-native-android-widget";
+import {
+  FlexWidget,
+  TextWidget,
+  IconWidget,
+} from "react-native-android-widget";
 import { runes } from "../data/runes";
 import { getTodayKey } from "../utils/dateKey";
 import { seededIntFromKey, seededRandomFromKey } from "../utils/seededRandom";
@@ -25,8 +29,8 @@ export function RuneWidget({ dateKey }: RuneWidgetProps) {
 
   const hasReversedMeaning = Boolean(
     rune?.meaning?.reversed &&
-      typeof rune.meaning.reversed === "string" &&
-      rune.meaning.reversed.trim() !== "",
+    typeof rune.meaning.reversed === "string" &&
+    rune.meaning.reversed.trim() !== "",
   );
   const reversedRoll = seededRandomFromKey(`${key}:reversed`);
   const isReversed = hasReversedMeaning ? reversedRoll < 0.5 : false;
@@ -38,9 +42,7 @@ export function RuneWidget({ dateKey }: RuneWidgetProps) {
 
   // Truncate meaning for widget display (avoid text overflow)
   const truncatedMeaning =
-    meaningText.length > 80
-      ? `${meaningText.slice(0, 77)}...`
-      : meaningText;
+    meaningText.length > 80 ? `${meaningText.slice(0, 77)}...` : meaningText;
 
   return (
     <FlexWidget

@@ -10,7 +10,7 @@ Versioning: [Semantic Versioning](https://semver.org/).
 
 - **Notification daily trigger could fire a day early.** When the app was
   opened before the daily reset time (e.g., 5 AM with a 6 AM reset), the
-  `DAILY` trigger would fire *today* instead of tomorrow, delivering the
+  `DAILY` trigger would fire _today_ instead of tomorrow, delivering the
   wrong rune a full day early. The scheduler now detects this case and
   falls back to a one-time `TIME_INTERVAL` notification for the first
   fire, re-establishing the daily repeat on the next app open after the

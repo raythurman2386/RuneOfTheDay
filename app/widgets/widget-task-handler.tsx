@@ -19,7 +19,8 @@ const nameToWidget = {
  */
 export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
   const widgetInfo = props.widgetInfo;
-  const Widget = nameToWidget[widgetInfo.widgetName as keyof typeof nameToWidget];
+  const Widget =
+    nameToWidget[widgetInfo.widgetName as keyof typeof nameToWidget];
 
   switch (props.widgetAction) {
     case "WIDGET_ADDED":
