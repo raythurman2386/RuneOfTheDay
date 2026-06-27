@@ -54,6 +54,12 @@ upload-keystore.jks
 google-play-service-account.json
 *.keystore
 android.keystore
+*.p8
+*.mobileprovision
+*.key
+*.pem
+*.p12
+*.jks
 
 # Coverage reports
 coverage/

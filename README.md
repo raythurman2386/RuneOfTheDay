@@ -161,12 +161,10 @@ npm test -- --coverage  # Run with coverage report
 
 ### Contributing
 
-1. Fork the repository.
-2. Create a feature branch: `git checkout -b feature/your-feature`.
-3. Commit your changes: `git commit -m 'Add your feature'`.
-4. Push to the branch: `git push origin feature/your-feature`.
-5. Submit a pull request.
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed setup, code style,
+testing, and PR guidelines.
 
 ## License
 
-Licensed under the MIT License.
+This project is licensed under the MIT License — see the [LICENSE](./LICENSE)
+file for details.
