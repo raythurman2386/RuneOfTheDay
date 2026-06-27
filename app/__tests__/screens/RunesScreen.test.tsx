@@ -1,7 +1,8 @@
 import React from "react";
-import { render } from "@testing-library/react-native";
+import { render, fireEvent } from "@testing-library/react-native";
 import RunesScreen from "../../(tabs)/runes";
 import { runes } from "../../data/runes";
+import { router } from "expo-router";
 
 jest.mock("../../hooks/useColorTheme", () => ({
   useColorTheme: () => ({
@@ -15,6 +16,8 @@ jest.mock("../../hooks/useColorTheme", () => ({
       tabIconSelected: "#ffffff",
       tabIconDefault: "#888888",
       reversedRune: "#FF0000",
+      border: "#333333",
+      accent: "#D4A857",
     },
   }),
 }));
@@ -31,12 +34,16 @@ jest.mock("../../hooks/useHaptics", () => ({
 }));
 
 jest.mock("expo-router", () => ({
+  __esModule: true,
   router: {
     push: jest.fn(),
   },
 }));
 
 describe("RunesScreen", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
   it("renders without crashing", () => {
     const { getByTestId } = render(<RunesScreen />);
     // The FlatList is rendered inside a View — verify it doesn't crash
@@ -76,5 +83,27 @@ describe("RunesScreen", () => {
     const { getByText } = render(<RunesScreen />);
     expect(getByText(runes[0].name)).toBeTruthy();
     expect(getByText(runes[1].name)).toBeTruthy();
+  });
+
+  it("navigates to rune detail when a rune is pressed", () => {
+    const { getByText } = render(<RunesScreen />);
+    const runeItem = getByText(runes[0].name);
+
+    fireEvent.press(runeItem);
+
+    expect(router.push).toHaveBeenCalledWith({
+      pathname: "/rune/[id]",
+      params: { id: runes[0].name },
+    });
+  });
+
+  it("navigates to the correct rune for each item pressed", () => {
+    const { getByText } = render(<RunesScreen />);
+
+    fireEvent.press(getByText(runes[1].name));
+    expect(router.push).toHaveBeenCalledWith({
+      pathname: "/rune/[id]",
+      params: { id: runes[1].name },
+    });
   });
 });

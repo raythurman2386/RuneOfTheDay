@@ -11,7 +11,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useLocalSearchParams, Stack } from "expo-router";
 import { useColorTheme } from "../hooks/useColorTheme";
 import { runes } from "../data/runes";
-import { DURATION_ENTRANCE, easeOut, fadeInUp } from "../constants/animations";
+import { DURATION_ENTRANCE, fadeInUp } from "../constants/animations";
 
 export default function RuneDetailsScreen() {
   // Get the rune ID from the URL params

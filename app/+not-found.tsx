@@ -22,7 +22,7 @@ export default function NotFound() {
       <Text style={[styles.rune, { color: colors.accent }]}>ᛉ</Text>
       <Text style={[styles.title, { color: colors.text }]}>Page not found</Text>
       <Text style={[styles.subtitle, { color: colors.icon }]}>
-        The page you're looking for doesn't exist.
+        The page you&apos;re looking for doesn&apos;t exist.
       </Text>
       <Pressable
         style={[styles.button, { backgroundColor: colors.accent }]}

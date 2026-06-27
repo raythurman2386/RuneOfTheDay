@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useState } from "react";
 import { Pressable, Animated } from "react-native";
 import { Tabs } from "expo-router";
 import type { BottomTabBarButtonProps } from "expo-router/build/react-navigation/bottom-tabs/types";
@@ -14,7 +14,9 @@ import { DURATION_QUICK } from "../constants/animations";
 // and remount on every parent render (losing state, replaying animations).
 const TabButton = ({ onPress, ref, ...props }: BottomTabBarButtonProps) => {
   const { lightFeedback } = useHaptics();
-  const scale = useRef(new Animated.Value(1)).current;
+  // useState with lazy init avoids the ref-during-render lint error
+  // that useRef(...).current triggers.
+  const [scale] = useState(() => new Animated.Value(1));
 
   const handlePressIn = () => {
     Animated.timing(scale, {

@@ -1,5 +1,5 @@
 import React from "react";
-import { render } from "@testing-library/react-native";
+import { render, fireEvent, act } from "@testing-library/react-native";
 import FlashcardScreen from "../../screens/FlashcardScreen";
 import { runes } from "../../data/runes";
 
@@ -131,5 +131,83 @@ describe("FlashcardScreen", () => {
   it("renders the flip card component", () => {
     const { getByTestId } = render(<FlashcardScreen />);
     expect(getByTestId("flip-card")).toBeTruthy();
+  });
+
+  it("advances to the next rune when Next is pressed", async () => {
+    jest.useFakeTimers();
+    const { getByTestId } = render(<FlashcardScreen />);
+
+    // Initially shows rune 0
+    expect(getByTestId("rune-name").props.children).toBe(runes[0].name);
+
+    await act(async () => {
+      fireEvent.press(getByTestId("next-button"));
+      jest.advanceTimersByTime(200);
+    });
+
+    expect(getByTestId("rune-name").props.children).toBe(runes[1].name);
+    jest.useRealTimers();
+  });
+
+  it("wraps around to the last rune when Previous is pressed from the first", async () => {
+    jest.useFakeTimers();
+    const { getByTestId } = render(<FlashcardScreen />);
+
+    await act(async () => {
+      fireEvent.press(getByTestId("prev-button"));
+      jest.advanceTimersByTime(200);
+    });
+
+    expect(getByTestId("rune-name").props.children).toBe(
+      runes[runes.length - 1].name,
+    );
+    jest.useRealTimers();
+  });
+
+  it("wraps around to the first rune when Next is pressed from the last", async () => {
+    jest.useFakeTimers();
+    const { getByTestId } = render(<FlashcardScreen />);
+
+    // Advance to the last rune
+    for (let i = 0; i < runes.length - 1; i++) {
+      await act(async () => {
+        fireEvent.press(getByTestId("next-button"));
+        jest.advanceTimersByTime(200);
+      });
+    }
+
+    expect(getByTestId("progress-text").props.children).toBe(
+      `${runes.length} / ${runes.length}`,
+    );
+
+    // Press Next one more time — should wrap to rune 0
+    await act(async () => {
+      fireEvent.press(getByTestId("next-button"));
+      jest.advanceTimersByTime(200);
+    });
+
+    expect(getByTestId("progress-text").props.children).toBe(
+      `1 / ${runes.length}`,
+    );
+    jest.useRealTimers();
+  });
+
+  it("updates the progress counter when navigating", async () => {
+    jest.useFakeTimers();
+    const { getByTestId } = render(<FlashcardScreen />);
+
+    expect(getByTestId("progress-text").props.children).toBe(
+      `1 / ${runes.length}`,
+    );
+
+    await act(async () => {
+      fireEvent.press(getByTestId("next-button"));
+      jest.advanceTimersByTime(200);
+    });
+
+    expect(getByTestId("progress-text").props.children).toBe(
+      `2 / ${runes.length}`,
+    );
+    jest.useRealTimers();
   });
 });

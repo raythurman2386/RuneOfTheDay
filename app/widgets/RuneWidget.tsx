@@ -1,11 +1,7 @@
 "use no memo";
 
 import React from "react";
-import {
-  FlexWidget,
-  TextWidget,
-  IconWidget,
-} from "react-native-android-widget";
+import { FlexWidget, TextWidget } from "react-native-android-widget";
 import { runes } from "../data/runes";
 import { getTodayKey } from "../utils/dateKey";
 import { seededIntFromKey, seededRandomFromKey } from "../utils/seededRandom";

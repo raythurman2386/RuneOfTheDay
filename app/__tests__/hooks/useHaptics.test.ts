@@ -86,4 +86,80 @@ describe("useHaptics", () => {
 
     expect(Haptics.notificationAsync).not.toHaveBeenCalled();
   });
+
+  it("should call Haptics.impactAsync with Heavy style when heavyFeedback is called", async () => {
+    const { result } = renderHook(() => useHaptics());
+
+    await act(async () => {
+      result.current.heavyFeedback();
+    });
+
+    expect(Haptics.impactAsync).toHaveBeenCalledWith("heavy");
+  });
+
+  it("should call Haptics.notificationAsync with Error type when errorFeedback is called", async () => {
+    const { result } = renderHook(() => useHaptics());
+
+    await act(async () => {
+      result.current.errorFeedback();
+    });
+
+    expect(Haptics.notificationAsync).toHaveBeenCalledWith("error");
+  });
+
+  it("should call Haptics.notificationAsync with Success type when successFeedback is called", async () => {
+    const { result } = renderHook(() => useHaptics());
+
+    await act(async () => {
+      result.current.successFeedback();
+    });
+
+    expect(Haptics.notificationAsync).toHaveBeenCalledWith("success");
+  });
+
+  it("should report isSupported as true on native platforms", () => {
+    const { result } = renderHook(() => useHaptics());
+    expect(result.current.isSupported).toBe(true);
+  });
+
+  it("should report isSupported as false on web", () => {
+    Object.defineProperty(Platform, "OS", { get: () => "web" });
+
+    const { result } = renderHook(() => useHaptics());
+    expect(result.current.isSupported).toBe(false);
+  });
+
+  it("should silently handle haptics errors", async () => {
+    const consoleSpy = jest
+      .spyOn(console, "debug")
+      .mockImplementation(() => {});
+    Haptics.impactAsync.mockRejectedValueOnce(new Error("Haptics unavailable"));
+
+    const { result } = renderHook(() => useHaptics());
+
+    await act(async () => {
+      result.current.lightFeedback();
+    });
+
+    expect(consoleSpy).toHaveBeenCalledWith(
+      "Haptics not available:",
+      expect.any(Error),
+    );
+    consoleSpy.mockRestore();
+  });
+
+  it("should not call any haptics on web even when enabled", async () => {
+    Object.defineProperty(Platform, "OS", { get: () => "web" });
+
+    const { result } = renderHook(() => useHaptics());
+
+    await act(async () => {
+      result.current.mediumFeedback();
+      result.current.heavyFeedback();
+      result.current.errorFeedback();
+    });
+
+    expect(Haptics.impactAsync).not.toHaveBeenCalled();
+    expect(Haptics.notificationAsync).not.toHaveBeenCalled();
+  });
 });
