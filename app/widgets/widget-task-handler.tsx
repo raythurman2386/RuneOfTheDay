@@ -4,8 +4,9 @@ import { Linking } from "react-native";
 import { RuneWidget } from "./RuneWidget";
 
 const nameToWidget = {
-  // "Rune" is the name registered in the Expo config plugin
+  // Both widget sizes use the same component — it adapts via widgetWidth
   Rune: RuneWidget,
+  RuneWide: RuneWidget,
 };
 
 /**
@@ -22,17 +23,21 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
   const Widget =
     nameToWidget[widgetInfo.widgetName as keyof typeof nameToWidget];
 
+  // Pass the widget width so the component can scale fonts accordingly
+  const renderWithSize = () =>
+    props.renderWidget(<Widget widgetWidth={widgetInfo.width} />);
+
   switch (props.widgetAction) {
     case "WIDGET_ADDED":
-      props.renderWidget(<Widget />);
+      renderWithSize();
       break;
 
     case "WIDGET_UPDATE":
-      props.renderWidget(<Widget />);
+      renderWithSize();
       break;
 
     case "WIDGET_RESIZED":
-      props.renderWidget(<Widget />);
+      renderWithSize();
       break;
 
     case "WIDGET_CLICK":

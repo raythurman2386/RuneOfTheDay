@@ -20,6 +20,22 @@ const widgetConfig: WithAndroidWidgetsParams = {
       // Update every 30 minutes (minimum allowed)
       updatePeriodMillis: 1800000,
     },
+    {
+      name: "RuneWide",
+      label: "Daily Rune (Wide)",
+      description:
+        "Shows today's Elder Futhark rune and its meaning in a wider format.",
+      // 4x2 cells — full width on most phones
+      targetCellWidth: 4,
+      targetCellHeight: 2,
+      // Fallback for Android 11 and below
+      minWidth: "320dp",
+      minHeight: "180dp",
+      // Preview image shown in the widget picker
+      previewImage: "./assets/images/widget-preview.png",
+      // Update every 30 minutes (minimum allowed)
+      updatePeriodMillis: 1800000,
+    },
   ],
 };
 

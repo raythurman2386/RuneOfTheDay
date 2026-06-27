@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { Stack, router, SplashScreen } from "expo-router";
-import { View, ActivityIndicator, Platform } from "react-native";
+import {
+  View,
+  ActivityIndicator,
+  Platform,
+  useColorScheme,
+} from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import * as Font from "expo-font";
@@ -19,17 +24,21 @@ interface InitialSettings {
 }
 
 function LoadingScreen() {
-  const { colors } = useColorTheme();
+  // LoadingScreen renders before SettingsProvider is mounted, so we
+  // can't use useColorTheme() here. Use system appearance directly.
+  const isDark = useColorScheme() === "dark";
+  const backgroundColor = isDark ? "#0D1117" : "#FAFAF7";
+  const accentColor = isDark ? "#D4A857" : "#B8860B";
   return (
     <View
       style={{
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: colors.background,
+        backgroundColor,
       }}
     >
-      <ActivityIndicator size="large" color={colors.accent} />
+      <ActivityIndicator size="large" color={accentColor} />
     </View>
   );
 }

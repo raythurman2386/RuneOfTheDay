@@ -9,6 +9,8 @@ import { seededIntFromKey, seededRandomFromKey } from "../utils/seededRandom";
 interface RuneWidgetProps {
   /** Override the date key (used for preview/testing). Defaults to today. */
   dateKey?: string;
+  /** Widget width in dp (from WidgetInfo). Used to scale font sizes. */
+  widgetWidth?: number;
 }
 
 /**
@@ -18,10 +20,19 @@ interface RuneWidgetProps {
  * no hooks. The rune is computed deterministically from the date key so the
  * widget always matches the in-app daily rune.
  */
-export function RuneWidget({ dateKey }: RuneWidgetProps) {
+export function RuneWidget({ dateKey, widgetWidth }: RuneWidgetProps) {
   const key = dateKey ?? getTodayKey();
   const index = seededIntFromKey(key, runes.length);
   const rune = runes[index];
+
+  // Scale font sizes based on widget width. A 2x2 widget (~180dp) gets
+  // smaller fonts; a 4x2 widget (~320dp+) gets larger fonts with more
+  // room for the meaning text.
+  const isWide = (widgetWidth ?? 180) >= 280;
+  const symbolSize = isWide ? 64 : 56;
+  const nameSize = isWide ? 20 : 18;
+  const meaningSize = isWide ? 14 : 13;
+  const maxMeaningLength = isWide ? 120 : 80;
 
   const hasReversedMeaning = Boolean(
     rune?.meaning?.reversed &&
@@ -38,7 +49,9 @@ export function RuneWidget({ dateKey }: RuneWidgetProps) {
 
   // Truncate meaning for widget display (avoid text overflow)
   const truncatedMeaning =
-    meaningText.length > 80 ? `${meaningText.slice(0, 77)}...` : meaningText;
+    meaningText.length > maxMeaningLength
+      ? `${meaningText.slice(0, maxMeaningLength - 3)}...`
+      : meaningText;
 
   return (
     <FlexWidget
@@ -67,7 +80,7 @@ export function RuneWidget({ dateKey }: RuneWidgetProps) {
           text={rune.symbol}
           style={{
             fontFamily: "ElderFuthark",
-            fontSize: 56,
+            fontSize: symbolSize,
             color: "#D4A857",
             textAlign: "center",
           }}
@@ -85,7 +98,7 @@ export function RuneWidget({ dateKey }: RuneWidgetProps) {
         <TextWidget
           text={isReversed ? `${rune.name} (Reversed)` : rune.name}
           style={{
-            fontSize: 18,
+            fontSize: nameSize,
             fontFamily: "Inter",
             fontWeight: "700",
             color: "#E6EDF3",
@@ -95,7 +108,7 @@ export function RuneWidget({ dateKey }: RuneWidgetProps) {
         <TextWidget
           text={truncatedMeaning}
           style={{
-            fontSize: 13,
+            fontSize: meaningSize,
             fontFamily: "Inter",
             color: "#9DA7B3",
           }}
