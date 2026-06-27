@@ -13,6 +13,11 @@ import { runes } from "../data/runes";
 import { useColorTheme } from "../hooks/useColorTheme";
 import useHaptics from "../hooks/useHaptics";
 import { router } from "expo-router";
+import {
+  DURATION_STANDARD,
+  STAGGER_DELAY_MS,
+  easeOut,
+} from "../constants/animations";
 
 interface Rune {
   name: string;
@@ -35,20 +40,22 @@ interface RuneItemProps {
 
 function RuneItem({ item, index, onPress, colors }: RuneItemProps) {
   const [opacity] = useState(() => new Animated.Value(0));
-  const [translateY] = useState(() => new Animated.Value(20));
+  const [translateY] = useState(() => new Animated.Value(12));
 
   React.useEffect(() => {
     Animated.parallel([
       Animated.timing(opacity, {
         toValue: 1,
-        duration: 300,
-        delay: index * 50,
+        duration: DURATION_STANDARD,
+        delay: index * STAGGER_DELAY_MS,
+        easing: easeOut,
         useNativeDriver: true,
       }),
       Animated.timing(translateY, {
         toValue: 0,
-        duration: 300,
-        delay: index * 50,
+        duration: DURATION_STANDARD,
+        delay: index * STAGGER_DELAY_MS,
+        easing: easeOut,
         useNativeDriver: true,
       }),
     ]).start();
@@ -66,7 +73,7 @@ function RuneItem({ item, index, onPress, colors }: RuneItemProps) {
           styles.runeItem,
           {
             backgroundColor: colors.surface,
-            borderColor: colors.icon,
+            borderColor: colors.border,
             transform: [{ scale: pressed ? 0.98 : 1 }],
           },
         ]}
@@ -75,7 +82,7 @@ function RuneItem({ item, index, onPress, colors }: RuneItemProps) {
         accessibilityRole="button"
       >
         <View style={styles.runeContent}>
-          <Text style={[styles.symbol, { color: colors.text }]}>
+          <Text style={[styles.symbol, { color: colors.accent }]}>
             {item.symbol}
           </Text>
           <View style={styles.textContainer}>

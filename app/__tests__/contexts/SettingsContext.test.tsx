@@ -158,10 +158,7 @@ describe("SettingsContext", () => {
     expect(result.current.dailyResetHour).toBe(9);
     expect(result.current.dailyResetMinute).toBe(45);
     expect(AsyncStorage.setItem).toHaveBeenCalledWith("dailyResetHour", "9");
-    expect(AsyncStorage.setItem).toHaveBeenCalledWith(
-      "dailyResetMinute",
-      "45",
-    );
+    expect(AsyncStorage.setItem).toHaveBeenCalledWith("dailyResetMinute", "45");
   });
 
   it("setDailyResetTime ignores invalid values", async () => {

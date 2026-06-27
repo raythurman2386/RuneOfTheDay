@@ -17,13 +17,15 @@ interface StoredData {
   isReversed?: boolean;
 }
 
-const pickRuneForDate = (dateKey: string): { index: number; isReversed: boolean } => {
+const pickRuneForDate = (
+  dateKey: string,
+): { index: number; isReversed: boolean } => {
   const index = seededIntFromKey(dateKey, runes.length);
   const selectedRune = runes[index];
   const hasReversedMeaning = Boolean(
     selectedRune?.meaning?.reversed &&
-      typeof selectedRune.meaning.reversed === "string" &&
-      selectedRune.meaning.reversed.trim() !== "",
+    typeof selectedRune.meaning.reversed === "string" &&
+    selectedRune.meaning.reversed.trim() !== "",
   );
   const reversedRoll = seededRandomFromKey(`${dateKey}:reversed`);
   const isReversed = hasReversedMeaning ? reversedRoll < 0.5 : false;
@@ -47,12 +49,18 @@ const useRuneOfTheDay = (): { rune: Rune | null; isReversed: boolean } => {
   const scheduleRuneNotification = useCallback(
     async (dateKey: string) => {
       try {
-        const { index, isReversed: pickedIsReversed } = pickRuneForDate(dateKey);
-        const pickedRune = runes[index];
+        // The notification fires at the next daily reset, which marks the
+        // start of *tomorrow's* rune day. Announce the rune for the date the
+        // notification will actually fire on, not the current day — otherwise
+        // the push shows yesterday's rune ("day before" bug).
+        const fireDate = new Date();
+        fireDate.setDate(fireDate.getDate() + 1);
+        fireDate.setHours(dailyResetHour, dailyResetMinute, 0, 0);
+        const fireDateKey = getLocalDateKey(fireDate);
 
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        tomorrow.setHours(dailyResetHour, dailyResetMinute, 0, 0);
+        const { index, isReversed: pickedIsReversed } =
+          pickRuneForDate(fireDateKey);
+        const pickedRune = runes[index];
 
         const meaningText =
           pickedIsReversed && pickedRune.meaning.reversed
@@ -62,7 +70,7 @@ const useRuneOfTheDay = (): { rune: Rune | null; isReversed: boolean } => {
         await scheduleNotification(
           `Your Daily Rune Awaits ${pickedRune.symbol || ""}`,
           `${pickedRune.name} - ${meaningText}`,
-          tomorrow,
+          fireDate,
           NOTIFICATION_IDENTIFIER,
           true,
         );
@@ -129,7 +137,8 @@ const useRuneOfTheDay = (): { rune: Rune | null; isReversed: boolean } => {
 
       try {
         const todayKey = getTodayKey();
-        const { index, isReversed: pickedIsReversed } = pickRuneForDate(todayKey);
+        const { index, isReversed: pickedIsReversed } =
+          pickRuneForDate(todayKey);
         safeSetRune(runes[index]);
         safeSetIsReversed(pickedIsReversed);
       } catch (fallbackError) {

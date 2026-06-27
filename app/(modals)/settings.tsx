@@ -78,10 +78,10 @@ export default function SettingsScreen() {
         <View
           style={[
             styles.section,
-            { backgroundColor: colors.surface, borderColor: colors.icon },
+            { backgroundColor: colors.surface, borderColor: colors.border },
           ]}
         >
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>
+          <Text style={[styles.sectionTitle, { color: colors.accent }]}>
             Appearance
           </Text>
           <View style={styles.optionsContainer}>
@@ -91,7 +91,7 @@ export default function SettingsScreen() {
                 {
                   backgroundColor:
                     theme === "system" ? colors.tint : colors.background,
-                  borderColor: colors.icon,
+                  borderColor: colors.border,
                 },
               ]}
               onPress={() => setTheme("system")}
@@ -127,7 +127,7 @@ export default function SettingsScreen() {
                 {
                   backgroundColor:
                     theme === "light" ? colors.tint : colors.background,
-                  borderColor: colors.icon,
+                  borderColor: colors.border,
                 },
               ]}
               onPress={() => setTheme("light")}
@@ -153,7 +153,7 @@ export default function SettingsScreen() {
                 {
                   backgroundColor:
                     theme === "dark" ? colors.tint : colors.background,
-                  borderColor: colors.icon,
+                  borderColor: colors.border,
                 },
               ]}
               onPress={() => setTheme("dark")}
@@ -178,10 +178,10 @@ export default function SettingsScreen() {
         <View
           style={[
             styles.section,
-            { backgroundColor: colors.surface, borderColor: colors.icon },
+            { backgroundColor: colors.surface, borderColor: colors.border },
           ]}
         >
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>
+          <Text style={[styles.sectionTitle, { color: colors.accent }]}>
             Haptics
           </Text>
           <View style={styles.settingRow}>
@@ -207,10 +207,10 @@ export default function SettingsScreen() {
         <View
           style={[
             styles.section,
-            { backgroundColor: colors.surface, borderColor: colors.icon },
+            { backgroundColor: colors.surface, borderColor: colors.border },
           ]}
         >
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>
+          <Text style={[styles.sectionTitle, { color: colors.accent }]}>
             Notifications
           </Text>
           <View style={styles.settingRow}>
@@ -247,9 +247,7 @@ export default function SettingsScreen() {
               <Text style={[styles.settingLabel, { color: colors.text }]}>
                 Notification time
               </Text>
-              <Text
-                style={{ fontSize: 13, color: colors.icon, marginTop: 4 }}
-              >
+              <Text style={{ fontSize: 13, color: colors.icon, marginTop: 4 }}>
                 Daily rune unlocks at this time
               </Text>
             </View>
@@ -260,7 +258,10 @@ export default function SettingsScreen() {
               testID="notification-hour-button"
               style={[
                 styles.timeButton,
-                { borderColor: colors.icon, backgroundColor: colors.background },
+                {
+                  borderColor: colors.border,
+                  backgroundColor: colors.background,
+                },
               ]}
             >
               <Text
@@ -270,7 +271,9 @@ export default function SettingsScreen() {
                 {String(dailyResetHour).padStart(2, "0")}
               </Text>
             </Pressable>
-            <Text style={{ color: colors.text, fontSize: 18, marginHorizontal: 4 }}>
+            <Text
+              style={{ color: colors.text, fontSize: 18, marginHorizontal: 4 }}
+            >
               :
             </Text>
             <Pressable
@@ -280,7 +283,10 @@ export default function SettingsScreen() {
               testID="notification-minute-button"
               style={[
                 styles.timeButton,
-                { borderColor: colors.icon, backgroundColor: colors.background },
+                {
+                  borderColor: colors.border,
+                  backgroundColor: colors.background,
+                },
               ]}
             >
               <Text
@@ -307,7 +313,7 @@ export default function SettingsScreen() {
           <Pressable
             style={[
               styles.modalCard,
-              { backgroundColor: colors.surface, borderColor: colors.icon },
+              { backgroundColor: colors.surface, borderColor: colors.border },
             ]}
             onPress={() => {}}
           >
@@ -346,7 +352,7 @@ export default function SettingsScreen() {
                         backgroundColor: isSelected
                           ? colors.tint
                           : colors.background,
-                        borderColor: colors.icon,
+                        borderColor: colors.border,
                       },
                     ]}
                   >

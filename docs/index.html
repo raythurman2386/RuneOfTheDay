@@ -3,138 +3,716 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Rune of the Day</title>
+    <meta
+      name="description"
+      content="Rune of the Day — discover daily wisdom through the 24 Elder Futhark runes. A privacy-focused, offline-first mobile app. Now in early access on Google Play."
+    />
+    <title>Rune of the Day — Daily Wisdom from the Elder Futhark</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
     <style>
-      body {
-        font-family:
-          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
-          Cantarell, sans-serif;
-        line-height: 1.6;
+      :root {
+        --bg: #0d1117;
+        --bg-elev: #161b22;
+        --bg-card: #1c2128;
+        --border: #30363d;
+        --text: #e6edf3;
+        --text-muted: #9da7b3;
+        --gold: #d4a857;
+        --gold-bright: #f0c674;
+        --gold-dim: #8a6d2f;
+        --rune-blue: #4a90c2;
+        --rune-blue-deep: #2a5a7a;
+        --shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+        --radius: 12px;
+        --max-width: 960px;
+      }
+
+      * {
+        box-sizing: border-box;
         margin: 0;
         padding: 0;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family:
+          "Inter",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+        line-height: 1.7;
+        background: var(--bg);
+        color: var(--text);
         min-height: 100vh;
         display: flex;
         flex-direction: column;
-        color: #333;
+        -webkit-font-smoothing: antialiased;
       }
-      .hero {
-        background: linear-gradient(135deg, #0a7ea4 0%, #064c6c 100%);
-        color: white;
-        padding: 60px 20px;
-        text-align: center;
+
+      h1,
+      h2,
+      h3 {
+        font-family: "Cinzel", Georgia, serif;
+        font-weight: 600;
+        letter-spacing: 0.02em;
       }
-      .container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 40px 20px;
-        flex: 1;
-      }
-      h1 {
-        font-size: 2.5em;
-        margin-bottom: 20px;
-      }
-      .subtitle {
-        font-size: 1.2em;
-        opacity: 0.9;
-        margin-bottom: 30px;
-      }
-      .cta-button {
-        display: inline-block;
-        background: #fff;
-        color: #0a7ea4;
-        padding: 12px 24px;
-        border-radius: 25px;
+
+      a {
+        color: var(--gold-bright);
         text-decoration: none;
-        font-weight: bold;
-        transition: transform 0.2s;
-        margin: 10px;
+        transition: color 0.2s ease;
       }
-      .cta-button:hover {
+
+      a:hover {
+        color: var(--gold);
+      }
+
+      /* ---------- Hero ---------- */
+      .hero {
+        position: relative;
+        text-align: center;
+        padding: 80px 20px 60px;
+        background:
+          radial-gradient(
+            ellipse at 50% 0%,
+            rgba(74, 144, 194, 0.18) 0%,
+            transparent 60%
+          ),
+          linear-gradient(180deg, #0d1117 0%, #0d1117 100%);
+        overflow: hidden;
+      }
+
+      .hero::before {
+        content: "ᚠᚢᚦᚨᚱᚲᚷᚹᚺᚾᛁᛃᛇᛈᛉᛊᛏᛒᛖᛗᛚᛜᛞᛟ";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: clamp(3rem, 12vw, 9rem);
+        color: var(--gold-dim);
+        opacity: 0.06;
+        white-space: nowrap;
+        pointer-events: none;
+        letter-spacing: 0.15em;
+        user-select: none;
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 1;
+        max-width: var(--max-width);
+        margin: 0 auto;
+      }
+
+      .hero-rune {
+        font-size: clamp(3rem, 8vw, 5rem);
+        color: var(--gold-bright);
+        line-height: 1;
+        margin-bottom: 16px;
+        text-shadow: 0 0 30px rgba(240, 198, 116, 0.3);
+      }
+
+      .hero h1 {
+        font-size: clamp(2rem, 6vw, 3.5rem);
+        margin-bottom: 16px;
+        color: var(--text);
+      }
+
+      .hero .subtitle {
+        font-size: clamp(1rem, 2.5vw, 1.3rem);
+        color: var(--text-muted);
+        max-width: 560px;
+        margin: 0 auto 36px;
+        font-weight: 400;
+      }
+
+      .cta-group {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 14px;
+      }
+
+      .cta-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 28px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 1rem;
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
+        border: 1px solid var(--gold);
+      }
+
+      .cta-button.primary {
+        background: var(--gold);
+        color: #1a1208;
+      }
+
+      .cta-button.primary:hover {
+        background: var(--gold-bright);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(212, 168, 87, 0.35);
+      }
+
+      .cta-button.secondary {
+        background: transparent;
+        color: var(--gold-bright);
+      }
+
+      .cta-button.secondary:hover {
+        background: rgba(212, 168, 87, 0.1);
         transform: translateY(-2px);
       }
+
+      .cta-button.disabled {
+        background: transparent;
+        color: var(--text-muted);
+        border-color: var(--border);
+        cursor: not-allowed;
+        opacity: 0.7;
+      }
+
+      .cta-button.disabled:hover {
+        transform: none;
+        box-shadow: none;
+      }
+
+      .cta-badge {
+        display: block;
+        font-size: 0.7rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        opacity: 0.7;
+        margin-top: 2px;
+      }
+
+      /* ---------- Sections ---------- */
+      .section {
+        max-width: var(--max-width);
+        margin: 0 auto;
+        padding: 64px 20px;
+      }
+
+      .section-title {
+        text-align: center;
+        font-size: clamp(1.5rem, 4vw, 2.2rem);
+        margin-bottom: 12px;
+        color: var(--text);
+      }
+
+      .section-subtitle {
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 1.05rem;
+        max-width: 600px;
+        margin: 0 auto 48px;
+      }
+
+      /* ---------- Feature grid ---------- */
       .features {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 30px;
-        margin-top: 40px;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 24px;
       }
+
       .feature {
-        background: #f5f5f5;
-        padding: 20px;
-        border-radius: 8px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 32px 24px;
+        text-align: center;
+        transition:
+          transform 0.2s ease,
+          border-color 0.2s ease;
+      }
+
+      .feature:hover {
+        transform: translateY(-4px);
+        border-color: var(--gold-dim);
+      }
+
+      .feature-icon {
+        font-size: 2.5rem;
+        color: var(--gold-bright);
+        margin-bottom: 16px;
+        line-height: 1;
+      }
+
+      .feature h3 {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+        color: var(--text);
+      }
+
+      .feature p {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+      }
+
+      /* ---------- How it works ---------- */
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 32px;
+      }
+
+      .step {
         text-align: center;
       }
-      .feature h3 {
-        color: #0a7ea4;
-        margin-top: 0;
+
+      .step-number {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: var(--rune-blue-deep);
+        color: var(--gold-bright);
+        font-family: "Cinzel", serif;
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 16px;
+        border: 1px solid var(--gold-dim);
       }
+
+      .step h3 {
+        font-size: 1.1rem;
+        margin-bottom: 8px;
+      }
+
+      .step p {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+      }
+
+      /* ---------- About ---------- */
+      .about {
+        background: var(--bg-elev);
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+      }
+
+      .about-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 48px;
+        align-items: center;
+      }
+
+      .about-text p {
+        color: var(--text-muted);
+        margin-bottom: 16px;
+      }
+
+      .about-runes {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        text-align: center;
+      }
+
+      .about-rune {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 20px 8px;
+        transition: border-color 0.2s ease;
+      }
+
+      .about-rune:hover {
+        border-color: var(--gold-dim);
+      }
+
+      .about-rune .glyph {
+        font-size: 2rem;
+        color: var(--gold-bright);
+        margin-bottom: 6px;
+      }
+
+      .about-rune .name {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        font-family: "Cinzel", serif;
+      }
+
+      /* ---------- FAQ ---------- */
+      .faq {
+        max-width: 720px;
+        margin: 0 auto;
+      }
+
+      .faq-item {
+        border-bottom: 1px solid var(--border);
+      }
+
+      .faq-item summary {
+        cursor: pointer;
+        padding: 20px 0;
+        font-family: "Cinzel", serif;
+        font-size: 1.05rem;
+        color: var(--text);
+        list-style: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .faq-item summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .faq-item summary::after {
+        content: "+";
+        color: var(--gold);
+        font-size: 1.4rem;
+        font-weight: 400;
+        transition: transform 0.2s ease;
+      }
+
+      .faq-item[open] summary::after {
+        transform: rotate(45deg);
+      }
+
+      .faq-item p {
+        padding: 0 0 20px;
+        color: var(--text-muted);
+      }
+
+      /* ---------- Footer ---------- */
       footer {
-        background: #f5f5f5;
-        padding: 20px;
+        background: var(--bg-elev);
+        border-top: 1px solid var(--border);
+        padding: 40px 20px;
         text-align: center;
         margin-top: auto;
       }
-      footer a {
-        color: #0a7ea4;
-        text-decoration: none;
-        margin: 0 10px;
+
+      .footer-links {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 24px;
+        margin-bottom: 16px;
       }
-      @media (prefers-color-scheme: dark) {
-        body {
-          background-color: #1a1a1a;
-          color: #eee;
+
+      .footer-links a {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+      }
+
+      .footer-links a:hover {
+        color: var(--gold-bright);
+      }
+
+      .footer-copy {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        opacity: 0.7;
+      }
+
+      .footer-rune {
+        color: var(--gold-dim);
+        font-size: 1.5rem;
+        margin-bottom: 12px;
+        letter-spacing: 0.3em;
+      }
+
+      /* ---------- Responsive ---------- */
+      @media (max-width: 720px) {
+        .about-grid {
+          grid-template-columns: 1fr;
+          gap: 32px;
         }
-        .feature {
-          background: #2d2d2d;
+
+        .section {
+          padding: 48px 20px;
         }
-        footer {
-          background: #2d2d2d;
+
+        .hero {
+          padding: 60px 20px 48px;
         }
-        .cta-button {
-          background: #2d2d2d;
-          color: #66b2ff;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
         }
       }
     </style>
   </head>
   <body>
-    <div class="hero">
-      <h1>Rune of the Day</h1>
-      <p class="subtitle">Discover daily wisdom through ancient Norse runes</p>
-      <div>
-        <a href="#" class="cta-button">Download on App Store</a>
-        <a
-          href="https://play.google.com/store/apps/details?id=com.ravenwoodcreations.runeoftheday"
-          class="cta-button"
-          >Get it on Google Play</a
-        >
+    <!-- Hero -->
+    <header class="hero">
+      <div class="hero-content">
+        <div class="hero-rune" aria-hidden="true">ᚠ</div>
+        <h1>Rune of the Day</h1>
+        <p class="subtitle">
+          Discover daily wisdom through the ancient Elder Futhark — a
+          privacy-focused companion for reflection, learning, and a moment of
+          intention each morning.
+        </p>
+        <div class="cta-group">
+          <span class="cta-button disabled" aria-label="App Store coming soon">
+            Coming to App Store
+            <span class="cta-badge">Coming Soon</span>
+          </span>
+          <a
+            href="https://play.google.com/store/apps/details?id=com.ravenwoodcreations.runeoftheday"
+            class="cta-button primary"
+          >
+            Get it on Google Play
+            <span class="cta-badge">Early Access</span>
+          </a>
+        </div>
       </div>
-    </div>
+    </header>
 
-    <div class="container">
+    <!-- Features -->
+    <section class="section" id="features">
+      <h2 class="section-title">What You'll Find</h2>
+      <p class="section-subtitle">
+        Everything you need to explore the runes — no account, no tracking, no
+        internet required.
+      </p>
       <div class="features">
         <div class="feature">
+          <div class="feature-icon" aria-hidden="true">ᚦ</div>
           <h3>Daily Rune</h3>
-          <p>Receive a new rune each day with its meaning and interpretation</p>
-        </div>
-        <div class="feature">
-          <h3>Learn Runes</h3>
           <p>
-            Interactive flashcards to help you learn all 24 Elder Futhark runes
+            A deterministically chosen rune each day with its symbol, name,
+            meaning, and associated Norse deity. Reversed readings included.
           </p>
         </div>
         <div class="feature">
-          <h3>Dark Mode</h3>
+          <div class="feature-icon" aria-hidden="true">ᚱ</div>
+          <h3>Rune Library</h3>
           <p>
-            Comfortable reading in any lighting with automatic theme switching
+            Browse all 24 Elder Futhark runes with translations, historical
+            context, keywords, magical uses, and astrological correspondences.
+          </p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon" aria-hidden="true">ᛚ</div>
+          <h3>Flashcards</h3>
+          <p>
+            Learn at your own pace with interactive flip cards. Swipe through
+            the full set with smooth animations and a progress counter.
+          </p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon" aria-hidden="true">ᛏ</div>
+          <h3>Daily Reminders</h3>
+          <p>
+            Optional morning notifications so you never miss your rune. Choose
+            your preferred unlock time — from 5:00 AM to 9:45 AM.
+          </p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon" aria-hidden="true">ᛜ</div>
+          <h3>Light &amp; Dark Themes</h3>
+          <p>
+            Automatic theme switching that follows your system, or pick a
+            preference manually. Optimized for comfortable reading day or night.
+          </p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon" aria-hidden="true">ᛉ</div>
+          <h3>Completely Private</h3>
+          <p>
+            Offline-first by design. No accounts, no analytics, no data
+            collection. Your preferences live only on your device.
           </p>
         </div>
       </div>
-    </div>
+    </section>
 
+    <!-- How it works -->
+    <section class="section" id="how-it-works">
+      <h2 class="section-title">How It Works</h2>
+      <p class="section-subtitle">
+        Three simple steps to bring a little ancient wisdom into your daily
+        routine.
+      </p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>Open the App</h3>
+          <p>
+            Your rune for the day is waiting on the Today screen, complete with
+            its meaning and divine associations.
+          </p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>Reflect &amp; Learn</h3>
+          <p>
+            Tap any rune to dive into its full details, or switch to flashcards
+            to study the entire Elder Futhark.
+          </p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>Return Tomorrow</h3>
+          <p>
+            A new rune appears each day at your chosen time. Enable
+            notifications so it greets you first thing in the morning.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section class="section about" id="about">
+      <div class="about-grid">
+        <div class="about-text">
+          <h2 class="section-title" style="text-align: left">
+            The Elder Futhark
+          </h2>
+          <p>
+            The Elder Futhark is the oldest form of the runic alphabets, used by
+            Germanic peoples from roughly the 2nd to the 8th century. Its 24
+            symbols are divided into three groups of eight, known as
+            <em>aettir</em>.
+          </p>
+          <p>
+            Each rune carries a name, a phonetic sound, and a rich symbolic
+            meaning rooted in Norse mythology and daily life — from wealth and
+            strength to journey, harvest, and inheritance.
+          </p>
+          <p>
+            Rune of the Day brings this tradition to your pocket, offering a
+            moment of reflection grounded in centuries of lore.
+          </p>
+        </div>
+        <div class="about-runes" aria-label="Sample Elder Futhark runes">
+          <div class="about-rune">
+            <div class="glyph">ᚠ</div>
+            <div class="name">Fehu</div>
+          </div>
+          <div class="about-rune">
+            <div class="glyph">ᚢ</div>
+            <div class="name">Uruz</div>
+          </div>
+          <div class="about-rune">
+            <div class="glyph">ᚦ</div>
+            <div class="name">Thurisaz</div>
+          </div>
+          <div class="about-rune">
+            <div class="glyph">ᚨ</div>
+            <div class="name">Ansuz</div>
+          </div>
+          <div class="about-rune">
+            <div class="glyph">ᚱ</div>
+            <div class="name">Raidho</div>
+          </div>
+          <div class="about-rune">
+            <div class="glyph">ᚲ</div>
+            <div class="name">Kenaz</div>
+          </div>
+          <div class="about-rune">
+            <div class="glyph">ᛉ</div>
+            <div class="name">Algiz</div>
+          </div>
+          <div class="about-rune">
+            <div class="glyph">ᛏ</div>
+            <div class="name">Tiwaz</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section" id="faq">
+      <h2 class="section-title">Frequently Asked Questions</h2>
+      <p class="section-subtitle">
+        Quick answers about how the app works and your privacy.
+      </p>
+      <div class="faq">
+        <details class="faq-item">
+          <summary>Does Rune of the Day collect my data?</summary>
+          <p>
+            No. The app is completely offline and collects no personal
+            information. Your theme, notification time, and daily rune are
+            stored only on your device. See our
+            <a href="privacy.html">Privacy Policy</a> for full details.
+          </p>
+        </details>
+        <details class="faq-item">
+          <summary>How is the daily rune chosen?</summary>
+          <p>
+            Each day's rune is selected deterministically from the current date,
+            so every device running the app sees the same rune on the same day.
+            The selection resets at your chosen unlock time.
+          </p>
+        </details>
+        <details class="faq-item">
+          <summary>What does "reversed" mean?</summary>
+          <p>
+            Like tarot cards, runes can be drawn upright or reversed (upside
+            down). A reversed rune often suggests a different shade of meaning —
+            not necessarily negative, but a different angle on the rune's
+            themes. The app shows reversed runes visually rotated.
+          </p>
+        </details>
+        <details class="faq-item">
+          <summary>Can I change the notification time?</summary>
+          <p>
+            Yes. Open Settings and choose any time from 5:00 AM to 9:45 AM in
+            15-minute increments. Your daily reminder will fire at that time
+            going forward.
+          </p>
+        </details>
+        <details class="faq-item">
+          <summary>Which platforms are supported?</summary>
+          <p>
+            Rune of the Day is available now on Google Play in early access. An
+            iOS App Store release is coming soon. The app requires no internet
+            connection after installation.
+          </p>
+        </details>
+        <details class="faq-item">
+          <summary>Is the app open source?</summary>
+          <p>
+            Yes! The source code is available on
+            <a href="https://github.com/raythurman2386/RuneOfTheDay">GitHub</a>.
+            Contributions, issues, and suggestions are welcome.
+          </p>
+        </details>
+      </div>
+    </section>
+
+    <!-- Footer -->
     <footer>
-      <a href="privacy.html">Privacy Policy</a>
-      <a href="https://github.com/raythurman2386/RuneOfTheDay">GitHub</a>
+      <div class="footer-rune" aria-hidden="true">ᚠ ᚢ ᚦ ᚨ ᚱ</div>
+      <div class="footer-links">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="https://github.com/raythurman2386/RuneOfTheDay">GitHub</a>
+        <a href="#features">Features</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <p class="footer-copy">
+        © <span id="year"></span> Ravenwood Creations · Rune of the Day
+      </p>
     </footer>
+
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
   </body>
 </html>

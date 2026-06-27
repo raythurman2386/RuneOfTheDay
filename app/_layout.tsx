@@ -19,16 +19,17 @@ interface InitialSettings {
 }
 
 function LoadingScreen() {
+  const { colors } = useColorTheme();
   return (
     <View
       style={{
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#ffffff",
+        backgroundColor: colors.background,
       }}
     >
-      <ActivityIndicator size="large" color="#000000" />
+      <ActivityIndicator size="large" color={colors.accent} />
     </View>
   );
 }
@@ -71,7 +72,7 @@ function RootLayoutNav() {
           options={{
             headerShown: true,
             animation: "default",
-            animationDuration: 200,
+            animationDuration: 250,
             gestureEnabled: true,
             gestureDirection: "horizontal",
             contentStyle: {

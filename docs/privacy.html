@@ -3,123 +3,395 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Privacy Policy - Rune of the Day</title>
+    <meta
+      name="description"
+      content="Privacy Policy for Rune of the Day — a privacy-focused, offline-first mobile app. No data collection, no accounts, no third-party tracking."
+    />
+    <title>Privacy Policy — Rune of the Day</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
     <style>
+      :root {
+        --bg: #0d1117;
+        --bg-elev: #161b22;
+        --bg-card: #1c2128;
+        --border: #30363d;
+        --text: #e6edf3;
+        --text-muted: #9da7b3;
+        --gold: #d4a857;
+        --gold-bright: #f0c674;
+        --gold-dim: #8a6d2f;
+        --radius: 12px;
+        --max-width: 760px;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
       body {
         font-family:
-          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
-          Cantarell, sans-serif;
-        line-height: 1.6;
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-        color: #333;
+          "Inter",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+        line-height: 1.7;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        -webkit-font-smoothing: antialiased;
       }
-      h1 {
-        color: #0a7ea4;
-        border-bottom: 2px solid #eee;
-        padding-bottom: 10px;
+
+      h1,
+      h2,
+      h3 {
+        font-family: "Cinzel", Georgia, serif;
+        font-weight: 600;
+        letter-spacing: 0.02em;
       }
-      h2 {
-        color: #2c3e50;
-        margin-top: 30px;
+
+      a {
+        color: var(--gold-bright);
+        text-decoration: none;
+        transition: color 0.2s ease;
       }
+
+      a:hover {
+        color: var(--gold);
+      }
+
+      /* ---------- Header ---------- */
+      .page-header {
+        text-align: center;
+        padding: 60px 20px 40px;
+        background:
+          radial-gradient(
+            ellipse at 50% 0%,
+            rgba(74, 144, 194, 0.12) 0%,
+            transparent 60%
+          ),
+          var(--bg);
+        border-bottom: 1px solid var(--border);
+      }
+
+      .page-header .rune-glyph {
+        font-size: 2.5rem;
+        color: var(--gold-bright);
+        margin-bottom: 12px;
+      }
+
+      .page-header h1 {
+        font-size: clamp(1.8rem, 5vw, 2.6rem);
+        margin-bottom: 8px;
+      }
+
+      .page-header .updated {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+      }
+
+      /* ---------- Back link ---------- */
+      .back-link {
+        display: inline-block;
+        margin: 24px 20px 0;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+      }
+
+      .back-link:hover {
+        color: var(--gold-bright);
+      }
+
+      /* ---------- Content ---------- */
       .container {
-        background: #fff;
-        border-radius: 8px;
-        padding: 20px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        max-width: var(--max-width);
+        margin: 0 auto;
+        padding: 32px 20px 64px;
+        flex: 1;
       }
-      @media (prefers-color-scheme: dark) {
-        body {
-          background-color: #1a1a1a;
-          color: #eee;
-        }
-        .container {
-          background: #2d2d2d;
-        }
-        h1 {
-          color: #66b2ff;
-          border-bottom-color: #444;
-        }
-        h2 {
-          color: #99ccff;
+
+      .container h2 {
+        font-size: 1.3rem;
+        color: var(--text);
+        margin-top: 36px;
+        margin-bottom: 12px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .container h2:first-of-type {
+        margin-top: 0;
+      }
+
+      .container p {
+        color: var(--text-muted);
+        margin-bottom: 14px;
+      }
+
+      .container ul {
+        color: var(--text-muted);
+        margin: 0 0 14px 1.4em;
+      }
+
+      .container li {
+        margin-bottom: 6px;
+      }
+
+      .container strong {
+        color: var(--text);
+        font-weight: 600;
+      }
+
+      /* ---------- TL;DR callout ---------- */
+      .callout {
+        background: var(--bg-card);
+        border: 1px solid var(--gold-dim);
+        border-radius: var(--radius);
+        padding: 20px 24px;
+        margin-bottom: 32px;
+      }
+
+      .callout h2 {
+        margin-top: 0;
+        border-bottom: none;
+        padding-bottom: 0;
+        color: var(--gold-bright);
+        font-size: 1.15rem;
+      }
+
+      .callout p {
+        margin-bottom: 0;
+      }
+
+      /* ---------- Contact card ---------- */
+      .contact {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 24px;
+        margin-top: 12px;
+      }
+
+      .contact ul {
+        margin-bottom: 0;
+      }
+
+      /* ---------- Footer ---------- */
+      footer {
+        background: var(--bg-elev);
+        border-top: 1px solid var(--border);
+        padding: 32px 20px;
+        text-align: center;
+      }
+
+      .footer-links {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 24px;
+        margin-bottom: 12px;
+      }
+
+      .footer-links a {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+      }
+
+      .footer-links a:hover {
+        color: var(--gold-bright);
+      }
+
+      .footer-copy {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        opacity: 0.7;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
         }
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <h1>Privacy Policy - Rune of the Day</h1>
-      <p>Last updated: March 16, 2025</p>
+    <header class="page-header">
+      <div class="rune-glyph" aria-hidden="true">ᛉ</div>
+      <h1>Privacy Policy</h1>
+      <p class="updated">Last updated: June 26, 2026</p>
+    </header>
+
+    <a href="index.html" class="back-link">← Back to Rune of the Day</a>
+
+    <main class="container">
+      <div class="callout">
+        <h2>The Short Version</h2>
+        <p>
+          <strong>Rune of the Day collects no data. Period.</strong> The app
+          works entirely offline. No accounts, no analytics, no advertising
+          SDKs, no third-party trackers. Everything you do stays on your device.
+        </p>
+      </div>
 
       <h2>Introduction</h2>
       <p>
-        Welcome to Rune of the Day. We respect your privacy and are committed to
-        protecting any information that your device may store while using our
-        app. This Privacy Policy explains our practices regarding data handling
-        in our mobile application.
+        Welcome to Rune of the Day, developed by Ravenwood Creations. We believe
+        privacy is a feature, not an afterthought. This Privacy Policy explains
+        exactly what information the app does and does not handle so you can use
+        it with confidence.
       </p>
 
-      <h2>Information Collection and Use</h2>
+      <h2>Information We Collect</h2>
       <p>
-        Rune of the Day is designed with privacy in mind and operates entirely
-        offline. We do not collect, store, or transmit any personal information
-        about our users.
+        <strong
+          >We do not collect, store, or transmit any personal
+          information.</strong
+        >
+        Rune of the Day has no servers, no databases, and no backend. The app
+        never sends any data anywhere.
       </p>
-
-      <h2>Local Storage</h2>
-      <p>Our app uses local storage (AsyncStorage) on your device to:</p>
+      <p>We do not collect:</p>
       <ul>
-        <li>Remember your daily rune selection</li>
-        <li>Store your theme preferences (light/dark mode)</li>
+        <li>Names, email addresses, or phone numbers</li>
+        <li>Location data or IP addresses</li>
+        <li>Usage analytics or crash reports</li>
+        <li>Advertising identifiers</li>
+        <li>Any other personally identifiable information</li>
+      </ul>
+
+      <h2>Information Stored On Your Device</h2>
+      <p>
+        The app uses your device's local storage (AsyncStorage) to remember your
+        preferences and daily rune. This data never leaves your device, is not
+        accessible to us, and is not shared with any third party.
+      </p>
+      <p>Specifically, the app stores:</p>
+      <ul>
+        <li>
+          <strong>Daily rune</strong> — the rune selected for the current day
+          and its orientation (upright or reversed)
+        </li>
+        <li>
+          <strong>Theme preference</strong> — your choice of light, dark, or
+          system theme
+        </li>
+        <li>
+          <strong>Haptics preference</strong> — whether haptic feedback is
+          enabled
+        </li>
+        <li>
+          <strong>Notification time</strong> — your chosen daily reminder time
+          (5:00 AM–9:45 AM)
+        </li>
       </ul>
       <p>
-        This information never leaves your device and is not accessible to us or
-        any third parties.
+        You can clear this data at any time by uninstalling the app or through
+        your device's system settings.
       </p>
 
-      <h2>Data Security</h2>
+      <h2>Notifications</h2>
       <p>
-        Since all data is stored locally on your device, the security of your
-        information depends on your device's security settings. We recommend
-        keeping your device's operating system and our app updated to the latest
-        version.
+        If you enable daily reminders, Rune of the Day schedules a local
+        notification on your device. These notifications are handled entirely by
+        your operating system — no data is sent to us. You can disable
+        notifications at any time in the app's Settings screen or in your
+        device's system settings.
       </p>
+
+      <h2>Permissions</h2>
+      <p>
+        The app requests the following permissions, each tied directly to a
+        feature you control:
+      </p>
+      <ul>
+        <li>
+          <strong>Notifications</strong> — used only if you opt in to daily
+          reminders
+        </li>
+        <li>
+          <strong>Vibration</strong> (Android) — used for haptic feedback, which
+          you can disable in Settings
+        </li>
+        <li>
+          <strong>Receive boot completed</strong> (Android) — allows scheduled
+          notifications to persist after a device restart
+        </li>
+      </ul>
+      <p>No permission is required for core app functionality.</p>
 
       <h2>Third-Party Services</h2>
       <p>
-        Our app does not use any third-party services that collect information
-        about you.
+        Rune of the Day does not use any third-party services that collect
+        information about you. There are no analytics SDKs, ad networks, or
+        tracking libraries included in the app.
       </p>
 
       <h2>Children's Privacy</h2>
       <p>
-        Our app does not collect any personal information from anyone, including
-        children under the age of 13.
+        The app does not collect any personal information from anyone, including
+        children under the age of 13. It is safe for all ages.
       </p>
 
-      <h2>Changes to This Privacy Policy</h2>
+      <h2>Data Security</h2>
       <p>
-        We may update our Privacy Policy from time to time. We will notify you
-        of any changes by posting the new Privacy Policy on this page and
-        updating the "Last updated" date.
+        Because all data is stored locally on your device, the security of your
+        information depends on your device's own security settings (passcode,
+        biometric lock, encryption). We recommend keeping your operating system
+        and the app updated to the latest version.
+      </p>
+
+      <h2>Changes to This Policy</h2>
+      <p>
+        We may update this Privacy Policy from time to time. Any changes will be
+        posted on this page along with an updated "Last updated" date. If we
+        ever introduce a feature that changes how data is handled, we will
+        update this policy accordingly before the change takes effect.
       </p>
 
       <h2>Contact Us</h2>
       <p>
-        If you have any questions about this Privacy Policy, please contact us
-        at:
+        If you have any questions about this Privacy Policy, please reach out:
       </p>
-      <ul>
-        <li>Email: ravenwood.creations07@gmail.com</li>
-        <li>
-          GitHub:
-          <a href="https://github.com/raythurman2386/RuneOfTheDay"
-            >https://github.com/raythurman2386/RuneOfTheDay</a
-          >
-        </li>
-      </ul>
-    </div>
+      <div class="contact">
+        <ul>
+          <li>
+            Email:
+            <a href="mailto:ravenwood.creations07@gmail.com"
+              >ravenwood.creations07@gmail.com</a
+            >
+          </li>
+          <li>
+            GitHub:
+            <a href="https://github.com/raythurman2386/RuneOfTheDay"
+              >github.com/raythurman2386/RuneOfTheDay</a
+            >
+          </li>
+        </ul>
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="https://github.com/raythurman2386/RuneOfTheDay">GitHub</a>
+      </div>
+      <p class="footer-copy">
+        © <span id="year"></span> Ravenwood Creations · Rune of the Day
+      </p>
+    </footer>
+
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
   </body>
 </html>

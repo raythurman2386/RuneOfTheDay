@@ -14,12 +14,17 @@ import { runes, Rune } from "../data/runes";
 import { useColorTheme } from "../hooks/useColorTheme";
 import useHaptics from "../hooks/useHaptics";
 import { MaterialIcons } from "@expo/vector-icons";
-
-const TRANSITION_DURATION_MS = 200;
+import {
+  DURATION_QUICK,
+  DURATION_STANDARD,
+  easeOut,
+  easeInOut,
+} from "../constants/animations";
 
 const FlashcardScreen = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fadeAnim] = useState(new Animated.Value(1));
+  const [scaleAnim] = useState(new Animated.Value(1));
   const { colors } = useColorTheme();
   const { mediumFeedback, lightFeedback } = useHaptics();
   const transitionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -39,21 +44,43 @@ const FlashcardScreen = () => {
   }, []);
 
   const animateTransition = (callback: () => void) => {
+    // Snappy cross-fade: quick fade out, swap content, fade in + scale pop.
     Animated.sequence([
-      Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: TRANSITION_DURATION_MS,
-        useNativeDriver: true,
-      }),
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: TRANSITION_DURATION_MS,
-        useNativeDriver: true,
-      }),
+      // Fade out + slight shrink — fast so the user doesn't wait
+      Animated.parallel([
+        Animated.timing(fadeAnim, {
+          toValue: 0,
+          duration: DURATION_QUICK,
+          easing: easeInOut,
+          useNativeDriver: true,
+        }),
+        Animated.timing(scaleAnim, {
+          toValue: 0.92,
+          duration: DURATION_QUICK,
+          easing: easeInOut,
+          useNativeDriver: true,
+        }),
+      ]),
+      // Fade in + spring back to full scale — the "pop"
+      Animated.parallel([
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: DURATION_STANDARD,
+          easing: easeOut,
+          useNativeDriver: true,
+        }),
+        Animated.spring(scaleAnim, {
+          toValue: 1,
+          tension: 120,
+          friction: 8,
+          useNativeDriver: true,
+        }),
+      ]),
     ]).start();
 
     lightFeedback();
-    transitionTimerRef.current = setTimeout(callback, TRANSITION_DURATION_MS);
+    // Swap content at the midpoint (after fade out completes)
+    transitionTimerRef.current = setTimeout(callback, DURATION_QUICK);
   };
 
   const nextRune = () => {
@@ -97,7 +124,13 @@ const FlashcardScreen = () => {
         </Text>
       </View>
 
-      <Animated.View style={{ opacity: fadeAnim, flex: 1 }}>
+      <Animated.View
+        style={{
+          opacity: fadeAnim,
+          transform: [{ scale: scaleAnim }],
+          flex: 1,
+        }}
+      >
         <FlipCard
           key={currentIndex}
           friction={8}
@@ -112,12 +145,15 @@ const FlashcardScreen = () => {
           <View
             style={[
               styles.card,
-              { backgroundColor: colors.surface, borderColor: colors.icon },
+              { backgroundColor: colors.surface, borderColor: colors.border },
             ]}
             testID="card-front"
           >
             <Text
-              style={[styles.symbol, { color: colors.text, fontSize: cardWidth * 0.4 }]}
+              style={[
+                styles.symbol,
+                { color: colors.accent, fontSize: cardWidth * 0.4 },
+              ]}
               testID="rune-symbol"
             >
               {currentRune.symbol}
@@ -140,12 +176,12 @@ const FlashcardScreen = () => {
           <View
             style={[
               styles.card,
-              { backgroundColor: colors.surface, borderColor: colors.icon },
+              { backgroundColor: colors.surface, borderColor: colors.border },
             ]}
             testID="card-back"
           >
             <Text
-              style={[styles.backTitle, { color: colors.text }]}
+              style={[styles.backTitle, { color: colors.accent }]}
               testID="rune-name-back"
             >
               {currentRune.name}
@@ -208,12 +244,12 @@ const FlashcardScreen = () => {
         <Pressable
           style={[
             styles.button,
-            { backgroundColor: colors.surface, borderColor: colors.icon },
+            { backgroundColor: colors.surface, borderColor: colors.border },
           ]}
           onPress={previousRune}
           testID="prev-button"
         >
-          <MaterialIcons name="chevron-left" size={24} color={colors.text} />
+          <MaterialIcons name="chevron-left" size={24} color={colors.accent} />
           <Text
             style={[styles.buttonText, { color: colors.text }]}
             testID="prev-button-text"
@@ -225,7 +261,7 @@ const FlashcardScreen = () => {
         <Pressable
           style={[
             styles.button,
-            { backgroundColor: colors.surface, borderColor: colors.icon },
+            { backgroundColor: colors.surface, borderColor: colors.border },
           ]}
           onPress={nextRune}
           testID="next-button"
@@ -236,7 +272,7 @@ const FlashcardScreen = () => {
           >
             Next
           </Text>
-          <MaterialIcons name="chevron-right" size={24} color={colors.text} />
+          <MaterialIcons name="chevron-right" size={24} color={colors.accent} />
         </Pressable>
       </View>
     </View>

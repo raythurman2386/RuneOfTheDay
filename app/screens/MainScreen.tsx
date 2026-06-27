@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -7,11 +7,13 @@ import {
   Pressable,
   ScrollView,
   Platform,
+  Animated,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import useRuneOfTheDay from "../hooks/useRuneOfTheDay";
 import { useColorTheme } from "../hooks/useColorTheme";
 import useHaptics from "../hooks/useHaptics";
+import { DURATION_ENTRANCE, easeOut } from "../constants/animations";
 
 const MainScreen = () => {
   const { rune, isReversed } = useRuneOfTheDay();
@@ -21,6 +23,10 @@ const MainScreen = () => {
   const { successFeedback, mediumFeedback } = useHaptics();
   const successFeedbackRef = useRef(successFeedback);
 
+  // Entrance animation — gentle fade + scale when the rune appears.
+  const [runeOpacity] = useState(new Animated.Value(0));
+  const [runeScale] = useState(new Animated.Value(0.85));
+
   useEffect(() => {
     successFeedbackRef.current = successFeedback;
   }, [successFeedback]);
@@ -28,8 +34,27 @@ const MainScreen = () => {
   useEffect(() => {
     if (rune) {
       successFeedbackRef.current();
+      // Animate the rune in — fade + gentle scale spring.
+      Animated.parallel([
+        Animated.timing(runeOpacity, {
+          toValue: 1,
+          duration: DURATION_ENTRANCE,
+          easing: easeOut,
+          useNativeDriver: true,
+        }),
+        Animated.spring(runeScale, {
+          toValue: 1,
+          tension: 50,
+          friction: 7,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    } else {
+      // Reset when rune becomes null (e.g., day change)
+      runeOpacity.setValue(0);
+      runeScale.setValue(0.85);
     }
-  }, [rune]);
+  }, [rune, runeOpacity, runeScale]);
 
   if (!rune) {
     return (
@@ -53,40 +78,51 @@ const MainScreen = () => {
       contentInsetAdjustmentBehavior="automatic"
     >
       <View style={styles.header}>
-        <Text style={[styles.title, { color: colors.text }]}>
+        <Text style={[styles.title, { color: colors.accent }]}>
           Rune of the Day
         </Text>
       </View>
 
-      <Pressable
-        style={[styles.runeContainer, { minHeight: height * 0.3 }]}
-        onPress={() => mediumFeedback()}
+      <Animated.View
+        style={[
+          styles.runeContainer,
+          {
+            minHeight: height * 0.3,
+            opacity: runeOpacity,
+            transform: [{ scale: runeScale }],
+          },
+        ]}
       >
-        <Text
-          style={[
-            styles.symbol,
-            {
-              color: isReversed ? colors.reversedRune : colors.text,
-              transform: isReversed ? [{ rotate: "180deg" }] : undefined,
-            },
-          ]}
-        >
-          {rune.symbol}
-        </Text>
-        <Text style={[styles.name, { color: colors.text }]}>{rune.name}</Text>
-        <Text style={[styles.pronunciation, { color: colors.icon }]}>
-          {rune.pronunciation}
-        </Text>
-      </Pressable>
+        <Pressable onPress={() => mediumFeedback()}>
+          <Text
+            style={[
+              styles.symbol,
+              {
+                color: isReversed ? colors.reversedRune : colors.accent,
+                transform: isReversed ? [{ rotate: "180deg" }] : undefined,
+              },
+            ]}
+          >
+            {rune.symbol}
+          </Text>
+          <Text style={[styles.name, { color: colors.text }]}>{rune.name}</Text>
+          <Text style={[styles.pronunciation, { color: colors.icon }]}>
+            {rune.pronunciation}
+          </Text>
+        </Pressable>
+      </Animated.View>
 
       <View style={styles.meaningContainer}>
         <View
           style={[
             styles.section,
-            { backgroundColor: colors.surface, borderColor: colors.icon },
+            {
+              backgroundColor: colors.surface,
+              borderColor: colors.border,
+            },
           ]}
         >
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>
+          <Text style={[styles.sectionTitle, { color: colors.accent }]}>
             {isReversed && rune.meaning.reversed
               ? "Reversed Meaning"
               : "Primary Meaning"}
@@ -103,10 +139,13 @@ const MainScreen = () => {
             <View
               style={[
                 styles.section,
-                { backgroundColor: colors.surface, borderColor: colors.icon },
+                {
+                  backgroundColor: colors.surface,
+                  borderColor: colors.border,
+                },
               ]}
             >
-              <Text style={[styles.sectionTitle, { color: colors.text }]}>
+              <Text style={[styles.sectionTitle, { color: colors.accent }]}>
                 Associated Deities
               </Text>
               <Text style={[styles.deity, { color: colors.icon }]}>
@@ -118,10 +157,13 @@ const MainScreen = () => {
         <View
           style={[
             styles.section,
-            { backgroundColor: colors.surface, borderColor: colors.icon },
+            {
+              backgroundColor: colors.surface,
+              borderColor: colors.border,
+            },
           ]}
         >
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>
+          <Text style={[styles.sectionTitle, { color: colors.accent }]}>
             Translation
           </Text>
           <Text style={[styles.translation, { color: colors.icon }]}>
@@ -161,12 +203,15 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 28,
     textTransform: "uppercase",
-    letterSpacing: 2,
+    letterSpacing: 3,
   },
   symbol: {
     fontFamily: "ElderFuthark",
     fontSize: 120,
     marginBottom: 16,
+    textShadowColor: "rgba(212, 168, 87, 0.25)",
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 20,
   },
   name: {
     fontSize: 36,

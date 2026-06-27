@@ -2,7 +2,10 @@ import { renderHook, act } from "@testing-library/react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import useRuneOfTheDay from "../../hooks/useRuneOfTheDay";
 import { runes } from "../../data/runes";
-import { seededIntFromKey, seededRandomFromKey } from "../../utils/seededRandom";
+import {
+  seededIntFromKey,
+  seededRandomFromKey,
+} from "../../utils/seededRandom";
 import { getLocalDateKey } from "../../utils/dateKey";
 
 const mockScheduleNotification = jest.fn(() => Promise.resolve(true));
@@ -84,14 +87,17 @@ describe("useRuneOfTheDay", () => {
 
     const call = mockScheduleNotification.mock.calls[0];
     const [title, body, triggerDate, identifier, repeatsDaily] = call;
-    const todayKey = getLocalDateKey(new Date());
-    const expectedIndex = seededIntFromKey(todayKey, runes.length);
+
+    // The notification fires tomorrow at the reset time, so it should
+    // announce tomorrow's rune — not today's (the "day before" bug).
+    const fireDateKey = getLocalDateKey(triggerDate);
+    const expectedIndex = seededIntFromKey(fireDateKey, runes.length);
     const expectedRune = runes[expectedIndex];
-    const reversedRoll = seededRandomFromKey(`${todayKey}:reversed`);
+    const reversedRoll = seededRandomFromKey(`${fireDateKey}:reversed`);
     const hasReversedMeaning = Boolean(
       expectedRune?.meaning?.reversed &&
-        typeof expectedRune.meaning.reversed === "string" &&
-        expectedRune.meaning.reversed.trim() !== "",
+      typeof expectedRune.meaning.reversed === "string" &&
+      expectedRune.meaning.reversed.trim() !== "",
     );
     const expectedIsReversed = hasReversedMeaning ? reversedRoll < 0.5 : false;
     const expectedMeaning =
@@ -108,25 +114,44 @@ describe("useRuneOfTheDay", () => {
     expect(triggerDate.getHours()).toBe(6);
     expect(triggerDate.getMinutes()).toBe(0);
 
+    // Persisted storage reflects today's rune (the one shown in-app), which
+    // differs from the notification rune (derived from the fire date above).
+    const todayKey = getLocalDateKey(new Date());
+    const persistedIndex = seededIntFromKey(todayKey, runes.length);
+    const persistedReversedRoll = seededRandomFromKey(`${todayKey}:reversed`);
+    const persistedHasReversed = Boolean(
+      runes[persistedIndex]?.meaning?.reversed &&
+      typeof runes[persistedIndex].meaning.reversed === "string" &&
+      runes[persistedIndex].meaning.reversed!.trim() !== "",
+    );
+    const persistedIsReversed = persistedHasReversed
+      ? persistedReversedRoll < 0.5
+      : false;
+
     expect(AsyncStorage.setItem).toHaveBeenCalledTimes(1);
     const [key, valueStr] = (AsyncStorage.setItem as jest.Mock).mock.calls[0];
     expect(key).toBe("runeOfTheDay");
     const persisted = JSON.parse(valueStr);
-    expect(persisted.index).toBe(expectedIndex);
-    expect(persisted.isReversed).toBe(expectedIsReversed);
+    expect(persisted.index).toBe(persistedIndex);
+    expect(persisted.isReversed).toBe(persistedIsReversed);
     expect(persisted.date).toBe(todayKey);
   });
 
   it("uses the reversed meaning when the seed rolls reversed", async () => {
-    const todayKey = getLocalDateKey(new Date());
-    const expectedIndex = seededIntFromKey(todayKey, runes.length);
+    // The notification announces the rune for the fire date (tomorrow at
+    // reset), so derive expectations from that date key.
+    const fireDate = new Date();
+    fireDate.setDate(fireDate.getDate() + 1);
+    fireDate.setHours(6, 0, 0, 0);
+    const fireDateKey = getLocalDateKey(fireDate);
+    const expectedIndex = seededIntFromKey(fireDateKey, runes.length);
     const expectedRune = runes[expectedIndex];
     const hasReversedMeaning = Boolean(
       expectedRune?.meaning?.reversed &&
-        typeof expectedRune.meaning.reversed === "string" &&
-        expectedRune.meaning.reversed.trim() !== "",
+      typeof expectedRune.meaning.reversed === "string" &&
+      expectedRune.meaning.reversed.trim() !== "",
     );
-    const reversedRoll = seededRandomFromKey(`${todayKey}:reversed`);
+    const reversedRoll = seededRandomFromKey(`${fireDateKey}:reversed`);
     const expectReversed = hasReversedMeaning && reversedRoll < 0.5;
 
     renderHook(() => useRuneOfTheDay());
@@ -164,9 +189,17 @@ describe("useRuneOfTheDay", () => {
       await flushPromises();
     });
 
+    // The displayed rune comes from storage (today's seed), but the
+    // notification announces the rune for the fire date (tomorrow at reset).
+    const fireDate = new Date();
+    fireDate.setDate(fireDate.getDate() + 1);
+    fireDate.setHours(6, 0, 0, 0);
+    const fireDateKey = getLocalDateKey(fireDate);
+    const fireIndex = seededIntFromKey(fireDateKey, runes.length);
+
     expect(mockScheduleNotification).toHaveBeenCalledTimes(1);
     const call = mockScheduleNotification.mock.calls[0];
-    expect(call[1]).toContain(runes[seededIndex].name);
+    expect(call[1]).toContain(runes[fireIndex].name);
     expect(AsyncStorage.setItem).not.toHaveBeenCalled();
   });
 
@@ -188,10 +221,13 @@ describe("useRuneOfTheDay", () => {
     expect(triggerDate.getMinutes()).toBe(30);
   });
 
-  it("schedules the notification with today's rune, not yesterday's", async () => {
-    const todayKey = getLocalDateKey(new Date());
-    const todayIndex = seededIntFromKey(todayKey, runes.length);
-    const todayRune = runes[todayIndex];
+  it("schedules the notification with tomorrow's rune, not today's", async () => {
+    const fireDate = new Date();
+    fireDate.setDate(fireDate.getDate() + 1);
+    fireDate.setHours(6, 0, 0, 0);
+    const fireDateKey = getLocalDateKey(fireDate);
+    const fireIndex = seededIntFromKey(fireDateKey, runes.length);
+    const fireRune = runes[fireIndex];
 
     renderHook(() => useRuneOfTheDay());
 
@@ -201,6 +237,6 @@ describe("useRuneOfTheDay", () => {
 
     const call = mockScheduleNotification.mock.calls[0];
     const [, body] = call;
-    expect(body).toContain(todayRune.name);
+    expect(body).toContain(fireRune.name);
   });
 });

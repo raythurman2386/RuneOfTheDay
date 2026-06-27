@@ -11,6 +11,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useLocalSearchParams, Stack } from "expo-router";
 import { useColorTheme } from "../hooks/useColorTheme";
 import { runes } from "../data/runes";
+import { DURATION_ENTRANCE, easeOut, fadeInUp } from "../constants/animations";
 
 export default function RuneDetailsScreen() {
   // Get the rune ID from the URL params
@@ -24,18 +25,15 @@ export default function RuneDetailsScreen() {
   const insets = useSafeAreaInsets();
   const symbolSize = Math.min(width * 0.4, 180);
 
-  // Animation value — useState with lazy init persists across renders without
-  // accessing a ref's .current during render.
+  // Animation values — useState with lazy init persists across renders.
   const [fadeAnim] = useState(() => new Animated.Value(0));
+  const [slideAnim] = useState(() => new Animated.Value(12));
 
   useEffect(() => {
-    // Start the fade-in animation when the component mounts
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 400,
-      useNativeDriver: true,
-    }).start();
-  }, [fadeAnim]);
+    // Snappy fade-in with a subtle upward slide — feels like the content
+    // is rising into place rather than just appearing.
+    fadeInUp(fadeAnim, slideAnim, DURATION_ENTRANCE).start();
+  }, [fadeAnim, slideAnim]);
 
   if (!rune) {
     return (
@@ -62,6 +60,7 @@ export default function RuneDetailsScreen() {
           {
             backgroundColor: colors.background,
             opacity: fadeAnim,
+            transform: [{ translateY: slideAnim }],
           },
         ]}
         contentContainerStyle={[
@@ -74,7 +73,7 @@ export default function RuneDetailsScreen() {
           <Text
             style={[
               styles.symbol,
-              { color: colors.text, fontSize: symbolSize },
+              { color: colors.accent, fontSize: symbolSize },
             ]}
           >
             {rune.symbol}
@@ -92,10 +91,10 @@ export default function RuneDetailsScreen() {
         <View
           style={[
             styles.section,
-            { backgroundColor: colors.surface, borderColor: colors.icon },
+            { backgroundColor: colors.surface, borderColor: colors.border },
           ]}
         >
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>
+          <Text style={[styles.sectionTitle, { color: colors.accent }]}>
             Translation
           </Text>
           <Text style={[styles.sectionContent, { color: colors.icon }]}>
@@ -109,10 +108,10 @@ export default function RuneDetailsScreen() {
         <View
           style={[
             styles.section,
-            { backgroundColor: colors.surface, borderColor: colors.icon },
+            { backgroundColor: colors.surface, borderColor: colors.border },
           ]}
         >
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>
+          <Text style={[styles.sectionTitle, { color: colors.accent }]}>
             Primary Meaning
           </Text>
           <Text style={[styles.sectionContent, { color: colors.icon }]}>
@@ -124,10 +123,10 @@ export default function RuneDetailsScreen() {
           <View
             style={[
               styles.section,
-              { backgroundColor: colors.surface, borderColor: colors.icon },
+              { backgroundColor: colors.surface, borderColor: colors.border },
             ]}
           >
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>
+            <Text style={[styles.sectionTitle, { color: colors.accent }]}>
               Additional Meanings
             </Text>
             <Text style={[styles.sectionContent, { color: colors.icon }]}>
@@ -140,10 +139,10 @@ export default function RuneDetailsScreen() {
           <View
             style={[
               styles.section,
-              { backgroundColor: colors.surface, borderColor: colors.icon },
+              { backgroundColor: colors.surface, borderColor: colors.border },
             ]}
           >
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>
+            <Text style={[styles.sectionTitle, { color: colors.accent }]}>
               Reversed Meaning
             </Text>
             <Text style={[styles.sectionContent, { color: colors.icon }]}>
@@ -155,10 +154,10 @@ export default function RuneDetailsScreen() {
         <View
           style={[
             styles.section,
-            { backgroundColor: colors.surface, borderColor: colors.icon },
+            { backgroundColor: colors.surface, borderColor: colors.border },
           ]}
         >
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>
+          <Text style={[styles.sectionTitle, { color: colors.accent }]}>
             Historical Context
           </Text>
           <Text style={[styles.sectionContent, { color: colors.icon }]}>
@@ -171,10 +170,10 @@ export default function RuneDetailsScreen() {
             <View
               style={[
                 styles.section,
-                { backgroundColor: colors.surface, borderColor: colors.icon },
+                { backgroundColor: colors.surface, borderColor: colors.border },
               ]}
             >
-              <Text style={[styles.sectionTitle, { color: colors.text }]}>
+              <Text style={[styles.sectionTitle, { color: colors.accent }]}>
                 Associated Deities
               </Text>
               <Text style={[styles.sectionContent, { color: colors.icon }]}>
@@ -192,11 +191,11 @@ export default function RuneDetailsScreen() {
                     styles.section,
                     {
                       backgroundColor: colors.surface,
-                      borderColor: colors.icon,
+                      borderColor: colors.border,
                     },
                   ]}
                 >
-                  <Text style={[styles.sectionTitle, { color: colors.text }]}>
+                  <Text style={[styles.sectionTitle, { color: colors.accent }]}>
                     Keywords
                   </Text>
                   <Text style={[styles.sectionContent, { color: colors.icon }]}>
@@ -212,11 +211,11 @@ export default function RuneDetailsScreen() {
                     styles.section,
                     {
                       backgroundColor: colors.surface,
-                      borderColor: colors.icon,
+                      borderColor: colors.border,
                     },
                   ]}
                 >
-                  <Text style={[styles.sectionTitle, { color: colors.text }]}>
+                  <Text style={[styles.sectionTitle, { color: colors.accent }]}>
                     Magical Uses
                   </Text>
                   <Text style={[styles.sectionContent, { color: colors.icon }]}>
@@ -232,11 +231,11 @@ export default function RuneDetailsScreen() {
                     styles.section,
                     {
                       backgroundColor: colors.surface,
-                      borderColor: colors.icon,
+                      borderColor: colors.border,
                     },
                   ]}
                 >
-                  <Text style={[styles.sectionTitle, { color: colors.text }]}>
+                  <Text style={[styles.sectionTitle, { color: colors.accent }]}>
                     Astrological Associations
                   </Text>
                   <Text style={[styles.sectionContent, { color: colors.icon }]}>
@@ -252,11 +251,11 @@ export default function RuneDetailsScreen() {
                     styles.section,
                     {
                       backgroundColor: colors.surface,
-                      borderColor: colors.icon,
+                      borderColor: colors.border,
                     },
                   ]}
                 >
-                  <Text style={[styles.sectionTitle, { color: colors.text }]}>
+                  <Text style={[styles.sectionTitle, { color: colors.accent }]}>
                     Elements
                   </Text>
                   <Text style={[styles.sectionContent, { color: colors.icon }]}>
@@ -272,11 +271,11 @@ export default function RuneDetailsScreen() {
                     styles.section,
                     {
                       backgroundColor: colors.surface,
-                      borderColor: colors.icon,
+                      borderColor: colors.border,
                     },
                   ]}
                 >
-                  <Text style={[styles.sectionTitle, { color: colors.text }]}>
+                  <Text style={[styles.sectionTitle, { color: colors.accent }]}>
                     Associated Colors
                   </Text>
                   <Text style={[styles.sectionContent, { color: colors.icon }]}>
@@ -292,11 +291,11 @@ export default function RuneDetailsScreen() {
                     styles.section,
                     {
                       backgroundColor: colors.surface,
-                      borderColor: colors.icon,
+                      borderColor: colors.border,
                     },
                   ]}
                 >
-                  <Text style={[styles.sectionTitle, { color: colors.text }]}>
+                  <Text style={[styles.sectionTitle, { color: colors.accent }]}>
                     Other Correspondences
                   </Text>
                   <Text style={[styles.sectionContent, { color: colors.icon }]}>

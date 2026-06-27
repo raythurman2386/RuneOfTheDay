@@ -108,19 +108,61 @@ const useNotifications = () => {
             );
           }
 
-          const dailyTrigger: Notifications.DailyTriggerInput = {
-            type: Notifications.SchedulableTriggerInputTypes.DAILY,
-            hour: triggerDate.getHours(),
-            minute: triggerDate.getMinutes(),
-            channelId:
-              Platform.OS === "android" ? NOTIFICATION_CHANNEL_ID : undefined,
-          };
+          // The DAILY trigger fires at the *next* occurrence of the given
+          // hour/minute, which may be today if the app opens before the
+          // reset time. That would deliver tomorrow's rune a day early. When
+          // the requested fire date is tomorrow, defer the daily repeat until
+          // after the first (one-time) fire so the content stays correct.
+          const now = new Date();
+          const nextDailyFire = new Date();
+          nextDailyFire.setHours(
+            triggerDate.getHours(),
+            triggerDate.getMinutes(),
+            0,
+            0,
+          );
+          const fireIsTomorrow = triggerDate.getDate() !== now.getDate();
 
-          await Notifications.scheduleNotificationAsync({
-            content,
-            trigger: dailyTrigger,
-            identifier,
-          });
+          if (fireIsTomorrow && nextDailyFire.getTime() > now.getTime()) {
+            // Today's reset time hasn't arrived yet — a DAILY trigger would
+            // fire today. Schedule a one-time notification for the intended
+            // fire date instead; the daily repeat is re-established on the
+            // next app open after the reset has passed.
+            const secondsFromNow = Math.max(
+              Math.floor((triggerDate.getTime() - now.getTime()) / 1000),
+              1,
+            );
+            const timeIntervalTrigger: Notifications.TimeIntervalTriggerInput =
+              {
+                type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
+                seconds: secondsFromNow,
+                repeats: false,
+                channelId:
+                  Platform.OS === "android"
+                    ? NOTIFICATION_CHANNEL_ID
+                    : undefined,
+              };
+
+            await Notifications.scheduleNotificationAsync({
+              content,
+              trigger: timeIntervalTrigger,
+              identifier,
+            });
+          } else {
+            const dailyTrigger: Notifications.DailyTriggerInput = {
+              type: Notifications.SchedulableTriggerInputTypes.DAILY,
+              hour: triggerDate.getHours(),
+              minute: triggerDate.getMinutes(),
+              channelId:
+                Platform.OS === "android" ? NOTIFICATION_CHANNEL_ID : undefined,
+            };
+
+            await Notifications.scheduleNotificationAsync({
+              content,
+              trigger: dailyTrigger,
+              identifier,
+            });
+          }
         } else {
           if (triggerDate.getTime() <= Date.now()) {
             console.warn("Cannot schedule one-time notification in the past");
