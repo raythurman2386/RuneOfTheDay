@@ -81,8 +81,7 @@ describe("useColorTheme", () => {
     );
 
     let changeCallback:
-      | ((params: { colorScheme: string | null }) => void)
-      | null = null;
+      ((params: { colorScheme: string | null }) => void) | null = null;
     mockAppearance.addChangeListener.mockImplementation((cb: any) => {
       changeCallback = cb;
       return { remove: jest.fn() };
@@ -111,8 +110,7 @@ describe("useColorTheme", () => {
     );
 
     let changeCallback:
-      | ((params: { colorScheme: string | null }) => void)
-      | null = null;
+      ((params: { colorScheme: string | null }) => void) | null = null;
     mockAppearance.addChangeListener.mockImplementation((cb: any) => {
       changeCallback = cb;
       return { remove: jest.fn() };

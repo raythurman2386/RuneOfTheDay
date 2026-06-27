@@ -93,7 +93,10 @@ const MainScreen = () => {
           },
         ]}
       >
-        <Pressable onPress={() => mediumFeedback()}>
+        <Pressable
+          onPress={() => mediumFeedback()}
+          style={styles.runePressable}
+        >
           <Text
             style={[
               styles.symbol,
@@ -212,6 +215,9 @@ const styles = StyleSheet.create({
     textShadowColor: "rgba(212, 168, 87, 0.25)",
     textShadowOffset: { width: 0, height: 0 },
     textShadowRadius: 20,
+  },
+  runePressable: {
+    alignItems: "center",
   },
   name: {
     fontSize: 36,
