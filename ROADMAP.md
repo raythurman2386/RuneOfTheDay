@@ -60,7 +60,7 @@ Prioritized by user interest and impact.
 - [ ] **Notification deep-link to specific rune** — `_layout.tsx:92-103` ignores the notification payload and always navigates to Today root. Read the rune identifier from the notification data and deep-link to `rune/[id]`.
 - [ ] **Quiz mode** — Multiple choice questions about rune meanings, matching runes to names/meanings, track user progress and show mastery level.
 - [ ] **Localization/i18n** — Add `expo-localization` + i18n library. Extract all hardcoded UI strings (tab titles, section labels, button text, notification text) into translation files.
-- [ ] **Widget support** — Android home screen widget showing today's rune. Requires real implementation: register `@bittingz/expo-widgets` plugin in `app.json`, write widget source, update daily via background task or scheduled notification.
+- [~] **Widget support** — Android home screen widget showing today's rune. Implemented with `react-native-android-widget` (pure TypeScript, no native code). Widget shows rune symbol + name + meaning, updates every 30 min, deep-links to app on tap. Needs dev build testing on device. iOS WidgetKit support still pending.
 - [ ] **Backend integration** — User profiles with favorite runes, daily rune history sync, community interpretations. Requires backend service (out of scope for offline-first phase).
 - [ ] **In-app sound** — Add subtle sound effects (flip, reveal) with a settings toggle. Requires `expo-av` dependency and sound assets.
 

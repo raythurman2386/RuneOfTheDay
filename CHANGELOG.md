@@ -79,6 +79,10 @@ Versioning: [Semantic Versioning](https://semver.org/).
   detail screen now render in gold accent with a subtle text-shadow
   glow on the main hero symbol.
 - **Tab bar hides on keyboard** via `tabBarHideOnKeyboard: true`.
+- **Android home screen widget** showing today's rune symbol, name, and
+  meaning. Uses `react-native-android-widget` with a pure-TypeScript
+  widget design. Updates every 30 minutes. Tapping the widget
+  deep-links into the app. Configured via `app.config.ts` config plugin.
 
 ### Developer
 
@@ -88,6 +92,11 @@ Versioning: [Semantic Versioning](https://semver.org/).
   themes in `Colors.ts`.
 - Updated `useRuneOfTheDay` tests to assert the notification announces
   the fire-date rune (tomorrow) rather than today's rune.
+- Converted `app.json` to `app.config.ts` to support the widget config
+  plugin with typed widget parameters.
+- Added `index.ts` entry point that registers the widget task handler
+  alongside Expo Router.
+- Removed unused `@bittingz/expo-widgets` dependency.
 - 94 tests pass, 0 type errors, 0 lint warnings.
 
 ## [1.1.0] - 2026-06-25
