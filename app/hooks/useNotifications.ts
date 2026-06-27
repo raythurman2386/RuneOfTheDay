@@ -101,92 +101,43 @@ const useNotifications = () => {
           priority: Notifications.AndroidNotificationPriority.HIGH,
         };
 
-        if (repeatsDaily) {
-          if (__DEV__) {
-            console.log(
-              `Scheduling daily notification for ${String(triggerDate.getHours()).padStart(2, "0")}:${String(triggerDate.getMinutes()).padStart(2, "0")}`,
-            );
-          }
-
-          // The DAILY trigger fires at the *next* occurrence of the given
-          // hour/minute, which may be today if the app opens before the
-          // reset time. That would deliver tomorrow's rune a day early. When
-          // the requested fire date is tomorrow, defer the daily repeat until
-          // after the first (one-time) fire so the content stays correct.
-          const now = new Date();
-          const nextDailyFire = new Date();
-          nextDailyFire.setHours(
-            triggerDate.getHours(),
-            triggerDate.getMinutes(),
-            0,
-            0,
-          );
-          const fireIsTomorrow = triggerDate.getDate() !== now.getDate();
-
-          if (fireIsTomorrow && nextDailyFire.getTime() > now.getTime()) {
-            // Today's reset time hasn't arrived yet — a DAILY trigger would
-            // fire today. Schedule a one-time notification for the intended
-            // fire date instead; the daily repeat is re-established on the
-            // next app open after the reset has passed.
-            const secondsFromNow = Math.max(
-              Math.floor((triggerDate.getTime() - now.getTime()) / 1000),
-              1,
-            );
-            const timeIntervalTrigger: Notifications.TimeIntervalTriggerInput =
-              {
-                type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
-                seconds: secondsFromNow,
-                repeats: false,
-                channelId:
-                  Platform.OS === "android"
-                    ? NOTIFICATION_CHANNEL_ID
-                    : undefined,
-              };
-
-            await Notifications.scheduleNotificationAsync({
-              content,
-              trigger: timeIntervalTrigger,
-              identifier,
-            });
-          } else {
-            const dailyTrigger: Notifications.DailyTriggerInput = {
-              type: Notifications.SchedulableTriggerInputTypes.DAILY,
-              hour: triggerDate.getHours(),
-              minute: triggerDate.getMinutes(),
-              channelId:
-                Platform.OS === "android" ? NOTIFICATION_CHANNEL_ID : undefined,
-            };
-
-            await Notifications.scheduleNotificationAsync({
-              content,
-              trigger: dailyTrigger,
-              identifier,
-            });
-          }
-        } else {
-          if (triggerDate.getTime() <= Date.now()) {
-            console.warn("Cannot schedule one-time notification in the past");
-            return false;
-          }
-          const secondsFromNow = Math.max(
-            Math.floor((triggerDate.getTime() - Date.now()) / 1000),
-            1,
-          );
-
-          const timeIntervalTrigger: Notifications.TimeIntervalTriggerInput = {
-            type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
-            seconds: secondsFromNow,
-            repeats: false,
-            channelId:
-              Platform.OS === "android" ? NOTIFICATION_CHANNEL_ID : undefined,
-          };
-
-          await Notifications.scheduleNotificationAsync({
-            content,
-            trigger: timeIntervalTrigger,
-            identifier,
-          });
+        // Always schedule a ONE-TIME notification. A repeating DAILY trigger
+        // freezes the content at schedule time, so it keeps announcing the
+        // same rune every day — falling a day further behind whenever the app
+        // isn't reopened. One-time triggers guarantee the content matches the
+        // date they actually fire on; the caller reschedules the next day's
+        // notification on each app open (and via the periodic interval check).
+        // The `repeatsDaily` flag is retained for API compatibility but no
+        // longer produces a repeating trigger.
+        if (triggerDate.getTime() <= Date.now()) {
+          console.warn("Cannot schedule notification in the past");
+          return false;
         }
+
+        if (__DEV__) {
+          console.log(
+            `Scheduling one-time notification for ${triggerDate.toISOString()}`,
+          );
+        }
+
+        const secondsFromNow = Math.max(
+          Math.floor((triggerDate.getTime() - Date.now()) / 1000),
+          1,
+        );
+
+        const timeIntervalTrigger: Notifications.TimeIntervalTriggerInput = {
+          type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
+          seconds: secondsFromNow,
+          repeats: false,
+          channelId:
+            Platform.OS === "android" ? NOTIFICATION_CHANNEL_ID : undefined,
+        };
+
+        await Notifications.scheduleNotificationAsync({
+          content,
+          trigger: timeIntervalTrigger,
+          identifier,
+        });
 
         return true;
       } catch (error) {

@@ -7,6 +7,21 @@ import {
   seededRandomFromKey,
 } from "../../utils/seededRandom";
 import { getLocalDateKey } from "../../utils/dateKey";
+import { saltedKey } from "../../utils/userSalt";
+
+// Fixed salt so tests can predict the exact rune. The real hook loads a
+// random per-install salt; here we mock getUserSalt to return this.
+const TEST_SALT = "abcdef0123456789";
+
+jest.mock("../../utils/userSalt", () => ({
+  __esModule: true,
+  getUserSalt: jest.fn(() => Promise.resolve(TEST_SALT)),
+  saltedKey: (dateKey: string, salt: string) =>
+    salt ? `${dateKey}:${salt}` : dateKey,
+}));
+
+// Matches DAILY_CHECK_INTERVAL_MS in the hook (15 minutes).
+const DAILY_CHECK_INTERVAL_MS = 15 * 60 * 1000;
 
 const mockScheduleNotification = jest.fn(() => Promise.resolve(true));
 const mockUseSettings = jest.fn(() => ({
@@ -52,6 +67,21 @@ afterAll(() => {
 
 const flushPromises = () => new Promise((resolve) => setTimeout(resolve, 0));
 
+// Mirrors getNextResetDate in the hook: the next reset strictly after `from`.
+// Tests use this so expectations hold whether run before or after the reset.
+const getNextResetDate = (
+  hour: number,
+  minute: number,
+  from: Date = new Date(),
+): Date => {
+  const candidate = new Date(from);
+  candidate.setHours(hour, minute, 0, 0);
+  if (candidate.getTime() <= from.getTime()) {
+    candidate.setDate(candidate.getDate() + 1);
+  }
+  return candidate;
+};
+
 describe("useRuneOfTheDay", () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -88,12 +118,13 @@ describe("useRuneOfTheDay", () => {
     const call = mockScheduleNotification.mock.calls[0];
     const [title, body, triggerDate, identifier, repeatsDaily] = call;
 
-    // The notification fires tomorrow at the reset time, so it should
-    // announce tomorrow's rune — not today's (the "day before" bug).
+    // The notification fires at the next reset strictly after now, so it
+    // announces the rune for that date — not today's (the "day before" bug).
     const fireDateKey = getLocalDateKey(triggerDate);
-    const expectedIndex = seededIntFromKey(fireDateKey, runes.length);
+    const saltedFireKey = saltedKey(fireDateKey, TEST_SALT);
+    const expectedIndex = seededIntFromKey(saltedFireKey, runes.length);
     const expectedRune = runes[expectedIndex];
-    const reversedRoll = seededRandomFromKey(`${fireDateKey}:reversed`);
+    const reversedRoll = seededRandomFromKey(`${saltedFireKey}:reversed`);
     const hasReversedMeaning = Boolean(
       expectedRune?.meaning?.reversed &&
       typeof expectedRune.meaning.reversed === "string" &&
@@ -117,8 +148,11 @@ describe("useRuneOfTheDay", () => {
     // Persisted storage reflects today's rune (the one shown in-app), which
     // differs from the notification rune (derived from the fire date above).
     const todayKey = getLocalDateKey(new Date());
-    const persistedIndex = seededIntFromKey(todayKey, runes.length);
-    const persistedReversedRoll = seededRandomFromKey(`${todayKey}:reversed`);
+    const saltedTodayKey = saltedKey(todayKey, TEST_SALT);
+    const persistedIndex = seededIntFromKey(saltedTodayKey, runes.length);
+    const persistedReversedRoll = seededRandomFromKey(
+      `${saltedTodayKey}:reversed`,
+    );
     const persistedHasReversed = Boolean(
       runes[persistedIndex]?.meaning?.reversed &&
       typeof runes[persistedIndex].meaning.reversed === "string" &&
@@ -138,20 +172,19 @@ describe("useRuneOfTheDay", () => {
   });
 
   it("uses the reversed meaning when the seed rolls reversed", async () => {
-    // The notification announces the rune for the fire date (tomorrow at
-    // reset), so derive expectations from that date key.
-    const fireDate = new Date();
-    fireDate.setDate(fireDate.getDate() + 1);
-    fireDate.setHours(6, 0, 0, 0);
+    // The notification announces the rune for the fire date (the next reset
+    // strictly after now), so derive expectations from that date key.
+    const fireDate = getNextResetDate(6, 0);
     const fireDateKey = getLocalDateKey(fireDate);
-    const expectedIndex = seededIntFromKey(fireDateKey, runes.length);
+    const saltedFireKey = saltedKey(fireDateKey, TEST_SALT);
+    const expectedIndex = seededIntFromKey(saltedFireKey, runes.length);
     const expectedRune = runes[expectedIndex];
     const hasReversedMeaning = Boolean(
       expectedRune?.meaning?.reversed &&
       typeof expectedRune.meaning.reversed === "string" &&
       expectedRune.meaning.reversed.trim() !== "",
     );
-    const reversedRoll = seededRandomFromKey(`${fireDateKey}:reversed`);
+    const reversedRoll = seededRandomFromKey(`${saltedFireKey}:reversed`);
     const expectReversed = hasReversedMeaning && reversedRoll < 0.5;
 
     renderHook(() => useRuneOfTheDay());
@@ -172,7 +205,8 @@ describe("useRuneOfTheDay", () => {
 
   it("uses the stored rune when stored date matches today and the index matches the seed", async () => {
     const todayKey = getLocalDateKey(new Date());
-    const seededIndex = seededIntFromKey(todayKey, runes.length);
+    const saltedTodayKey = saltedKey(todayKey, TEST_SALT);
+    const seededIndex = seededIntFromKey(saltedTodayKey, runes.length);
     const stored = {
       date: todayKey,
       index: seededIndex,
@@ -190,12 +224,12 @@ describe("useRuneOfTheDay", () => {
     });
 
     // The displayed rune comes from storage (today's seed), but the
-    // notification announces the rune for the fire date (tomorrow at reset).
-    const fireDate = new Date();
-    fireDate.setDate(fireDate.getDate() + 1);
-    fireDate.setHours(6, 0, 0, 0);
+    // notification announces the rune for the fire date (the next reset
+    // strictly after now).
+    const fireDate = getNextResetDate(6, 0);
     const fireDateKey = getLocalDateKey(fireDate);
-    const fireIndex = seededIntFromKey(fireDateKey, runes.length);
+    const saltedFireKey = saltedKey(fireDateKey, TEST_SALT);
+    const fireIndex = seededIntFromKey(saltedFireKey, runes.length);
 
     expect(mockScheduleNotification).toHaveBeenCalledTimes(1);
     const call = mockScheduleNotification.mock.calls[0];
@@ -221,12 +255,11 @@ describe("useRuneOfTheDay", () => {
     expect(triggerDate.getMinutes()).toBe(30);
   });
 
-  it("schedules the notification with tomorrow's rune, not today's", async () => {
-    const fireDate = new Date();
-    fireDate.setDate(fireDate.getDate() + 1);
-    fireDate.setHours(6, 0, 0, 0);
+  it("schedules the notification with the next reset's rune, not today's", async () => {
+    const fireDate = getNextResetDate(6, 0);
     const fireDateKey = getLocalDateKey(fireDate);
-    const fireIndex = seededIntFromKey(fireDateKey, runes.length);
+    const saltedFireKey = saltedKey(fireDateKey, TEST_SALT);
+    const fireIndex = seededIntFromKey(saltedFireKey, runes.length);
     const fireRune = runes[fireIndex];
 
     renderHook(() => useRuneOfTheDay());
@@ -238,5 +271,72 @@ describe("useRuneOfTheDay", () => {
     const call = mockScheduleNotification.mock.calls[0];
     const [, body] = call;
     expect(body).toContain(fireRune.name);
+  });
+
+  it("re-arms the next notification on the periodic interval when the rune is already current", async () => {
+    // Seed storage with today's rune so the interval check takes the
+    // "already current" branch, which must still reschedule the notification.
+    const todayKey = getLocalDateKey(new Date());
+    const saltedTodayKey = saltedKey(todayKey, TEST_SALT);
+    const seededIndex = seededIntFromKey(saltedTodayKey, runes.length);
+    const stored = {
+      date: todayKey,
+      index: seededIndex,
+      timestamp: Date.now(),
+      isReversed: false,
+    };
+    (AsyncStorage.getItem as jest.Mock).mockResolvedValue(
+      JSON.stringify(stored),
+    );
+
+    jest.useFakeTimers();
+    try {
+      renderHook(() => useRuneOfTheDay());
+
+      // Flush the async mount effect (microtasks only — fake timers swallow
+      // the setTimeout-based flushPromises helper).
+      await act(async () => {
+        await Promise.resolve();
+      });
+
+      // One schedule from the initial updateRuneOfTheDay.
+      expect(mockScheduleNotification).toHaveBeenCalledTimes(1);
+
+      // Fast-forward the 15-minute interval, then flush the async interval
+      // callback's microtasks.
+      await act(async () => {
+        jest.advanceTimersByTime(DAILY_CHECK_INTERVAL_MS);
+        await Promise.resolve();
+      });
+
+      // The interval check found today's rune current and re-armed the next
+      // one-time notification — proving staleness is prevented even when the
+      // app stays open across the reset boundary.
+      expect(mockScheduleNotification).toHaveBeenCalledTimes(2);
+    } finally {
+      jest.useRealTimers();
+    }
+  });
+
+  it("computes the next reset as today's reset when it hasn't occurred yet", () => {
+    // 05:59 local is before the 06:00 reset, so the next reset is today 06:00.
+    const before = new Date();
+    before.setHours(5, 59, 0, 0);
+    const next = getNextResetDate(6, 0, before);
+    expect(next.getHours()).toBe(6);
+    expect(next.getMinutes()).toBe(0);
+    expect(getLocalDateKey(next)).toBe(getLocalDateKey(before));
+  });
+
+  it("computes the next reset as tomorrow's reset when today's has passed", () => {
+    // 06:01 local is after the 06:00 reset, so the next reset is tomorrow.
+    const after = new Date();
+    after.setHours(6, 1, 0, 0);
+    const next = getNextResetDate(6, 0, after);
+    expect(next.getHours()).toBe(6);
+    expect(next.getMinutes()).toBe(0);
+    const tomorrow = new Date(after);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    expect(getLocalDateKey(next)).toBe(getLocalDateKey(tomorrow));
   });
 });

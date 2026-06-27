@@ -26,13 +26,19 @@ jest.mock("expo-notifications", () => {
   };
 });
 
-jest.mock("@react-native-async-storage/async-storage", () => ({
-  setItem: jest.fn(() => Promise.resolve()),
-  getItem: jest.fn(() => Promise.resolve(null)),
-  removeItem: jest.fn(() => Promise.resolve()),
-  clear: jest.fn(() => Promise.resolve()),
-  __esModule: true,
-}));
+jest.mock("@react-native-async-storage/async-storage", () => {
+  const storage = {
+    setItem: jest.fn(() => Promise.resolve()),
+    getItem: jest.fn(() => Promise.resolve(null)),
+    removeItem: jest.fn(() => Promise.resolve()),
+    clear: jest.fn(() => Promise.resolve()),
+  };
+  return {
+    __esModule: true,
+    default: storage,
+    ...storage,
+  };
+});
 
 jest.mock("expo-haptics", () => ({
   impactAsync: jest.fn(),

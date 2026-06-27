@@ -120,7 +120,7 @@ describe("useNotifications", () => {
     expect(Notifications.scheduleNotificationAsync).not.toHaveBeenCalled();
   });
 
-  it("schedules a daily notification when permissions granted", async () => {
+  it("schedules a one-time notification even when repeatsDaily is requested", async () => {
     const { result } = renderHook(() => useNotifications());
 
     await act(async () => {
@@ -148,10 +148,36 @@ describe("useNotifications", () => {
       .calls[0][0];
     expect(call.content.title).toBe("Daily Rune");
     expect(call.content.body).toBe("Fehu - Wealth");
-    expect(call.trigger.type).toBe("daily");
-    expect(call.trigger.hour).toBe(6);
-    expect(call.trigger.minute).toBe(0);
+    // Repeating DAILY triggers freeze content and fall behind; the robust
+    // fix always uses a one-time TIME_INTERVAL trigger regardless of the
+    // repeatsDaily flag.
+    expect(call.trigger.type).toBe("timeInterval");
+    expect(call.trigger.repeats).toBe(false);
     expect(call.identifier).toBe("rune-daily");
+  });
+
+  it("returns false for a daily notification whose fire date is in the past", async () => {
+    const { result } = renderHook(() => useNotifications());
+
+    await act(async () => {
+      await flushPromises();
+    });
+
+    const pastDate = new Date(Date.now() - 3600000);
+
+    let scheduleResult: boolean | undefined;
+    await act(async () => {
+      scheduleResult = await result.current.scheduleNotification(
+        "Daily Rune",
+        "Fehu - Wealth",
+        pastDate,
+        "rune-daily-past",
+        true,
+      );
+    });
+
+    expect(scheduleResult).toBe(false);
+    expect(Notifications.scheduleNotificationAsync).not.toHaveBeenCalled();
   });
 
   it("returns false for one-time notification in the past", async () => {

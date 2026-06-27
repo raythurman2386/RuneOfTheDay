@@ -1,6 +1,12 @@
 import React from "react";
 import { widgetTaskHandler } from "../../widgets/widget-task-handler";
 
+// Mock getUserSalt so the handler doesn't hit AsyncStorage.
+jest.mock("../../utils/userSalt", () => ({
+  __esModule: true,
+  getUserSalt: jest.fn(() => Promise.resolve("test-salt-0123")),
+}));
+
 // Mock the widget primitives
 jest.mock("react-native-android-widget", () => {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -83,5 +89,20 @@ describe("widgetTaskHandler", () => {
       expect.any(Error),
     );
     consoleSpy.mockRestore();
+  });
+
+  it("passes the compact variant for RuneCompact widgets", async () => {
+    await widgetTaskHandler(makeProps("WIDGET_ADDED", "RuneCompact") as any);
+    expect(mockRenderWidget).toHaveBeenCalledTimes(1);
+  });
+
+  it("passes the full variant for RuneWide widgets", async () => {
+    await widgetTaskHandler(makeProps("WIDGET_ADDED", "RuneWide") as any);
+    expect(mockRenderWidget).toHaveBeenCalledTimes(1);
+  });
+
+  it("passes the wide variant for RuneWide4x1 widgets", async () => {
+    await widgetTaskHandler(makeProps("WIDGET_ADDED", "RuneWide4x1") as any);
+    expect(mockRenderWidget).toHaveBeenCalledTimes(1);
   });
 });

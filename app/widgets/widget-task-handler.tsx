@@ -2,11 +2,17 @@ import React from "react";
 import type { WidgetTaskHandlerProps } from "react-native-android-widget";
 import { Linking } from "react-native";
 import { RuneWidget } from "./RuneWidget";
+import { getUserSalt } from "../utils/userSalt";
 
-const nameToWidget = {
-  // Both widget sizes use the same component — it adapts via widgetWidth
-  Rune: RuneWidget,
-  RuneWide: RuneWidget,
+// Each registered widget name maps to a layout variant:
+// - "compact" — rune + name, centered column (2x2, no meaning)
+// - "wide"    — rune + name side-by-side (4x1, no meaning)
+// - "full"    — rune + name + meaning (3x2 / 4x2)
+const widgetVariants: Record<string, "compact" | "wide" | "full"> = {
+  RuneCompact: "compact",
+  Rune: "full",
+  RuneWide: "full",
+  RuneWide4x1: "wide",
 };
 
 /**
@@ -20,12 +26,21 @@ const nameToWidget = {
  */
 export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
   const widgetInfo = props.widgetInfo;
-  const Widget =
-    nameToWidget[widgetInfo.widgetName as keyof typeof nameToWidget];
+  const variant = widgetVariants[widgetInfo.widgetName] ?? "full";
 
-  // Pass the widget width so the component can scale fonts accordingly
+  // Load the per-install salt so the widget shows the same rune as the app.
+  const salt = await getUserSalt();
+
+  // Pass the widget dimensions so the component can scale fonts accordingly
   const renderWithSize = () =>
-    props.renderWidget(<Widget widgetWidth={widgetInfo.width} />);
+    props.renderWidget(
+      <RuneWidget
+        widgetWidth={widgetInfo.width}
+        widgetHeight={widgetInfo.height}
+        salt={salt}
+        variant={variant}
+      />,
+    );
 
   switch (props.widgetAction) {
     case "WIDGET_ADDED":
