@@ -6,14 +6,30 @@ const widgetConfig: WithAndroidWidgetsParams = {
   fonts: ["./assets/fonts/rune.ttf"],
   widgets: [
     {
-      name: "Rune",
-      label: "Daily Rune",
-      description: "Shows today's Elder Futhark rune and its meaning.",
-      // 2x2 cells on most launchers
+      name: "RuneCompact",
+      label: "Daily Rune (Compact)",
+      description:
+        "Shows today's rune symbol and name — compact 2x2 format with no meaning text.",
+      // 2x2 cells — small, just the rune and name
       targetCellWidth: 2,
       targetCellHeight: 2,
       // Fallback for Android 11 and below
-      minWidth: "180dp",
+      minWidth: "140dp",
+      minHeight: "140dp",
+      // Preview image shown in the widget picker
+      previewImage: "./assets/images/widget-preview.png",
+      // Update every 30 minutes (minimum allowed)
+      updatePeriodMillis: 1800000,
+    },
+    {
+      name: "Rune",
+      label: "Daily Rune",
+      description: "Shows today's Elder Futhark rune and its meaning.",
+      // 3x2 cells — fits most phones with room for the meaning text
+      targetCellWidth: 3,
+      targetCellHeight: 2,
+      // Fallback for Android 11 and below
+      minWidth: "220dp",
       minHeight: "180dp",
       // Preview image shown in the widget picker
       previewImage: "./assets/images/widget-preview.png",
@@ -25,12 +41,28 @@ const widgetConfig: WithAndroidWidgetsParams = {
       label: "Daily Rune (Wide)",
       description:
         "Shows today's Elder Futhark rune and its meaning in a wider format.",
-      // 4x2 cells — full width on most phones
+      // 4x2 cells — full width on most phones, extra room on large phones
       targetCellWidth: 4,
       targetCellHeight: 2,
       // Fallback for Android 11 and below
       minWidth: "320dp",
       minHeight: "180dp",
+      // Preview image shown in the widget picker
+      previewImage: "./assets/images/widget-preview.png",
+      // Update every 30 minutes (minimum allowed)
+      updatePeriodMillis: 1800000,
+    },
+    {
+      name: "RuneWide4x1",
+      label: "Daily Rune (Wide, Short)",
+      description:
+        "Shows today's rune symbol and name in a short, wide 4x1 strip — no meaning text.",
+      // 4x1 cells — full width, single row height
+      targetCellWidth: 4,
+      targetCellHeight: 1,
+      // Fallback for Android 11 and below
+      minWidth: "320dp",
+      minHeight: "80dp",
       // Preview image shown in the widget picker
       previewImage: "./assets/images/widget-preview.png",
       // Update every 30 minutes (minimum allowed)
