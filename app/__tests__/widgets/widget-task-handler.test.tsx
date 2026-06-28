@@ -1,10 +1,13 @@
 import React from "react";
 import { widgetTaskHandler } from "../../widgets/widget-task-handler";
 
-// Mock getUserSalt so the handler doesn't hit AsyncStorage.
+// Mock getUserSalt so the handler doesn't hit AsyncStorage. Must also
+// export saltedKey because the shared runeSelection util imports it.
 jest.mock("../../utils/userSalt", () => ({
   __esModule: true,
   getUserSalt: jest.fn(() => Promise.resolve("test-salt-0123")),
+  saltedKey: (dateKey: string, salt: string) =>
+    salt ? `${dateKey}:${salt}` : dateKey,
 }));
 
 // Mock the widget primitives

@@ -2,10 +2,22 @@
 
 import React from "react";
 import { FlexWidget, TextWidget } from "react-native-android-widget";
-import { runes } from "../data/runes";
+import {
+  pickRuneForDate,
+  meaningTextForSelection,
+  displayNameForSelection,
+  type RuneSelection,
+} from "../utils/runeSelection";
 import { getTodayKey } from "../utils/dateKey";
-import { seededIntFromKey, seededRandomFromKey } from "../utils/seededRandom";
-import { saltedKey } from "../utils/userSalt";
+
+// Widget colours mirror the app's dark theme (see constants/Colors.ts).
+// The widget always renders on a dark background regardless of the app's
+// theme setting, so the dark-theme values are the correct match.
+const SYMBOL_COLOR = "#D4A857"; // goldBright — dark-theme accent
+const REVERSED_SYMBOL_COLOR = "rgba(255, 90, 90, 0.9)"; // dark-theme reversedRune
+const NAME_COLOR = "#E6EDF3"; // dark-theme text
+const MEANING_COLOR = "#9DA7B3"; // dark-theme icon
+const BACKGROUND_COLOR = "#0D1117"; // dark-theme background
 
 interface RuneWidgetProps {
   /** Override the date key (used for preview/testing). Defaults to today. */
@@ -17,6 +29,13 @@ interface RuneWidgetProps {
   /** Per-install salt so each user gets their own daily rune. */
   salt?: string;
   /**
+   * Pre-resolved selection from the shared cache (app + widget parity).
+   * When provided, this takes precedence over computing from dateKey/salt
+   * so the widget always shows exactly what the app shows. The task handler
+   * reads the app's persisted `runeOfTheDay` entry and passes it here.
+   */
+  selection?: RuneSelection;
+  /**
    * Layout variant:
    * - "compact" — rune symbol + name, centered column (2x2, no meaning)
    * - "wide"    — rune symbol + name side-by-side (4x1, no meaning)
@@ -26,22 +45,39 @@ interface RuneWidgetProps {
 }
 
 /**
+ * Resolve the rune selection for the widget. Prefer the cached selection
+ * passed from the task handler (guarantees app/widget parity); fall back to
+ * computing from the date key + salt so the widget still works standalone.
+ */
+const resolveSelection = (
+  dateKey: string | undefined,
+  salt: string | undefined,
+  selection: RuneSelection | undefined,
+): RuneSelection => {
+  if (selection) return selection;
+  return pickRuneForDate(dateKey ?? getTodayKey(), salt ?? "");
+};
+
+/**
  * Android home screen widget showing today's rune.
  *
  * Uses react-native-android-widget primitives — no standard RN components,
- * no hooks. The rune is computed deterministically from the date key so the
- * widget always matches the in-app daily rune.
+ * no hooks. The rune is resolved via the shared `pickRuneForDate` (or a
+ * cached selection from the app) so the widget always matches the in-app
+ * daily rune. Reversed runes tint the symbol red and append " (Reversed)"
+ * to the name, mirroring the app's reversed-rune treatment (Android widget
+ * RemoteViews don't support rotation, so colour is the visual cue).
  */
 export function RuneWidget({
   dateKey,
   widgetWidth,
   widgetHeight,
   salt,
+  selection,
   variant = "full",
 }: RuneWidgetProps) {
-  const key = saltedKey(dateKey ?? getTodayKey(), salt ?? "");
-  const index = seededIntFromKey(key, runes.length);
-  const rune = runes[index];
+  const resolved = resolveSelection(dateKey, salt, selection);
+  const { rune, isReversed } = resolved;
 
   // Scale font sizes based on the widget's actual dimensions. Each axis is
   // scaled independently so text never overflows: the symbol is bounded by
@@ -74,18 +110,15 @@ export function RuneWidget({
   const meaningSize = Math.round(height * 0.085);
   const maxMeaningLength = Math.round(width * 0.42);
 
-  const hasReversedMeaning = Boolean(
-    rune?.meaning?.reversed &&
-    typeof rune.meaning.reversed === "string" &&
-    rune.meaning.reversed.trim() !== "",
-  );
-  const reversedRoll = seededRandomFromKey(`${key}:reversed`);
-  const isReversed = hasReversedMeaning ? reversedRoll < 0.5 : false;
+  const meaningText = meaningTextForSelection(resolved);
+  const displayName = displayNameForSelection(resolved);
 
-  const meaningText =
-    isReversed && rune.meaning.reversed
-      ? rune.meaning.reversed
-      : rune.meaning.primaryThemes;
+  // Reversed runes: tint the symbol red to signal reversal, matching the
+  // app's reversedRune colour. Android widget RemoteViews don't support
+  // CSS-style rotation, so the colour change + " (Reversed)" name suffix
+  // (added by displayNameForSelection) are the visual cues — consistent
+  // with the app's red-tone treatment for reversed runes.
+  const symbolColor = isReversed ? REVERSED_SYMBOL_COLOR : SYMBOL_COLOR;
 
   // Truncate meaning for widget display (avoid text overflow)
   const showMeaning = !isCompact && !isWide;
@@ -93,8 +126,6 @@ export function RuneWidget({
     showMeaning && meaningText.length > maxMeaningLength
       ? `${meaningText.slice(0, maxMeaningLength - 3)}...`
       : meaningText;
-
-  const displayName = isReversed ? `${rune.name} (Reversed)` : rune.name;
 
   // Compact layout: centered column with symbol above name.
   if (isCompact) {
@@ -104,7 +135,7 @@ export function RuneWidget({
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#0D1117",
+          backgroundColor: BACKGROUND_COLOR,
           borderRadius: 16,
           padding: 8,
           width: "match_parent",
@@ -117,7 +148,7 @@ export function RuneWidget({
           style={{
             fontFamily: "ElderFuthark",
             fontSize: symbolSize,
-            color: "#D4A857",
+            color: symbolColor,
             textAlign: "center",
             marginBottom: 4,
           }}
@@ -128,7 +159,7 @@ export function RuneWidget({
             fontSize: nameSize,
             fontFamily: "Inter",
             fontWeight: "700",
-            color: "#E6EDF3",
+            color: NAME_COLOR,
             textAlign: "center",
           }}
         />
@@ -146,7 +177,7 @@ export function RuneWidget({
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "flex-start",
-          backgroundColor: "#0D1117",
+          backgroundColor: BACKGROUND_COLOR,
           borderRadius: 12,
           padding: 8,
           width: "match_parent",
@@ -167,7 +198,7 @@ export function RuneWidget({
             style={{
               fontFamily: "ElderFuthark",
               fontSize: symbolSize,
-              color: "#D4A857",
+              color: symbolColor,
               textAlign: "center",
             }}
           />
@@ -185,7 +216,7 @@ export function RuneWidget({
               fontSize: nameSize,
               fontFamily: "Inter",
               fontWeight: "700",
-              color: "#E6EDF3",
+              color: NAME_COLOR,
             }}
           />
         </FlexWidget>
@@ -200,7 +231,7 @@ export function RuneWidget({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "flex-start",
-        backgroundColor: "#0D1117",
+        backgroundColor: BACKGROUND_COLOR,
         borderRadius: 16,
         padding: 16,
         width: "match_parent",
@@ -222,7 +253,7 @@ export function RuneWidget({
           style={{
             fontFamily: "ElderFuthark",
             fontSize: symbolSize,
-            color: "#D4A857",
+            color: symbolColor,
             textAlign: "center",
           }}
         />
@@ -242,7 +273,7 @@ export function RuneWidget({
             fontSize: nameSize,
             fontFamily: "Inter",
             fontWeight: "700",
-            color: "#E6EDF3",
+            color: NAME_COLOR,
             marginBottom: 4,
           }}
         />
@@ -251,7 +282,7 @@ export function RuneWidget({
           style={{
             fontSize: meaningSize,
             fontFamily: "Inter",
-            color: "#9DA7B3",
+            color: MEANING_COLOR,
           }}
         />
       </FlexWidget>

@@ -4,8 +4,11 @@ import { runes, Rune } from "../data/runes";
 import useNotifications from "./useNotifications";
 import { useSettings } from "../contexts/SettingsContext";
 import { getLocalDateKey, getTodayKey } from "../utils/dateKey";
-import { seededIntFromKey, seededRandomFromKey } from "../utils/seededRandom";
-import { getUserSalt, saltedKey } from "../utils/userSalt";
+import { getUserSalt } from "../utils/userSalt";
+import {
+  pickRuneForDate,
+  meaningTextForSelection,
+} from "../utils/runeSelection";
 
 const STORAGE_KEY = "runeOfTheDay";
 const NOTIFICATION_IDENTIFIER = "runeOfTheDayNotification";
@@ -17,23 +20,6 @@ interface StoredData {
   timestamp: number;
   isReversed?: boolean;
 }
-
-const pickRuneForDate = (
-  dateKey: string,
-  salt: string = "",
-): { index: number; isReversed: boolean } => {
-  const key = saltedKey(dateKey, salt);
-  const index = seededIntFromKey(key, runes.length);
-  const selectedRune = runes[index];
-  const hasReversedMeaning = Boolean(
-    selectedRune?.meaning?.reversed &&
-    typeof selectedRune.meaning.reversed === "string" &&
-    selectedRune.meaning.reversed.trim() !== "",
-  );
-  const reversedRoll = seededRandomFromKey(`${key}:reversed`);
-  const isReversed = hasReversedMeaning ? reversedRoll < 0.5 : false;
-  return { index, isReversed };
-};
 
 const useRuneOfTheDay = (): { rune: Rune | null; isReversed: boolean } => {
   const [rune, setRune] = useState<Rune | null>(null);
@@ -84,10 +70,11 @@ const useRuneOfTheDay = (): { rune: Rune | null; isReversed: boolean } => {
         );
         const pickedRune = runes[index];
 
-        const meaningText =
-          pickedIsReversed && pickedRune.meaning.reversed
-            ? pickedRune.meaning.reversed
-            : pickedRune.meaning.primaryThemes;
+        const meaningText = meaningTextForSelection({
+          index,
+          isReversed: pickedIsReversed,
+          rune: pickedRune,
+        });
 
         await scheduleNotification(
           `Your Daily Rune Awaits ${pickedRune.symbol || ""}`,
